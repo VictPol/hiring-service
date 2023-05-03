@@ -1,5 +1,7 @@
 package com.hirix.configuration;
 
+
+import org.springframework.boot.autoconfigure.flyway.FlywayMigrationInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,6 +15,11 @@ public class ApplicationConfig {
 //    public RandomValuesGenerator getRandomGenerator() {
 //        return new RandomValuesGenerator();
 //    }
+
+    @Bean
+    public FlywayMigrationInitializer flywayInitializer() {
+        return null;
+    }
 
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
