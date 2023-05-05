@@ -1,7 +1,7 @@
 package com.hirix.domain;
 
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -17,9 +17,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
@@ -32,27 +29,19 @@ import java.util.Set;
 @Setter
 @Getter
 @EqualsAndHashCode(exclude = {
-        "employees", "companies", "skills"
+        "skills"
 })
 @ToString(exclude = {
-        "employees", "companies", "skills"
+        "skills"
 })
 @Entity
-@Table(name = "locations")
-public class Location {
+@Table(name = "professions")
+public class Profession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "global_region")
-    private String globalRegion;
     @Column
-    private String country;
-    @Column(name = "local_region")
-    private String localRegion;
-    @Column
-    private String city;
-    @Column(name = "is_countryside")
-    private boolean locationIsCountryside;
+    private String profession;
     @Column
     private Timestamp created;
     @Column
@@ -61,18 +50,8 @@ public class Location {
     private boolean deleted;
     @Column(name = "is_visible")
     private boolean visible;
-    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
-    @JsonBackReference
-    private Set<Employee> employees = Collections.emptySet();
-    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
-    @JsonBackReference
-    private Set<Company> companies = Collections.emptySet();
-    @ManyToMany
-    @JoinTable(name = "l_skills_locations",
-            joinColumns = @JoinColumn(name = "locations_id"),
-            inverseJoinColumns = @JoinColumn(name = "skills_id")
-    )
+    @OneToMany(mappedBy = "profession", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
     @JsonBackReference
     private Set<Skill> skills = Collections.emptySet();
-
 }
+

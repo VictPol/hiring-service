@@ -1,7 +1,6 @@
-package com.hirix.controller.springdata;
+package com.hirix.controller.controllers;
 
 import com.hirix.domain.Employee;
-import com.hirix.domain.User;
 import com.hirix.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

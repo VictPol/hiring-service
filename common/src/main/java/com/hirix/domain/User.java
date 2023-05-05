@@ -1,6 +1,6 @@
 package com.hirix.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,9 +17,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,10 +31,10 @@ import java.sql.Timestamp;
 @Getter
 
 @EqualsAndHashCode(exclude = {
-        "employee"
+        "employee", "company", "roles"
 })
 @ToString(exclude = {
-        "employee"
+        "employee", "company", "roles"
 })
 @Entity
 @Table (name = "users")
@@ -65,5 +66,11 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
     @JsonManagedReference
     private Employee employee;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
+    @JsonManagedReference
+    private Company company;
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("users")
+    private Set<Role> roles = Collections.emptySet();
 
 }

@@ -1,4 +1,4 @@
-package com.hirix.controller.springdata;
+package com.hirix.controller.controllers;
 
 import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
