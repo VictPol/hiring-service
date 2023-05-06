@@ -1,5 +1,7 @@
 package com.hirix.controller.controllers;
 
+import com.hirix.domain.Role;
+import com.hirix.repository.RoleRepository;
 import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,14 +30,14 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUserById(@PathVariable Long id) {
-        Optional<User> users = userRepository.findById(id);
-        return new ResponseEntity<>(users.get(), HttpStatus.OK);
+        Optional<User> user = userRepository.findById(id);
+        return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<Object> getUserByEmail(@PathVariable String email) {
-        Optional<User> users = userRepository.findByEmail(email);
-        return new ResponseEntity<>(users.get(), HttpStatus.OK);
+        Optional<User> user = userRepository.findByEmail(email);
+        return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
 }
