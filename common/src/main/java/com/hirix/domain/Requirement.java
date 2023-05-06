@@ -1,6 +1,7 @@
 package com.hirix.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -32,10 +34,12 @@ import java.util.Set;
 @Setter
 @Getter
 @EqualsAndHashCode(exclude = {
-        "company", "industry", "profession", "specialization", "rank", "position", "location"
+        "company", "industry", "profession", "specialization",
+        "rank", "position", "location", "offers"
 })
 @ToString(exclude = {
-        "company", "industry", "profession", "specialization", "rank", "position", "location"
+        "company", "industry", "profession", "specialization",
+        "rank", "position", "location", "offers"
 })
 @Entity
 @Table(name = "requirements")
@@ -88,7 +92,10 @@ public class Requirement {
     @ManyToOne
     @JoinColumn(name = "location_id")
     @JsonManagedReference
-    private Location location;
+    private Location locationOffered;
+    @OneToMany(mappedBy = "requirement", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
+    @JsonBackReference
+    private Set<Offer> offers = Collections.emptySet();
 
 }
 

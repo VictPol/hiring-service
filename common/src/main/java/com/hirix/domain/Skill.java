@@ -1,6 +1,7 @@
 package com.hirix.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -32,10 +34,12 @@ import java.util.Set;
 @Setter
 @Getter
 @EqualsAndHashCode(exclude = {
-        "employee", "industry", "profession", "specialization", "rank", "position", "locationsDesired"
+        "employee", "industry", "profession", "specialization", "rank",
+        "position", "locationsDesired", "offers"
 })
 @ToString(exclude = {
-        "employee", "industry", "profession", "specialization", "rank", "position", "locationsDesired"
+        "employee", "industry", "profession", "specialization", "rank",
+        "position", "locationsDesired", "offers"
 })
 @Entity
 @Table(name = "skills")
@@ -92,6 +96,9 @@ public class Skill {
     @ManyToMany(mappedBy = "skills", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Location> locationsDesired = Collections.emptySet();
+    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
+    @JsonBackReference
+    private Set<Offer> offers = Collections.emptySet();
 
 }
 
