@@ -1,6 +1,6 @@
 package com.hirix.controller.controllers;
 
-import com.hirix.domain.Role;
+
 import com.hirix.repository.RoleRepository;
 import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+
 
 import com.hirix.domain.User;
 
@@ -39,5 +40,6 @@ public class UserController {
         Optional<User> user = userRepository.findByEmail(email);
         return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
+
 
 }

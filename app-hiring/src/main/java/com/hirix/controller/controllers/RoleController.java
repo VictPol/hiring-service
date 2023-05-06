@@ -34,7 +34,7 @@ public class RoleController {
 
     @GetMapping("/role/{role_name}")
     public ResponseEntity<Object> getRoleByRoleName(@PathVariable("role_name") String roleName) {
-        Optional<Role> role = roleRepository.findByRole(roleName.toUpperCase().trim());
+        Optional<Role> role = roleRepository.findRoleByRoleName(roleName.toUpperCase().trim());
         return new ResponseEntity<>(role.get(), HttpStatus.OK);
     }
 
