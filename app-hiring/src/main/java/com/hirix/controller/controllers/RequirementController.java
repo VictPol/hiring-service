@@ -20,15 +20,16 @@ public class RequirementController {
     private final RequirementRepository requirementRepository;
 
     @GetMapping
-    public ResponseEntity<Object> getAllRequirements() {
+    public ResponseEntity<List<Requirement>> getAllRequirements() {
         List<Requirement> requirements = requirementRepository.findAll();
         return new ResponseEntity<>(requirements, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getRequirementById(@PathVariable String id) {
+    public ResponseEntity<Requirement> getRequirementById(@PathVariable String id) {
         Long parsedId = Long.parseLong(id);
         Optional<Requirement> requirement = requirementRepository.findById(parsedId);
         return new ResponseEntity<>(requirement.get(), HttpStatus.OK);
     }
+
 }

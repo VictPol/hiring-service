@@ -20,15 +20,16 @@ public class OfferController {
     private final OfferRepository offerRepository;
 
     @GetMapping
-    public ResponseEntity<Object> getAllOffers() {
+    public ResponseEntity<List<Offer>> getAllOffers() {
         List<Offer> offers = offerRepository.findAll();
         return new ResponseEntity<>(offers, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getOfferById(@PathVariable String id) {
+    public ResponseEntity<Offer> getOfferById(@PathVariable String id) {
         Long parsedId = Long.parseLong(id);
         Optional<Offer> offer = offerRepository.findById(parsedId);
         return new ResponseEntity<>(offer.get(), HttpStatus.OK);
     }
+
 }

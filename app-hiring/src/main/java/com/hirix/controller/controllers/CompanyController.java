@@ -20,15 +20,16 @@ public class CompanyController {
     private  final CompanyRepository companyRepository;
 
     @GetMapping
-    public ResponseEntity<Object> getAllCompanies() {
+    public ResponseEntity<List<Company>> getAllCompanies() {
         List<Company> companies = companyRepository.findAll();
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getCompanyById(@PathVariable String id) {
+    public ResponseEntity<Company> getCompanyById(@PathVariable String id) {
         Long parsedId = Long.parseLong(id);
         Optional<Company> company = companyRepository.findById(parsedId);
         return new ResponseEntity<>(company.get(), HttpStatus.OK);
     }
+
 }

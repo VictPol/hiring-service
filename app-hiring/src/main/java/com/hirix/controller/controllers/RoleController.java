@@ -20,20 +20,20 @@ public class RoleController {
     private final RoleRepository roleRepository;
 
     @GetMapping
-    public ResponseEntity<Object> getAllRoles() {
+    public ResponseEntity<List<Role>> getAllRoles() {
         List<Role> roles = roleRepository.findAll();
         return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getRoleById(@PathVariable String id) {
+    public ResponseEntity<Role> getRoleById(@PathVariable String id) {
         Long parsedId = Long.parseLong(id);
         Optional<Role> role = roleRepository.findById(parsedId);
-        return new ResponseEntity<>(role, HttpStatus.OK);
+        return new ResponseEntity<>(role.get(), HttpStatus.OK);
     }
 
     @GetMapping("/role/{role_name}")
-    public ResponseEntity<Object> getRoleByRoleName(@PathVariable("role_name") String roleName) {
+    public ResponseEntity<Role> getRoleByRoleName(@PathVariable("role_name") String roleName) {
         Optional<Role> role = roleRepository.findRoleByRoleName(roleName.toUpperCase().trim());
         return new ResponseEntity<>(role.get(), HttpStatus.OK);
     }

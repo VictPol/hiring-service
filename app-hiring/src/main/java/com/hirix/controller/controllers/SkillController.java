@@ -21,15 +21,16 @@ public class SkillController {
     private final SkillRepository skillRepository;
 
     @GetMapping
-    public ResponseEntity<Object> getAllSkills() {
+    public ResponseEntity<List<Skill>> getAllSkills() {
         List<Skill> skills = skillRepository.findAll();
         return new ResponseEntity<>(skills, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getSkillById(@PathVariable String id) {
+    public ResponseEntity<Skill> getSkillById(@PathVariable String id) {
         Long parsedId = Long.parseLong(id);
         Optional<Skill> skill = skillRepository.findById(parsedId);
         return new ResponseEntity<>(skill.get(), HttpStatus.OK);
     }
+
 }
