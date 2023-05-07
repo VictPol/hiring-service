@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class SearchCriteriaEmployee {
+public class EmployeeSearchCriteria {
     private String query;
 
     private String birthday;

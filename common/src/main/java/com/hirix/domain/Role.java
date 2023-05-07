@@ -48,7 +48,7 @@ public class Role {
     @Column (name = "is_deleted")
     private boolean deleted;
     @Column (name = "is_visible")
-    private boolean visible;
+    private boolean visible = true;
 
     @ManyToMany
     @JoinTable(name = "l_users_roles",

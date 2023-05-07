@@ -1,6 +1,6 @@
 package com.hirix.controller.controllers;
 
-import com.hirix.controller.requests.SearchCriteriaEmployee;
+import com.hirix.controller.requests.EmployeeSearchCriteria;
 import com.hirix.domain.Employee;
 import com.hirix.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +40,7 @@ public class EmployeeController {
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, List<Employee>>> searchEmployeesByFullNameAndBirthdayAfter
-            (@ModelAttribute SearchCriteriaEmployee criteria) {
+            (@ModelAttribute EmployeeSearchCriteria criteria) {
         Timestamp birthday = Timestamp.valueOf(criteria.getBirthday());
         List<Employee> employees = employeeRepository.findEmployeesByFullNameLikeAndBirthdayAfter
             ("%" + criteria.getQuery() + "%", birthday);
