@@ -1,4 +1,4 @@
-package com.hirix.controller.requests;
+package com.hirix.controller.requests.search;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
-import java.sql.Timestamp;
 
 @Setter
 @Getter

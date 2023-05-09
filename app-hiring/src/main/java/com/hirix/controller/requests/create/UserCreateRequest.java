@@ -1,11 +1,13 @@
-package com.hirix.controller.requests;
+package com.hirix.controller.requests.create;
 
+import com.hirix.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -14,6 +16,7 @@ import java.sql.Timestamp;
 public class UserCreateRequest {
     private String email;
     private String password;
-    private String created;
-    private String changed;
+    private Timestamp created;
+    private Timestamp changed;
+//    private Set<Role> roles;
 }

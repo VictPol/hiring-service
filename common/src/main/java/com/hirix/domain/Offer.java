@@ -1,6 +1,8 @@
 package com.hirix.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,20 +12,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,12 +40,16 @@ public class Offer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
+    @JsonIgnore
     private Timestamp created;
     @Column
+    @JsonIgnore
     private Timestamp changed;
     @Column(name = "is_deleted")
+    @JsonIgnore
     private boolean deleted;
     @Column(name = "is_accepted")
+    @JsonIgnore
     private boolean accepted;
     @Column(name = "is_contracted")
     private boolean contracted;
@@ -57,12 +58,16 @@ public class Offer {
     @Column(name = "comments_company")
     private String commentsCompany = "NO_COMMENTS";
     @ManyToOne
-    @JoinColumn(name = "skills_id")
-    @JsonManagedReference
+    @JoinColumn(name = "skill_id")
+//    @JsonManagedReference
+//    @JsonBackReference
+    @JsonIgnoreProperties("offers")
     private Skill skill;
     @ManyToOne
-    @JoinColumn(name = "requirements_id")
-    @JsonManagedReference
+    @JoinColumn(name = "requirement_id")
+//    @JsonManagedReference
+//    @JsonBackReference
+    @JsonIgnoreProperties("offers")
     private Requirement requirement;
 
 }

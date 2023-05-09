@@ -1,6 +1,8 @@
 package com.hirix.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.hirix.domain.enums.Education;
 import com.hirix.domain.enums.Gender;
@@ -62,21 +64,30 @@ public class Employee {
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.NOT_SELECTED;
     @Column
+    @JsonIgnore
     private Timestamp created;
     @Column
+    @JsonIgnore
     private Timestamp changed;
     @Column(name = "is_deleted")
+    @JsonIgnore
     private boolean deleted;
     @OneToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+//    @JsonBackReference
+//    @JsonManagedReference
+    @JsonIgnoreProperties("employee")
+    @JsonIgnore
     private User user;
     @ManyToOne
     @JoinColumn(name = "location_id")
+//    @JsonBackReference
     @JsonManagedReference
+//    @JsonIgnoreProperties("employees")
     private Location location;
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
-    @JsonBackReference
+//    @JsonBackReference
+//    @JsonManagedReference
+    @JsonIgnoreProperties("employee")
     private Set<Skill> skills = Collections.emptySet();
-
 }

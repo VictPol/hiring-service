@@ -1,5 +1,6 @@
-package com.hirix.controller.requests;
+package com.hirix.controller.requests.update;
 
+import com.hirix.controller.requests.create.UserCreateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

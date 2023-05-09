@@ -2,6 +2,7 @@ package com.hirix.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -50,7 +51,7 @@ public class Skill {
     @Column
     private Integer experience;
     @Column(name = "is_active")
-    private boolean active;
+    private boolean active = true;
     @Column
     private Integer recommendations;
     @Column
@@ -64,40 +65,59 @@ public class Skill {
     @Column(name = "term_max")
     private Integer termMax;
     @Column
+    @JsonIgnore
     private Timestamp created;
     @Column
+    @JsonIgnore
     private Timestamp changed;
     @Column(name = "is_deleted")
+    @JsonIgnore
     private boolean deleted;
     @ManyToOne
     @JoinColumn(name = "employee_id")
-    @JsonManagedReference
+//    @JsonBackReference
+//    @JsonManagedReference
+    @JsonIgnoreProperties("skills")
     private Employee employee;
     @ManyToOne
     @JoinColumn(name = "industry_id")
+//    @JsonBackReference
     @JsonManagedReference
+//    @JsonIgnoreProperties("skills")
     private Industry industry;
     @ManyToOne
     @JoinColumn(name = "profession_id")
+//    @JsonBackReference
     @JsonManagedReference
+//    @JsonIgnoreProperties("skills")
     private Profession profession;
     @ManyToOne
     @JoinColumn(name = "specialization_id")
+//    @JsonBackReference
     @JsonManagedReference
+//    @JsonIgnoreProperties("skills")
     private Specialization specialization;
     @ManyToOne
     @JoinColumn(name = "rank_id")
+//    @JsonBackReference
     @JsonManagedReference
+//    @JsonIgnoreProperties("skills")
     private Rank rank;
     @ManyToOne
     @JoinColumn(name = "position_id")
+//    @JsonBackReference
     @JsonManagedReference
+//    @JsonIgnoreProperties("skills")
     private Position position;
     @ManyToMany(mappedBy = "skills", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
+//    @JsonBackReference
+//    @JsonIgnoreProperties("skills")
     private Set<Location> locationsDesired = Collections.emptySet();
     @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
-    @JsonBackReference
+//    @JsonBackReference
+//    @JsonManagedReference
+    @JsonIgnoreProperties("skill")
     private Set<Offer> offers = Collections.emptySet();
 
 }

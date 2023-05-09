@@ -1,6 +1,9 @@
 package com.hirix.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -9,8 +12,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,12 +47,16 @@ public class Role {
     @Column (name = "role_name")
     private String roleName;
     @Column
+    @JsonIgnore
     private Timestamp created;
     @Column
+    @JsonIgnore
     private Timestamp changed;
     @Column (name = "is_deleted")
+    @JsonIgnore
     private boolean deleted;
     @Column (name = "is_visible")
+    @JsonIgnore
     private boolean visible = true;
 
     @ManyToMany
@@ -55,6 +64,9 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+//    @JsonManagedReference
+//    @JsonBackReference
     @JsonIgnoreProperties("roles")
+    @JsonIgnore
     private Set<User> users = Collections.emptySet();
 }

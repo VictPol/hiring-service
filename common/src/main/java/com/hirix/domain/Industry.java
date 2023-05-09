@@ -1,6 +1,9 @@
 package com.hirix.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -28,10 +31,10 @@ import java.util.Set;
 @Setter
 @Getter
 @EqualsAndHashCode(exclude = {
-        "skills"
+        "skills", "requirements"
 })
 @ToString(exclude = {
-        "skills"
+        "skills", "requirements"
 })
 @Entity
 @Table(name = "industries")
@@ -39,17 +42,28 @@ public class Industry {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "industry_name")
+    private String industryName;
     @Column
-    private String industry;
-    @Column
+    @JsonIgnore
     private Timestamp created;
     @Column
+    @JsonIgnore
     private Timestamp changed;
     @Column(name = "is_deleted")
+    @JsonIgnore
     private boolean deleted;
     @Column(name = "is_visible")
+    @JsonIgnore
     private boolean visible;
     @OneToMany(mappedBy = "industry", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
+//    @JsonManagedReference
     @JsonBackReference
+//    @JsonIgnoreProperties("industry")
     private Set<Skill> skills = Collections.emptySet();
+    @OneToMany(mappedBy = "industry", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
+    //    @JsonManagedReference
+    @JsonBackReference
+//    @JsonIgnoreProperties("industry")
+    private Set<Requirement> requirements = Collections.emptySet();
 }

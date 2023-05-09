@@ -1,4 +1,4 @@
-package com.hirix.controller.requests;
+package com.hirix.controller.requests.create;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

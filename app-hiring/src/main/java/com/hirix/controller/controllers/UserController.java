@@ -1,9 +1,8 @@
 package com.hirix.controller.controllers;
 
 
-import com.hirix.controller.requests.RoleCreateRequest;
-import com.hirix.controller.requests.UserCreateRequest;
-import com.hirix.controller.requests.UserUpdateRequest;
+import com.hirix.controller.requests.create.UserCreateRequest;
+import com.hirix.controller.requests.update.UserUpdateRequest;
 import com.hirix.repository.RoleRepository;
 import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +66,18 @@ public class UserController {
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
-        user.setCreated(Timestamp.valueOf(request.getCreated()));
-        user.setChanged(Timestamp.valueOf(request.getChanged()));
+        user.setCreated(request.getCreated());
+        user.setChanged(request.getChanged());
+//        user.setCreated(Timestamp.valueOf(request.getCreated()));
+//        user.setChanged(Timestamp.valueOf(request.getChanged()));
+//        user.setRoles(request.getRoles());
+//        user.setRoles(Collections.singleton(roleRepository.findRoleByRoleName("ROLE_USER").get()));
+//        Role role = new Role();
+//        role.setRoleName("ROLE_MODERATOR");
+//        role.setCreated(request.getCreated());
+//        role.setChanged(request.getChanged());
+//        Set<Role> roles = Collections.singleton(role);
+//        user.setRoles(roles);
         user = userRepository.save(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
@@ -82,7 +90,8 @@ public class UserController {
         User user = userRepository.findById(request.getId()).get();
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
-        user.setChanged(Timestamp.valueOf(request.getChanged()));
+        user.setChanged(request.getChanged());
+//        user.setChanged(Timestamp.valueOf(request.getChanged()));
         user = userRepository.save(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }

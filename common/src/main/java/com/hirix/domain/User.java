@@ -1,5 +1,7 @@
 package com.hirix.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -45,14 +47,19 @@ public class User {
     @Column
     private String email;
     @Column
+    @JsonIgnore
     private String password;
     @Column
+    @JsonIgnore
     private Timestamp created;
     @Column
+    @JsonIgnore
     private Timestamp changed;
     @Column (name = "is_deleted")
+    @JsonIgnore
     private boolean isDeleted;
     @Column (name = "is_visible")
+    @JsonIgnore
     private boolean isVisible;
     @Column (name = "is_locked")
     private boolean isLocked;
@@ -64,12 +71,18 @@ public class User {
 //    private Timestamp expired;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
-    @JsonManagedReference
+//    @JsonManagedReference
+//    @JsonBackReference
+    @JsonIgnoreProperties("user")
     private Employee employee;
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
-    @JsonManagedReference
+//    @JsonManagedReference
+//    @JsonBackReference
+    @JsonIgnoreProperties("user")
     private Company company;
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JsonManagedReference
+//    @JsonBackReference
     @JsonIgnoreProperties("users")
     private Set<Role> roles = Collections.emptySet();
 
