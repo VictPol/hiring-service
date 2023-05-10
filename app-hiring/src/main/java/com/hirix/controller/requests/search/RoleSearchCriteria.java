@@ -11,9 +11,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class EmployeeSearchCriteria {
+public class RoleSearchCriteria {
     private String query;
-    private String birthday;
+//    private String birthday;
 
     @Override
     public String toString() {

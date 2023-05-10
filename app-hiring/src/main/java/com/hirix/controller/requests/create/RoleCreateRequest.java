@@ -11,8 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RoleCreateRequest {
     private String roleName;
-
-    private String created;
-
-    private String changed;
+//    private String created;
+//    private String changed;
 }

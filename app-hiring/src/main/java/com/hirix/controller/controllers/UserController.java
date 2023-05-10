@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -41,31 +43,36 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        Optional<User> user = userRepository.findById(id);
-        return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        Optional<User> optionalUser = userRepository.findById(id);
+        User user = optionalUser.get();
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        Optional<User> user = userRepository.findByEmail(email);
-        return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        User user = optionalUser.get();
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/role/{role_name}")
-    public ResponseEntity<Map<String, Set<User>>> getUsersByRoleName(@PathVariable ("role_name") String roleName) {
-        Optional<Role> role = roleRepository.findRoleByRoleName(roleName);
-        Set<User> users = role.get().getUsers();
+    @GetMapping("/role/{ROLE_NAME}")
+    public ResponseEntity<Map<String, Set<User>>> getUsersByRoleName(@PathVariable ("ROLE_NAME") String roleName) {
+        Optional<Role> optionalRole = roleRepository.findRoleByRoleName(roleName);
+        Role role = optionalRole.get();
+        Set<User> users = role.getUsers();
         return new ResponseEntity<>(Collections.singletonMap(roleName, users), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<User> saveUser(@RequestBody UserCreateRequest request) {
+    public ResponseEntity<User> createUser(@RequestBody UserCreateRequest request) {
 //        if (result.hasErrors()) {
 //            throw new IllegalRequestException(result);
 //        }
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
+//        role.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+//        role.setChanged(Timestamp.valueOf(LocalDateTime.now()));
         user.setCreated(request.getCreated());
         user.setChanged(request.getChanged());
 //        user.setCreated(Timestamp.valueOf(request.getCreated()));

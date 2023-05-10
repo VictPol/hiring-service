@@ -51,7 +51,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Map<String, List<Employee>>> searchEmployeesByFullNameAndBirthdayAfter
+    public ResponseEntity<Map<String, List<Employee>>> searchEmployeesByFullNameLikeAndBirthdayAfter
             (@ModelAttribute EmployeeSearchCriteria criteria) {
         Timestamp birthday = Timestamp.valueOf(criteria.getBirthday());
         List<Employee> employees = employeeRepository.findEmployeesByFullNameLikeAndBirthdayAfter
@@ -60,7 +60,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<Employee> saveEmployee(@RequestBody EmployeeCreateRequest request) {
+    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeCreateRequest request) {
 //        if (result.hasErrors()) {
 //            throw new IllegalRequestException(result);
 //        }
