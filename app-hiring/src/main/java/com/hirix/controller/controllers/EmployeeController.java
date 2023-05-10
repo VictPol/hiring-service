@@ -76,11 +76,11 @@ public class EmployeeController {
 //        employee.setUser(user);
         Location location = locationRepository.findById(3L).get();
         employee.setLocation(location);
-        User user = new User();
-        user.setEmail(request.getUser().getEmail());
-        user.setPassword(request.getUser().getPassword());
-        user.setCreated(request.getUser().getCreated());
-        user.setChanged(request.getUser().getChanged());
+        User user = userRepository.findById(16L).get();
+//        user.setEmail(request.getUser().getEmail());
+//        user.setPassword(request.getUser().getPassword());
+//        user.setCreated(request.getUser().getCreated());
+//        user.setChanged(request.getUser().getChanged());
         user = userRepository.save(user);
         employee.setUser(user);
         employee = employeeRepository.save(employee);

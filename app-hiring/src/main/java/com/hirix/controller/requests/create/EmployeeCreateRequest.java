@@ -20,7 +20,7 @@ public class EmployeeCreateRequest {
     private Timestamp created;
     private Timestamp changed;
     private boolean deleted;
-    private UserCreateRequest user;
+//    private UserCreateRequest user;
 //    private Location location;
 //    private Set<Skill> skills = Collections.emptySet();
 }

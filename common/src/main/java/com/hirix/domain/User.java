@@ -49,6 +49,8 @@ public class User {
     @Column
     @JsonIgnore
     private String password;
+    @Column(name = "nick_name")
+    private String nickName;
     @Column
     @JsonIgnore
     private Timestamp created;

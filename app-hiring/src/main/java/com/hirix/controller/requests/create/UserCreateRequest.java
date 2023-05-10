@@ -16,7 +16,8 @@ import java.util.Set;
 public class UserCreateRequest {
     private String email;
     private String password;
-    private Timestamp created;
-    private Timestamp changed;
+    private String nickName;
+//    private Timestamp created;
+//    private Timestamp changed;
 //    private Set<Role> roles;
 }

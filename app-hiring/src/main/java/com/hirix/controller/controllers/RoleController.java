@@ -70,8 +70,6 @@ public class RoleController {
         role.setRoleName(request.getRoleName());
         role.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         role.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-//        role.setCreated(Timestamp.valueOf(request.getCreated()));
-//        role.setChanged(Timestamp.valueOf(request.getChanged()));
         role = roleRepository.save(role);
         return new ResponseEntity<>(role, HttpStatus.CREATED);
     }
@@ -85,7 +83,6 @@ public class RoleController {
         Role role = optionalRole.get();
         role.setRoleName(request.getRoleName());
         role.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-//        role.setChanged(Timestamp.valueOf(request.getChanged()));
         role = roleRepository.save(role);
         return new ResponseEntity<>(role, HttpStatus.OK);
     }
