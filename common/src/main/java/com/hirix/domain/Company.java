@@ -46,9 +46,9 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "full_title")
-    private String fullName;
+    private String fullTitle;
     @Column(name = "short_title")
-    private String shortName;
+    private String shortTitle;
     @Column(name = "reg_number")
     private String regNumber;
     @Column(name = "org_type")
