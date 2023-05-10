@@ -11,7 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class EmployeeSearchCriteria {
+public class CompanySearchCriteria {
     private String query;
 
     @Override

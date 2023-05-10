@@ -99,7 +99,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PatchMapping("/nick_name/{id}/{nick_name}")
+    @PatchMapping("/update_nick_name/{id}/{nick_name}")
     public ResponseEntity<User> updateUserNickName(@PathVariable Long id, @PathVariable(name = "nick_name") String nickName) {
 //        if (result.hasErrors()) {
 //            throw new IllegalRequestException(result);
