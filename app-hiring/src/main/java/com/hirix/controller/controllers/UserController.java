@@ -3,6 +3,8 @@ package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.UserCreateRequest;
 import com.hirix.controller.requests.update.UserUpdateRequest;
+import com.hirix.domain.LinkUsersRoles;
+import com.hirix.repository.LinkUsersRolesRepository;
 import com.hirix.repository.RoleRepository;
 import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ import com.hirix.domain.Role;
 public class UserController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final LinkUsersRolesRepository linkUsersRolesRepository;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
@@ -118,6 +121,20 @@ public class UserController {
         User user = optionalUser.get();
         userRepository.delete(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @PutMapping("/add_role/{user_id}/{role_id}")
+    public ResponseEntity<LinkUsersRoles> addRoleToUser(@PathVariable Long user_id, @PathVariable Long role_id) {
+//        if (result.hasErrors()) {
+//            throw new IllegalRequestException(result);
+//        }
+        LinkUsersRoles link = new LinkUsersRoles();
+        link.setUserId(user_id);
+        link.setRoleId(role_id);
+        link.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+        link.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+        link = linkUsersRolesRepository.save(link);
+        return new ResponseEntity<>(link, HttpStatus.CREATED);
     }
 
 }

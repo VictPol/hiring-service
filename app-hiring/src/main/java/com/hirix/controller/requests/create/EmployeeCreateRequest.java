@@ -13,13 +13,16 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class EmployeeCreateRequest {
     private String fullName;
-    private Timestamp birthday;
+    private String birthday;
     private String education;
     private String health;
     private String gender;
-    private Timestamp created;
-    private Timestamp changed;
-    private boolean deleted;
+    private Long userId;
+    private Long locationId;
+
+//    private Timestamp created;
+//    private Timestamp changed;
+//    private boolean deleted;
 //    private UserCreateRequest user;
 //    private Location location;
 //    private Set<Skill> skills = Collections.emptySet();

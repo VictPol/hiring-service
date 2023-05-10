@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -66,23 +67,18 @@ public class EmployeeController {
 //        }
         Employee employee = new Employee();
         employee.setFullName(request.getFullName());
-        employee.setBirthday(request.getBirthday());
+        employee.setBirthday(Timestamp.valueOf(request.getBirthday()));
         employee.setEducation(Education.valueOf(request.getEducation()));
         employee.setHealth(Health.valueOf(request.getHealth()));
         employee.setGender(Gender.valueOf(request.getGender()));
-        employee.setCreated(request.getCreated());
-        employee.setChanged(request.getChanged());
-//        User user = userRepository.findById(16L).get();
-//        employee.setUser(user);
-        Location location = locationRepository.findById(3L).get();
-        employee.setLocation(location);
-        User user = userRepository.findById(16L).get();
-//        user.setEmail(request.getUser().getEmail());
-//        user.setPassword(request.getUser().getPassword());
-//        user.setCreated(request.getUser().getCreated());
-//        user.setChanged(request.getUser().getChanged());
-        user = userRepository.save(user);
+        employee.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+        employee.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+        Optional<User> optionalUser = userRepository.findById(request.getUserId());
+        User user = optionalUser.get();
         employee.setUser(user);
+        Optional<Location> optionalLocation = locationRepository.findById(request.getLocationId());
+        Location location = optionalLocation.get();
+        employee.setLocation(location);
         employee = employeeRepository.save(employee);
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }

@@ -67,6 +67,6 @@ public class Role {
 //    @JsonManagedReference
 //    @JsonBackReference
     @JsonIgnoreProperties("roles")
-    @JsonIgnore
+//    @JsonIgnore
     private Set<User> users = Collections.emptySet();
 }
