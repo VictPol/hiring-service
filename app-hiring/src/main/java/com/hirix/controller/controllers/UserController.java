@@ -123,7 +123,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PutMapping("/add_role/{user_id}/{role_id}")
+    @PostMapping("/add_role/{user_id}/{role_id}")
     public ResponseEntity<LinkUsersRoles> addRoleToUser(@PathVariable Long user_id, @PathVariable Long role_id) {
 //        if (result.hasErrors()) {
 //            throw new IllegalRequestException(result);

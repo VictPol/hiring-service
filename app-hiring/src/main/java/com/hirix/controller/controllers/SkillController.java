@@ -8,6 +8,8 @@ import com.hirix.controller.requests.update.SkillUpdateRequest;
 import com.hirix.domain.Company;
 import com.hirix.domain.Employee;
 import com.hirix.domain.Industry;
+import com.hirix.domain.LinkSkillsLocations;
+import com.hirix.domain.LinkUsersRoles;
 import com.hirix.domain.Location;
 import com.hirix.domain.Position;
 import com.hirix.domain.Profession;
@@ -17,6 +19,7 @@ import com.hirix.domain.Specialization;
 import com.hirix.domain.User;
 import com.hirix.repository.EmployeeRepository;
 import com.hirix.repository.IndustryRepository;
+import com.hirix.repository.LinkSkillsLocationsRepository;
 import com.hirix.repository.PositionRepository;
 import com.hirix.repository.ProfessionRepository;
 import com.hirix.repository.RankRepository;
@@ -53,6 +56,7 @@ public class SkillController {
     private final SpecializationRepository specializationRepository;
     private final RankRepository rankRepository;
     private final PositionRepository positionRepository;
+    private final LinkSkillsLocationsRepository linkSkillsLocationsRepository;
 
     @GetMapping
     public ResponseEntity<List<Skill>> getAllSkills() {
@@ -160,6 +164,21 @@ public class SkillController {
         Skill skill = optionalSkill.get();
         skillRepository.delete(skill);
         return new ResponseEntity<>(skill, HttpStatus.OK);
+    }
+
+    @PostMapping("/add_location/{skill_id}/{location_id}")
+    public ResponseEntity<LinkSkillsLocations> addLocationToSkill
+            (@PathVariable Long skill_id, @PathVariable Long location_id) {
+//        if (result.hasErrors()) {
+//            throw new IllegalRequestException(result);
+//        }
+        LinkSkillsLocations link = new LinkSkillsLocations();
+        link.setSkillId(skill_id);
+        link.setLocationId(location_id);
+        link.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+        link.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+        link = linkSkillsLocationsRepository.save(link);
+        return new ResponseEntity<>(link, HttpStatus.CREATED);
     }
 
 }
