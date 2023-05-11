@@ -7,8 +7,8 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
-    List<Employee> findEmployeesByFullNameLike(String fullName);
-    List<Employee> findEmployeesByFullNameLikeAndBirthdayAfter(String fullName, Timestamp birthday);
+    List<Employee> findEmployeesByFullNameLike(String query);
+    List<Employee> findEmployeesByFullNameLikeAndBirthdayAfter(String query, Timestamp birthday);
 
 
 }
