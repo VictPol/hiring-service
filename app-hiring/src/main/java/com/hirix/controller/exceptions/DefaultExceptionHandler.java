@@ -5,7 +5,7 @@ import com.hirix.exception.ErrorMessage;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.LongNumberFormatException;
 import com.hirix.exception.NoReplyFromThisResource;
-import com.hirix.exception.PoorInfoInRequestToCreateEntity;
+import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -33,8 +33,8 @@ public class DefaultExceptionHandler {
     private static final Logger log = Logger.getLogger(DefaultExceptionHandler.class);
 //    private final RandomValuesGenerator generator;
 
-    @ExceptionHandler(PoorInfoInRequestToCreateEntity.class)
-    public ResponseEntity<ErrorMessage> handlePoorInfoInRequestToCreateEntity(PoorInfoInRequestToCreateEntity e) {
+    @ExceptionHandler(PoorInfoInRequestToCreateUpdateEntity.class)
+    public ResponseEntity<ErrorMessage> handlePoorInfoInRequestToCreateUpdateEntity(PoorInfoInRequestToCreateUpdateEntity e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
         log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
         return new ResponseEntity<>(
