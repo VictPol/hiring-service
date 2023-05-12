@@ -7,8 +7,8 @@ import com.hirix.domain.Company;
 import com.hirix.domain.Location;
 import com.hirix.domain.User;
 import com.hirix.exception.LongNumberFormatException;
-import com.hirix.exception.NoReplyFromThisResource;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
+import com.hirix.exception.SomeRuntimeException;
 import com.hirix.repository.CompanyRepository;
 import com.hirix.repository.LocationRepository;
 import com.hirix.repository.UserRepository;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -47,7 +48,7 @@ public class CompanyController {
         try {
             companies = companyRepository.findAll();
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource("Companies not found. No reply from required resource \"/companies\", ", e.getCause());
+            throw new SomeRuntimeException("Can not get companies from required resource \'/rest/companies\', ", e.getCause());
         }
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
@@ -58,17 +59,16 @@ public class CompanyController {
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new LongNumberFormatException("Bad information about company id in resource \"/companies/{id}\". " +
-                    "Must be Long type");
+            throw new LongNumberFormatException("Bad company {id} in resource \'/rest/companies/{id}\'. Must be Long type");
         }
         Optional<Company> optionalCompany;
         try {
             optionalCompany = companyRepository.findById(parsedId);
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("Company not found. No reply from required resource \"/companies/{id}\", ", e.getCause());
+            throw new SomeRuntimeException
+                    ("Can not get company by id from from required resource \'/rest/companies/{id}\', ", e.getCause());
         }
-        Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such was found"));
+        Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id was found"));
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
@@ -79,8 +79,8 @@ public class CompanyController {
         try {
             companies = companyRepository.findCompaniesByFullTitleLike("%" + criteria.getQuery() + "%");
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("Companies not found. No reply from required resource \"/search?\"" + criteria.getQuery() + ", ", e.getCause());
+            throw new SomeRuntimeException
+                    ("Can not search companies from required resource \'/rest/companies/search\'" + criteria.getQuery() + ", ", e.getCause());
         }
         return new ResponseEntity<>(Collections.singletonMap("companies", companies), HttpStatus.OK);
     }
@@ -112,8 +112,6 @@ public class CompanyController {
             company.setShortTitle(request.getShortTitle());
             company.setRegNumber(request.getRegNumber());
             company.setOrgType(request.getOrgType());
-            userId = request.getUserId();
-            locationId = request.getLocationId();
         } catch (RuntimeException e) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company", e.getCause());
         }
@@ -123,25 +121,27 @@ public class CompanyController {
         try {
             optionalUser = userRepository.findById(userId);
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("User needed to create company no found. No reply from required resource \"/companies\", ", e.getCause());
+            throw new SomeRuntimeException("Can not get user by id from DB, ", e.getCause());
         }
         User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id was found"));
-        company.setUser(user);
+        if (user.getCompany().getId() < 1L) {
+            company.setUser(user);
+        } else {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Can not create company, because company with such user exists yet");
+        }
         Optional<Location> optionalLocation;
         try {
             optionalLocation = locationRepository.findById(locationId);
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("Location needed to create company no found. No reply from required resource \"/companies\", ", e.getCause());
+            throw new SomeRuntimeException("Can not get location by id from DB, ", e.getCause());
         }
         Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id was found"));
         company.setLocation(location);
         try {
             company = companyRepository.save(company);
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("Company had not been saved. No reply from required resource \"/companies\", ", e.getCause());
+            throw new SomeRuntimeException("Company has not created and saved to DB, ", e.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
@@ -163,8 +163,7 @@ public class CompanyController {
         try {
             optionalCompany = companyRepository.findById(id);
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("Company to be updated not found. No reply from required resource \"/companies\", ", e.getCause());
+            throw new SomeRuntimeException("Can not get company by id from DB, ", e.getCause());
         }
         Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id was found"));
         try {
@@ -192,16 +191,15 @@ public class CompanyController {
         try {
             optionalLocation = locationRepository.findById(locationId);
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("Location needed to update company no found. No reply from required resource \"/companies\", ", e.getCause());
+            throw new SomeRuntimeException("Can not get location by id from DB, ", e.getCause());
         }
         Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id was found"));
         company.setLocation(location);
         try {
             company = companyRepository.save(company);
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("Company had not been saved. No answer from required resource \"/companies\", ", e.getCause());
+            throw new SomeRuntimeException
+                    ("Company has not been updated saved to DB, ", e.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
@@ -215,23 +213,21 @@ public class CompanyController {
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new LongNumberFormatException("Bad information about company id in resource \"/companies/{id}\". " +
+            throw new LongNumberFormatException("Bad information about company id in resource \'/rest/companies/{id}\'. " +
                     "Must be Long type");
         }
         Optional<Company> optionalCompany;
         try {
             optionalCompany = companyRepository.findById(parsedId);
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("Company to be deleted not found. No reply from required resource \"/companies\", ", e.getCause());
+            throw new SomeRuntimeException("Can not get company to be deleted from DB, ", e.getCause());
         }
         Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id was found"));
 
         try {
             companyRepository.delete(company);
         } catch (RuntimeException e) {
-            throw new NoReplyFromThisResource
-                    ("Company not deleted. No reply from required resource \"/companies\", ", e.getCause());
+            throw new SomeRuntimeException("Company has not been deleted, ", e.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.OK);
     }

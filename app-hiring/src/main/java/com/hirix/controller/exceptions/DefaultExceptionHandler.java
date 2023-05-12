@@ -4,8 +4,9 @@ package com.hirix.controller.exceptions;
 import com.hirix.exception.ErrorMessage;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.LongNumberFormatException;
-import com.hirix.exception.NoReplyFromThisResource;
+import com.hirix.exception.NoSuchElementFoundException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
+import com.hirix.exception.SomeRuntimeException;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -20,12 +21,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.hirix.exception.ApplicationErrorCodes.BAD_REQUEST_USER_CREATE;
+import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_FOUND_OR_NOT_SAVED;
 import static com.hirix.exception.ApplicationErrorCodes.FATAL_ERROR;
 import static com.hirix.exception.ApplicationErrorCodes.ID_IS_NOT_LONG;
 import static com.hirix.exception.ApplicationErrorCodes.NO_ENTITY_WITH_SUCH_ID;
-import static com.hirix.exception.ApplicationErrorCodes.NO_REPLY_FROM_THIS_RESOURCE;
-import static com.hirix.exception.ApplicationErrorCodes.POOR_INFORMATION_TO_CREATE_ENTITY;
-import static com.hirix.exception.ApplicationErrorCodes.USER_NOT_FOUND;
+import static com.hirix.exception.ApplicationErrorCodes.POOR_INFORMATION_TO_CREATE_UPDATE_ENTITY;
+import static com.hirix.exception.ApplicationErrorCodes.SOME_RUNTIME_EXCEPTION;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
-                        POOR_INFORMATION_TO_CREATE_ENTITY.getCodeId(),
+                        POOR_INFORMATION_TO_CREATE_UPDATE_ENTITY.getCodeId(),
                         e.getMessage()
                 ),
                 HttpStatus.BAD_REQUEST);
@@ -56,11 +57,11 @@ public class DefaultExceptionHandler {
                         NO_ENTITY_WITH_SUCH_ID.getCodeId(),
                         e.getMessage()
                 ),
-                HttpStatus.NO_CONTENT);
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(LongNumberFormatException.class)
-    public ResponseEntity<ErrorMessage> handleLongNumberFormatException(NumberFormatException e) {
+    public ResponseEntity<ErrorMessage> handleLongNumberFormatException(LongNumberFormatException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
         log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
         return new ResponseEntity<>(
@@ -72,17 +73,18 @@ public class DefaultExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
-@ExceptionHandler(NoReplyFromThisResource.class)
-public ResponseEntity<ErrorMessage> handleNoReplyFromThisResource(NoReplyFromThisResource e) {
+@ExceptionHandler(SomeRuntimeException.class)
+public ResponseEntity<ErrorMessage> handleSomeRuntimeException(SomeRuntimeException e) {
     String exceptionUniqueId = UUID.randomUUID().toString();
     log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
     return new ResponseEntity<>(
             new ErrorMessage(
                     exceptionUniqueId,
-                    NO_REPLY_FROM_THIS_RESOURCE.getCodeId(),
+                    ENTITY_NOT_FOUND_OR_NOT_SAVED.getCodeId(),
+//                    SOME_RUNTIME_EXCEPTION.getCodeId(),
                     e.getMessage()
             ),
-            HttpStatus.INTERNAL_SERVER_ERROR);
+            HttpStatus.UNPROCESSABLE_ENTITY);
 }
 
     @ExceptionHandler(IllegalRequestException.class)
@@ -120,7 +122,7 @@ public ResponseEntity<ErrorMessage> handleNoReplyFromThisResource(NoReplyFromThi
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
-                        USER_NOT_FOUND.getCodeId(),
+                        SOME_RUNTIME_EXCEPTION.getCodeId(),
                         e.getMessage()
                 ),
                 HttpStatus.INTERNAL_SERVER_ERROR);
