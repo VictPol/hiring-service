@@ -12,6 +12,9 @@ import com.hirix.domain.User;
 import com.hirix.domain.enums.Education;
 import com.hirix.domain.enums.Gender;
 import com.hirix.domain.enums.Health;
+import com.hirix.exception.LongNumberFormatException;
+import com.hirix.exception.NoReplyFromThisResource;
+import com.hirix.exception.PoorInfoInRequestToCreateEntity;
 import com.hirix.repository.CompanyRepository;
 import com.hirix.repository.LocationRepository;
 import com.hirix.repository.UserRepository;
@@ -33,6 +36,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -45,21 +49,44 @@ public class CompanyController {
 
     @GetMapping
     public ResponseEntity<List<Company>> getAllCompanies() {
-        List<Company> companies = companyRepository.findAll();
+        List<Company> companies;
+        try {
+            companies = companyRepository.findAll();
+        } catch (RuntimeException e) {
+            throw new NoReplyFromThisResource("No answer from required resource \"/companies\", ", e.getCause());
+        }
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Company> getCompanyById(@PathVariable String id) {
-        Long parsedId = Long.parseLong(id);
-        Optional<Company> company = companyRepository.findById(parsedId);
-        return new ResponseEntity<>(company.get(), HttpStatus.OK);
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new LongNumberFormatException("Parameter of company \"id\" must be of Long format");
+        }
+        Optional<Company> optionalCompany;
+        try {
+            optionalCompany = companyRepository.findById(parsedId);
+        } catch (RuntimeException e) {
+            throw new NoReplyFromThisResource
+                ("No answer from required resource \"/companies/{id}\", ", e.getCause());
+        }
+        Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such was found"));
+        return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, List<Company>>> searchCompaniesByFullTitleLike
             (@ModelAttribute CompanySearchCriteria criteria) {
-        List<Company> companies = companyRepository.findCompaniesByFullTitleLike("%" + criteria.getQuery() + "%");
+        List<Company> companies;
+        try {
+            companies = companyRepository.findCompaniesByFullTitleLike("%" + criteria.getQuery() + "%");
+        } catch (RuntimeException e) {
+            throw new NoReplyFromThisResource
+                ("No answer from required resource \"/search?\"" + criteria.getQuery() + ", ", e.getCause());
+        }
         return new ResponseEntity<>(Collections.singletonMap("companies", companies), HttpStatus.OK);
     }
 
@@ -69,19 +96,32 @@ public class CompanyController {
 //            throw new IllegalRequestException(result);
 //        }
         Company company = new Company();
-        company.setFullTitle(request.getFullTitle());
-        company.setShortTitle(request.getShortTitle());
-        company.setRegNumber(request.getRegNumber());
-        company.setOrgType(request.getOrgType());
+        Long userId;
+        Long locationId;
+        try {
+            company.setFullTitle(request.getFullTitle());
+            company.setShortTitle(request.getShortTitle());
+            company.setRegNumber(request.getRegNumber());
+            company.setOrgType(request.getOrgType());
+            userId = request.getUserId();
+            locationId = request.getLocationId();
+        } catch (RuntimeException e) {
+            throw new PoorInfoInRequestToCreateEntity("Poor information in request to create company", e.getCause());
+        }
         company.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        Optional<User> optionalUser = userRepository.findById(request.getUserId());
-        User user = optionalUser.get();
+        Optional<User> optionalUser = userRepository.findById(userId);
+        User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id was found"));
         company.setUser(user);
-        Optional<Location> optionalLocation = locationRepository.findById(request.getLocationId());
-        Location location = optionalLocation.get();
+        Optional<Location> optionalLocation = locationRepository.findById(locationId);
+        Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id was found"));
         company.setLocation(location);
-        company = companyRepository.save(company);
+        try {
+            company = companyRepository.save(company);
+        } catch (RuntimeException e) {
+            throw new NoReplyFromThisResource
+                ("Company had not been saved. No answer from required resource \"/companies\", ", e.getCause());
+        }
         return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
 
