@@ -1,9 +1,11 @@
 package com.hirix.controller.exceptions;
 
 
+import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
+import com.hirix.exception.EntityNotDeletedException;
+import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.ErrorMessage;
 import com.hirix.exception.IllegalRequestException;
-import com.hirix.exception.LongNumberFormatException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
 
 import static com.hirix.exception.ApplicationErrorCodes.BAD_ARGUMENTS_IN_SEARCH_PATH;
 import static com.hirix.exception.ApplicationErrorCodes.BAD_REQUEST_USER_CREATE;
+import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_CREATED_OR_NOT_UPDATED;
+import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_DELETED;
+import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_FOUND;
 import static com.hirix.exception.ApplicationErrorCodes.FATAL_ERROR;
 import static com.hirix.exception.ApplicationErrorCodes.ID_IS_NOT_LONG;
 import static com.hirix.exception.ApplicationErrorCodes.NO_ENTITY_WITH_SUCH_ID;
@@ -58,6 +63,19 @@ public class DefaultExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorMessage> handleEntityNotFoundException(EntityNotFoundException e) {
+        String exceptionUniqueId = UUID.randomUUID().toString();
+        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        return new ResponseEntity<>(
+                new ErrorMessage(
+                        exceptionUniqueId,
+                        ENTITY_NOT_FOUND.getCodeId(),
+                        e.getMessage()
+                ),
+                HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorMessage> handleNoSuchElementException(NoSuchElementException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
@@ -69,6 +87,32 @@ public class DefaultExceptionHandler {
                         e.getMessage()
                 ),
                 HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EntityNotCreatedOrNotUpdatedException.class)
+    public ResponseEntity<ErrorMessage> handleEntityNotCreatedOrNotUpdatedException(EntityNotCreatedOrNotUpdatedException e) {
+        String exceptionUniqueId = UUID.randomUUID().toString();
+        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        return new ResponseEntity<>(
+                new ErrorMessage(
+                        exceptionUniqueId,
+                        ENTITY_NOT_CREATED_OR_NOT_UPDATED.getCodeId(),
+                        e.getMessage()
+                ),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(EntityNotDeletedException.class)
+    public ResponseEntity<ErrorMessage> handleEntityNotDeletedException(EntityNotDeletedException e) {
+        String exceptionUniqueId = UUID.randomUUID().toString();
+        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        return new ResponseEntity<>(
+                new ErrorMessage(
+                        exceptionUniqueId,
+                        ENTITY_NOT_DELETED.getCodeId(),
+                        e.getMessage()
+                ),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(NumberFormatException.class)
