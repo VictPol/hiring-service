@@ -3,7 +3,9 @@ package com.hirix.exception;
 public enum ApplicationErrorCodes {
     SQL_ERROR(11),
     BAD_REQUEST_USER_CREATE(66),
+    BAD_ARGUMENTS_IN_SEARCH_PATH(67),
     ENTITY_NOT_FOUND_OR_NOT_SAVED(44),
+    SOME_EXCEPTION(21),
     SOME_RUNTIME_EXCEPTION(22),
     ID_IS_NOT_LONG(33),
     NO_ENTITY_WITH_SUCH_ID(55),

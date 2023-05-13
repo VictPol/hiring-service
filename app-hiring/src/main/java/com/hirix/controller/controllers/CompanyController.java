@@ -8,7 +8,6 @@ import com.hirix.domain.Location;
 import com.hirix.domain.User;
 import com.hirix.exception.LongNumberFormatException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
-import com.hirix.exception.SomeRuntimeException;
 import com.hirix.repository.CompanyRepository;
 import com.hirix.repository.LocationRepository;
 import com.hirix.repository.UserRepository;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -43,30 +41,35 @@ public class CompanyController {
     private final LocationRepository locationRepository;
 
     @GetMapping
-    public ResponseEntity<List<Company>> getAllCompanies() {
+    public ResponseEntity<List<Company>> getAllCompanies() throws Exception {
         List<Company> companies;
         try {
             companies = companyRepository.findAll();
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException("Can not get companies from required resource \'/rest/companies\', ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException("Can not get companies from required resource \'/rest/companies\', ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception("Can not get companies from required resource \'/rest/companies\', ", exception.getCause());
         }
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getCompanyById(@PathVariable String id) {
+    public ResponseEntity<Company> getCompanyById(@PathVariable String id) throws Exception {
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new LongNumberFormatException("Bad company {id} in resource \'/rest/companies/{id}\'. Must be Long type");
+            throw new NumberFormatException("Bad company {id} in resource \'/rest/companies/{id}\'. Must be Long type");
         }
         Optional<Company> optionalCompany;
         try {
             optionalCompany = companyRepository.findById(parsedId);
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException
-                    ("Can not get company by id from from required resource \'/rest/companies/{id}\', ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException
+                ("Can not get company by id from from required resource \'/rest/companies/{id}\', ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception
+                ("Can not get company by id from from required resource \'/rest/companies/{id}\', ", exception.getCause());
         }
         Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id was found"));
         return new ResponseEntity<>(company, HttpStatus.OK);
@@ -74,19 +77,26 @@ public class CompanyController {
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, List<Company>>> searchCompaniesByFullTitleLike
-            (@ModelAttribute CompanySearchCriteria criteria) {
+            (@ModelAttribute CompanySearchCriteria criteria) throws Exception {
         List<Company> companies;
+        String query = criteria.getQuery();
+        if (query == null) {
+            throw new IllegalArgumentException("Bad argument in search line, must be: \'search?query=word_like_full_company_title\'");
+        }
         try {
-            companies = companyRepository.findCompaniesByFullTitleLike("%" + criteria.getQuery() + "%");
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException
-                    ("Can not search companies from required resource \'/rest/companies/search\'" + criteria.getQuery() + ", ", e.getCause());
+            companies = companyRepository.findCompaniesByFullTitleLike("%" + query + "%");
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException
+                    ("Can not search companies from required resource \'/rest/companies/search\'" + criteria.getQuery() + ", ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception
+                    ("Can not search companies from required resource \'/rest/companies/search\'" + criteria.getQuery() + ", ", exception.getCause());
         }
         return new ResponseEntity<>(Collections.singletonMap("companies", companies), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Company> createCompany(@RequestBody CompanyCreateRequest request) {
+    public ResponseEntity<Company> createCompany(@RequestBody CompanyCreateRequest request) throws Exception {
 //        if (result.hasErrors()) {
 //            throw new IllegalRequestException(result);
 //        }
@@ -94,76 +104,104 @@ public class CompanyController {
         Long userId;
         try {
             userId = request.getUserId();
-        } catch (RuntimeException e) {
+        } catch (RuntimeException runtimeException) {
             throw new PoorInfoInRequestToCreateUpdateEntity
                     ("Poor information about user id in request body to create company. Must be Long type",
-                            e.getCause());
+                            runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about user id in request body to create company. Must be Long type",
+                            exception.getCause());
         }
         Long locationId;
         try {
             locationId = request.getLocationId();
-        } catch (RuntimeException e) {
+        } catch (RuntimeException runtimeException) {
             throw new PoorInfoInRequestToCreateUpdateEntity
                     ("Poor information about location id in request body to create company. Must be Long type",
-                            e.getCause());
+                            runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about location id in request body to create company. Must be Long type",
+                            exception.getCause());
         }
         try {
             company.setFullTitle(request.getFullTitle());
             company.setShortTitle(request.getShortTitle());
             company.setRegNumber(request.getRegNumber());
             company.setOrgType(request.getOrgType());
-        } catch (RuntimeException e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company", exception.getCause());
+        }
+        if (company.getFullTitle() == null ||
+            company.getShortTitle() == null ||
+            company.getRegNumber() == null ||
+            company.getOrgType() == null) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company");
         }
         company.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
         Optional<User> optionalUser;
         try {
             optionalUser = userRepository.findById(userId);
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException("Can not get user by id from DB, ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException("Can not get user by id from DB, ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception("Can not get user by id from DB, ", exception.getCause());
         }
         User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id was found"));
-        if (user.getCompany().getId() < 1L) {
+        if (user.getCompany() == null) {
             company.setUser(user);
         } else {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Can not create company, because company with such user exists yet");
+                    ("Can not create company, because company with such user id exists yet");
         }
         Optional<Location> optionalLocation;
         try {
             optionalLocation = locationRepository.findById(locationId);
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException("Can not get location by id from DB, ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException("Can not get location by id from DB, ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception("Can not get location by id from DB, ", exception.getCause());
         }
         Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id was found"));
         company.setLocation(location);
         try {
             company = companyRepository.save(company);
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException("Company has not created and saved to DB, ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException("Company has not created and saved to DB, ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception("Company has not created and saved to DB, ", exception.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<Company> updateCompany(@RequestBody CompanyUpdateRequest request) {
+    public ResponseEntity<Company> updateCompany(@RequestBody CompanyUpdateRequest request) throws Exception {
 //        if (result.hasErrors()) {
 //            throw new IllegalRequestException(result);
 //        }
         Long id;
         try {
             id = request.getId();
-        } catch (RuntimeException e) {
+        } catch (RuntimeException runtimeException) {
             throw new PoorInfoInRequestToCreateUpdateEntity
                     ("Poor information about company id in request body to update company. Must be Long type",
-                            e.getCause());
+                            runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about company id in request body to update company. Must be Long type",
+                            exception.getCause());
         }
         Optional<Company> optionalCompany;
         try {
             optionalCompany = companyRepository.findById(id);
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException("Can not get company by id from DB, ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException("Can not get company by id from DB, ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new RuntimeException("Can not get company by id from DB, ", exception.getCause());
         }
         Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id was found"));
         try {
@@ -171,10 +209,11 @@ public class CompanyController {
             company.setShortTitle(request.getShortTitle());
             company.setRegNumber(request.getRegNumber());
             company.setOrgType(request.getOrgType());
-        } catch (RuntimeException e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company", exception.getCause());
         }
-
         company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
 //        Optional<User> optionalUser = userRepository.findById(request.getUserId());
 //        User user = optionalUser.get();
@@ -182,30 +221,39 @@ public class CompanyController {
         Long locationId;
         try {
             locationId = request.getLocationId();
-        } catch (RuntimeException e) {
+        } catch (RuntimeException runtimeException) {
             throw new PoorInfoInRequestToCreateUpdateEntity
                     ("Poor information about location id in request body to update company. Must be Long type",
-                            e.getCause());
+                            runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about location id in request body to update company. Must be Long type",
+                            exception.getCause());
         }
         Optional<Location> optionalLocation;
         try {
             optionalLocation = locationRepository.findById(locationId);
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException("Can not get location by id from DB, ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException("Can not get location by id from DB, ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception("Can not get location by id from DB, ", exception.getCause());
         }
         Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id was found"));
         company.setLocation(location);
         try {
             company = companyRepository.save(company);
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException
-                    ("Company has not been updated saved to DB, ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException
+                    ("Company has not been updated and saved to DB, ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception
+                    ("Company has not been updated and saved to DB, ", exception.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Company> deleteCompany(@PathVariable String id) {
+    public ResponseEntity<Company> deleteCompany(@PathVariable String id) throws Exception {
 //        if (result.hasErrors()) {
 //            throw new IllegalRequestException(result);
 //        }
@@ -213,21 +261,25 @@ public class CompanyController {
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new LongNumberFormatException("Bad information about company id in resource \'/rest/companies/{id}\'. " +
+            throw new NumberFormatException("Bad information about company id in resource \'/rest/companies/{id}\'. " +
                     "Must be Long type");
         }
         Optional<Company> optionalCompany;
         try {
             optionalCompany = companyRepository.findById(parsedId);
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException("Can not get company to be deleted from DB, ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException("Can not get company to be deleted from DB, ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception("Can not get company to be deleted from DB, ", exception.getCause());
         }
         Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id was found"));
 
         try {
             companyRepository.delete(company);
-        } catch (RuntimeException e) {
-            throw new SomeRuntimeException("Company has not been deleted, ", e.getCause());
+        } catch (RuntimeException runtimeException) {
+            throw new RuntimeException("Company has not been deleted, ", runtimeException.getCause());
+        } catch (Exception exception) {
+            throw new Exception("Company has not been deleted, ", exception.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.OK);
     }

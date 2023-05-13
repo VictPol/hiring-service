@@ -4,9 +4,7 @@ package com.hirix.controller.exceptions;
 import com.hirix.exception.ErrorMessage;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.LongNumberFormatException;
-import com.hirix.exception.NoSuchElementFoundException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
-import com.hirix.exception.SomeRuntimeException;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -20,8 +18,8 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.hirix.exception.ApplicationErrorCodes.BAD_ARGUMENTS_IN_SEARCH_PATH;
 import static com.hirix.exception.ApplicationErrorCodes.BAD_REQUEST_USER_CREATE;
-import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_FOUND_OR_NOT_SAVED;
 import static com.hirix.exception.ApplicationErrorCodes.FATAL_ERROR;
 import static com.hirix.exception.ApplicationErrorCodes.ID_IS_NOT_LONG;
 import static com.hirix.exception.ApplicationErrorCodes.NO_ENTITY_WITH_SUCH_ID;
@@ -33,6 +31,19 @@ import static com.hirix.exception.ApplicationErrorCodes.SOME_RUNTIME_EXCEPTION;
 public class DefaultExceptionHandler {
     private static final Logger log = Logger.getLogger(DefaultExceptionHandler.class);
 //    private final RandomValuesGenerator generator;
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorMessage> handleIllegalArgumentException(IllegalArgumentException e) {
+        String exceptionUniqueId = UUID.randomUUID().toString();
+        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        return new ResponseEntity<>(
+                new ErrorMessage(
+                        exceptionUniqueId,
+                        BAD_ARGUMENTS_IN_SEARCH_PATH.getCodeId(),
+                        e.getMessage()
+                ),
+                HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(PoorInfoInRequestToCreateUpdateEntity.class)
     public ResponseEntity<ErrorMessage> handlePoorInfoInRequestToCreateUpdateEntity(PoorInfoInRequestToCreateUpdateEntity e) {
@@ -60,8 +71,8 @@ public class DefaultExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(LongNumberFormatException.class)
-    public ResponseEntity<ErrorMessage> handleLongNumberFormatException(LongNumberFormatException e) {
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<ErrorMessage> handleNumberFormatException(NumberFormatException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
         log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
         return new ResponseEntity<>(
@@ -72,20 +83,6 @@ public class DefaultExceptionHandler {
                 ),
                 HttpStatus.BAD_REQUEST);
     }
-
-@ExceptionHandler(SomeRuntimeException.class)
-public ResponseEntity<ErrorMessage> handleSomeRuntimeException(SomeRuntimeException e) {
-    String exceptionUniqueId = UUID.randomUUID().toString();
-    log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
-    return new ResponseEntity<>(
-            new ErrorMessage(
-                    exceptionUniqueId,
-                    ENTITY_NOT_FOUND_OR_NOT_SAVED.getCodeId(),
-//                    SOME_RUNTIME_EXCEPTION.getCodeId(),
-                    e.getMessage()
-            ),
-            HttpStatus.UNPROCESSABLE_ENTITY);
-}
 
     @ExceptionHandler(IllegalRequestException.class)
     public ResponseEntity<ErrorMessage> handleIllegalRequestException(IllegalRequestException e) {
@@ -112,7 +109,7 @@ public ResponseEntity<ErrorMessage> handleSomeRuntimeException(SomeRuntimeExcept
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorMessage> handleRuntimeException(RuntimeException e) {
-        /* Handles all other exceptions. Status code 500. */
+        /* Handles all other unchecked exceptions. Status code 500. */
 
         String exceptionUniqueId = UUID.randomUUID().toString();
 //        String exceptionUniqueId = generator.uuidGenerator();
@@ -130,7 +127,7 @@ public ResponseEntity<ErrorMessage> handleSomeRuntimeException(SomeRuntimeExcept
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {
-        /* Handles all other exceptions. Status code 500. */
+        /* Handles all other checked exceptions. Status code 500. */
 
 //        String exceptionUniqueId = generator.uuidGenerator();
         String exceptionUniqueId = UUID.randomUUID().toString();
