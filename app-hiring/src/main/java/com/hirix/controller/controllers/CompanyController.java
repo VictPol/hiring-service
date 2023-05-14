@@ -1,6 +1,7 @@
 package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.CompanyCreateRequest;
+import com.hirix.controller.requests.patch.CompanyPatchRequest;
 import com.hirix.controller.requests.search.CompanySearchCriteria;
 import com.hirix.controller.requests.update.CompanyUpdateRequest;
 import com.hirix.domain.Company;
@@ -9,6 +10,7 @@ import com.hirix.domain.User;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
 import com.hirix.exception.EntityNotDeletedException;
 import com.hirix.exception.EntityNotFoundException;
+import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.CompanyRepository;
 import com.hirix.repository.LocationRepository;
@@ -16,6 +18,7 @@ import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -99,27 +103,12 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<Company> createCompany(@RequestBody CompanyCreateRequest request) throws Exception {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
+    public ResponseEntity<Company> createCompany(@Valid @RequestBody CompanyCreateRequest request, BindingResult result)
+            throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to create company", result);
+        }
         Company company = new Company();
-        Long userId;
-        try {
-            userId = request.getUserId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about user id in request body to create company. Must be Long type",
-                    e.getCause());
-        }
-        Long locationId;
-        try {
-            locationId = request.getLocationId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to create company. Must be Long type",
-                    e.getCause());
-        }
         try {
             company.setFullTitle(request.getFullTitle());
             company.setShortTitle(request.getShortTitle());
@@ -139,6 +128,14 @@ public class CompanyController {
         }
         company.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+        Long userId;
+        try {
+            userId = request.getUserId();
+        } catch (Exception e) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about user id in request body to create company. Must be Long type",
+                            e.getCause());
+        }
         Optional<User> optionalUser;
         try {
             optionalUser = userRepository.findById(userId);
@@ -151,6 +148,14 @@ public class CompanyController {
         } else {
             throw new PoorInfoInRequestToCreateUpdateEntity
                     ("Can not create company, because company with such user id exists yet");
+        }
+        Long locationId;
+        try {
+            locationId = request.getLocationId();
+        } catch (Exception e) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about location id in request body to create company. Must be Long type",
+                            e.getCause());
         }
         Optional<Location> optionalLocation;
         try {
@@ -170,10 +175,11 @@ public class CompanyController {
     }
 
     @PutMapping
-    public ResponseEntity<Company> updateCompany(@RequestBody CompanyUpdateRequest request) throws Exception {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
+    public ResponseEntity<Company> updateCompany(@Valid @RequestBody CompanyUpdateRequest request, BindingResult result)
+        throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to update company", result);
+        }
         Long id;
         try {
             id = request.getId();
@@ -199,6 +205,28 @@ public class CompanyController {
                 e.getCause());
         }
         company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+        Long userId;
+        try {
+            userId = request.getUserId();
+        } catch (Exception e) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about user id in request body to create company. Must be Long type",
+                            e.getCause());
+        }
+        Optional<User> optionalUser;
+        try {
+            optionalUser = userRepository.findById(userId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get user by id from DB, ", e.getCause());
+        }
+        User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
+        if (user.getCompany() == null) {
+            company.getUser().setCompany(null);
+            company.setUser(user);
+        } else {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Can not create company, because company with such user id exists yet");
+        }
         Long locationId;
         try {
             locationId = request.getLocationId();
@@ -229,10 +257,10 @@ public class CompanyController {
     }
 
     @PatchMapping
-    public ResponseEntity<Company> partlyUpdateCompany(@RequestBody CompanyUpdateRequest request) throws Exception {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
+    public ResponseEntity<Company> patchUpdateCompany(@Valid @RequestBody CompanyPatchRequest request, BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException(result);
+        }
         Long id;
         try {
             id = request.getId();
@@ -266,6 +294,30 @@ public class CompanyController {
                 e.getCause());
         }
         company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+        Long userId;
+        try {
+            userId = request.getUserId();
+        } catch (Exception e) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about user id in request body to create company. Must be Long type",
+                            e.getCause());
+        }
+        if (userId != null && userId > 1) {
+            Optional<User> optionalUser;
+            try {
+                optionalUser = userRepository.findById(userId);
+            } catch (Exception e) {
+                throw new EntityNotFoundException("Can not get user by id from DB, ", e.getCause());
+            }
+            User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
+            if (user.getCompany() == null) {
+                company.getUser().setCompany(null);
+                company.setUser(user);
+            } else {
+                throw new PoorInfoInRequestToCreateUpdateEntity
+                        ("Can not create company, because company with such user id exists yet");
+            }
+        }
         Long locationId;
         try {
             locationId = request.getLocationId();
@@ -295,9 +347,6 @@ public class CompanyController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Company> deleteCompany(@PathVariable String id) throws Exception {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);

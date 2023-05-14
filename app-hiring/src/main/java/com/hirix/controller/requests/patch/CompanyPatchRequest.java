@@ -1,4 +1,5 @@
-package com.hirix.controller.requests.create;
+package com.hirix.controller.requests.patch;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,30 +19,30 @@ import javax.validation.constraints.Size;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Validated
-public class CompanyCreateRequest {
-    @NotNull
-    @ElementCollection(targetClass = String.class)
-    @Size(min = 2, max = 50)
-    private String fullTitle;
-    @NotNull
-    @ElementCollection(targetClass = String.class)
-    @Size(min = 2, max = 20)
-    private String shortTitle;
-    @NotNull
-    @ElementCollection(targetClass = String.class)
-    @Size(min = 2, max = 20)
-    private String regNumber;
-    @NotNull
-    @ElementCollection(targetClass = String.class)
-    @Size(min = 2, max = 20)
-    private String orgType;
+public class CompanyPatchRequest {
     @NotNull
     @ElementCollection(targetClass = Long.class)
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
+    private Long id;
+    @ElementCollection(targetClass = String.class)
+    @Size(min = 2, max = 50)
+    private String fullTitle;
+    @ElementCollection(targetClass = String.class)
+    @Size(min = 2, max = 20)
+    private String shortTitle;
+    @ElementCollection(targetClass = String.class)
+    @Size(min = 2, max = 20)
+    private String regNumber;
+    @ElementCollection(targetClass = String.class)
+    @Size(min = 2, max = 20)
+    private String orgType;
+    @ElementCollection(targetClass = Long.class)
+    @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
+    @Min(value = 1L)
+    @Max(value = 9223372036854775807L)
     private Long userId;
-    @NotNull
     @ElementCollection(targetClass = Long.class)
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
