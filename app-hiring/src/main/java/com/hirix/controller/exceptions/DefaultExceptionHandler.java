@@ -28,8 +28,9 @@ import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_FOUND;
 import static com.hirix.exception.ApplicationErrorCodes.FATAL_ERROR;
 import static com.hirix.exception.ApplicationErrorCodes.ID_IS_NOT_LONG;
 import static com.hirix.exception.ApplicationErrorCodes.NO_ENTITY_WITH_SUCH_ID;
+import static com.hirix.exception.ApplicationErrorCodes.NULL_POINTER;
 import static com.hirix.exception.ApplicationErrorCodes.POOR_INFORMATION_TO_CREATE_UPDATE_ENTITY;
-import static com.hirix.exception.ApplicationErrorCodes.SOME_RUNTIME_EXCEPTION;
+import static com.hirix.exception.ApplicationErrorCodes.RUNTIME_EXCEPTION;
 
 @ControllerAdvice
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorMessage> handleIllegalArgumentException(IllegalArgumentException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
-        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        log.error(exceptionUniqueId + " ," + e.getMessage(), e);
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -53,7 +54,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(PoorInfoInRequestToCreateUpdateEntity.class)
     public ResponseEntity<ErrorMessage> handlePoorInfoInRequestToCreateUpdateEntity(PoorInfoInRequestToCreateUpdateEntity e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
-        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        log.error(exceptionUniqueId + " ," + e.getMessage(), e);
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -66,7 +67,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ErrorMessage> handleEntityNotFoundException(EntityNotFoundException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
-        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        log.error(exceptionUniqueId + " ," + e.getMessage(), e);
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -79,7 +80,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<ErrorMessage> handleNoSuchElementException(NoSuchElementException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
-        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        log.error(exceptionUniqueId + " ," + e.getMessage(), e);
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -92,7 +93,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(EntityNotCreatedOrNotUpdatedException.class)
     public ResponseEntity<ErrorMessage> handleEntityNotCreatedOrNotUpdatedException(EntityNotCreatedOrNotUpdatedException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
-        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        log.error(exceptionUniqueId + " ," + e.getMessage(), e);
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -105,7 +106,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(EntityNotDeletedException.class)
     public ResponseEntity<ErrorMessage> handleEntityNotDeletedException(EntityNotDeletedException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
-        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        log.error(exceptionUniqueId + " ," + e.getMessage(), e);
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -118,7 +119,7 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(NumberFormatException.class)
     public ResponseEntity<ErrorMessage> handleNumberFormatException(NumberFormatException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
-        log.error(exceptionUniqueId + " ," + e.getMessage() + "\n", e);
+        log.error(exceptionUniqueId + " ," + e.getMessage(), e);
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -151,6 +152,24 @@ public class DefaultExceptionHandler {
                 HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<ErrorMessage> handleNullPointerException(NullPointerException e) {
+        /* Handles all other unchecked exceptions. Status code 500. */
+
+        String exceptionUniqueId = UUID.randomUUID().toString();
+//        String exceptionUniqueId = generator.uuidGenerator();
+
+        log.error(exceptionUniqueId + e.getMessage(), e);
+
+        return new ResponseEntity<>(
+                new ErrorMessage(
+                        exceptionUniqueId,
+                        NULL_POINTER.getCodeId(),
+                        e.getClass().getName()
+                ),
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorMessage> handleRuntimeException(RuntimeException e) {
         /* Handles all other unchecked exceptions. Status code 500. */
@@ -158,13 +177,13 @@ public class DefaultExceptionHandler {
         String exceptionUniqueId = UUID.randomUUID().toString();
 //        String exceptionUniqueId = generator.uuidGenerator();
 
-        log.error(exceptionUniqueId + e.getMessage() + "\n", e);
+        log.error(exceptionUniqueId + e.getMessage(), e);
 
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
-                        SOME_RUNTIME_EXCEPTION.getCodeId(),
-                        e.getMessage()
+                        RUNTIME_EXCEPTION.getCodeId(),
+                        e.getMessage() + e.getClass().getName()
                 ),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -176,13 +195,13 @@ public class DefaultExceptionHandler {
 //        String exceptionUniqueId = generator.uuidGenerator();
         String exceptionUniqueId = UUID.randomUUID().toString();
 
-        log.error(exceptionUniqueId + e.getMessage() + "\n", e);
+        log.error(exceptionUniqueId + e.getMessage(), e);
 
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
                         FATAL_ERROR.getCodeId(),
-                        e.getMessage()
+                        e.getMessage() + e.getClass().getName()
                 ),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
