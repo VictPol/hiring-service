@@ -7,6 +7,7 @@ import com.hirix.controller.requests.update.CompanyUpdateRequest;
 import com.hirix.domain.Company;
 import com.hirix.domain.Location;
 import com.hirix.domain.User;
+import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
 import com.hirix.exception.EntityNotDeletedException;
 import com.hirix.exception.EntityNotFoundException;
@@ -16,6 +17,7 @@ import com.hirix.repository.CompanyRepository;
 import com.hirix.repository.LocationRepository;
 import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -44,8 +46,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CompanyController {
     private final CompanyRepository companyRepository;
-    private final UserRepository userRepository;
-    private final LocationRepository locationRepository;
+    private final ConversionService conversionService;
 
     @GetMapping
     public ResponseEntity<List<Company>> getAllCompanies() throws Exception {
@@ -108,64 +109,12 @@ public class CompanyController {
         if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to create company", result);
         }
-        Company company = new Company();
+        Company company;
         try {
-            company.setFullTitle(request.getFullTitle());
-            company.setShortTitle(request.getShortTitle());
-            company.setRegNumber(request.getRegNumber());
-            company.setOrgType(request.getOrgType());
+            company = conversionService.convert(request, Company.class);
         } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company",
-                e.getCause());
+            throw new ConvertRequestToEntityException("Can not convert update request to company", e.getCause());
         }
-        if (company.getFullTitle() == null ||
-            company.getShortTitle() == null ||
-            company.getRegNumber() == null ||
-            company.getOrgType() == null ||
-            company.getUser().getId() < 1 ||
-            company.getLocation().getId() < 1) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company");
-        }
-        company.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        Long userId;
-        try {
-            userId = request.getUserId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about user id in request body to create company. Must be Long type",
-                            e.getCause());
-        }
-        Optional<User> optionalUser;
-        try {
-            optionalUser = userRepository.findById(userId);
-        } catch (Exception e) {
-            throw new EntityNotFoundException("Can not get user by id from DB, ", e.getCause());
-        }
-        User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
-        if (user.getCompany() == null) {
-            company.setUser(user);
-        } else {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Can not create company, because company with such user id exists yet");
-        }
-        Long locationId;
-        try {
-            locationId = request.getLocationId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about location id in request body to create company. Must be Long type",
-                            e.getCause());
-        }
-        Optional<Location> optionalLocation;
-        try {
-            optionalLocation = locationRepository.findById(locationId);
-        } catch (Exception e) {
-            throw new EntityNotFoundException("Can not get location by id from DB, ", e.getCause());
-        }
-        Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException
-            ("No location with such id was found"));
-        company.setLocation(location);
         try {
             company = companyRepository.save(company);
         } catch (Exception e) {
@@ -180,73 +129,12 @@ public class CompanyController {
         if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to update company", result);
         }
-        Long id;
+        Company company;
         try {
-            id = request.getId();
-        } catch (Exception exception) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about company id in request body to update company. Must be Long type",
-                    exception.getCause());
-        }
-        Optional<Company> optionalCompany;
-        try {
-            optionalCompany = companyRepository.findById(id);
+            company = conversionService.convert(request, Company.class);
         } catch (Exception e) {
-            throw new EntityNotFoundException("Can not get company by id from DB, ", e.getCause());
+            throw new ConvertRequestToEntityException("Can not convert update request to company", e.getCause());
         }
-        Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id"));
-        try {
-            company.setFullTitle(request.getFullTitle());
-            company.setShortTitle(request.getShortTitle());
-            company.setRegNumber(request.getRegNumber());
-            company.setOrgType(request.getOrgType());
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company",
-                e.getCause());
-        }
-        company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        Long userId;
-        try {
-            userId = request.getUserId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about user id in request body to create company. Must be Long type",
-                            e.getCause());
-        }
-        Optional<User> optionalUser;
-        try {
-            optionalUser = userRepository.findById(userId);
-        } catch (Exception e) {
-            throw new EntityNotFoundException("Can not get user by id from DB, ", e.getCause());
-        }
-        User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
-        if (user.getCompany() == null) {
-            company.getUser().setCompany(null);
-            company.setUser(user);
-        } else {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Can not create company, because company with such user id exists yet");
-        }
-        Long locationId;
-        try {
-            locationId = request.getLocationId();
-        } catch (Exception exception) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to update company. Must be Long type",
-                    exception.getCause());
-        }
-        if (locationId < 1) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to update company. Value must be more then 1");
-        }
-        Optional<Location> optionalLocation;
-        try {
-            optionalLocation = locationRepository.findById(locationId);
-        } catch (Exception exception) {
-            throw new EntityNotFoundException("Can not get location by id from DB, ", exception.getCause());
-        }
-        Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id"));
-        company.setLocation(location);
         try {
             company = companyRepository.save(company);
         } catch (Exception e) {
@@ -261,86 +149,17 @@ public class CompanyController {
         if (result.hasErrors()) {
             throw new IllegalRequestException(result);
         }
-        Long id;
+        Company company;
         try {
-            id = request.getId();
+            company = conversionService.convert(request, Company.class);
         } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about company id in request body to update company. Must be Long type",
-                    e.getCause());
-        }
-        Optional<Company> optionalCompany;
-        try {
-            optionalCompany = companyRepository.findById(id);
-        } catch (Exception e) {
-            throw new EntityNotFoundException("Can not get company by id from DB, ", e.getCause());
-        }
-        Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id"));
-        try {
-            if (request.getFullTitle() != null) {
-                company.setFullTitle(request.getFullTitle());
-            }
-            if (request.getShortTitle() != null) {
-                company.setShortTitle(request.getShortTitle());
-            }
-            if (request.getRegNumber() != null) {
-                company.setRegNumber(request.getRegNumber());
-            }
-            if (request.getOrgType() != null) {
-                company.setOrgType(request.getOrgType());
-            }
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company",
-                e.getCause());
-        }
-        company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        Long userId;
-        try {
-            userId = request.getUserId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about user id in request body to create company. Must be Long type",
-                            e.getCause());
-        }
-        if (userId != null && userId > 1) {
-            Optional<User> optionalUser;
-            try {
-                optionalUser = userRepository.findById(userId);
-            } catch (Exception e) {
-                throw new EntityNotFoundException("Can not get user by id from DB, ", e.getCause());
-            }
-            User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
-            if (user.getCompany() == null) {
-                company.getUser().setCompany(null);
-                company.setUser(user);
-            } else {
-                throw new PoorInfoInRequestToCreateUpdateEntity
-                        ("Can not create company, because company with such user id exists yet");
-            }
-        }
-        Long locationId;
-        try {
-            locationId = request.getLocationId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to update company. Must be Long type",
-                    e.getCause());
-        }
-        if (locationId != null && locationId > 1) {
-            Optional<Location> optionalLocation;
-            try {
-                optionalLocation = locationRepository.findById(locationId);
-            } catch (Exception exception) {
-                throw new EntityNotFoundException("Can not get location by id from DB, ", exception.getCause());
-            }
-            Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id"));
-            company.setLocation(location);
+            throw new ConvertRequestToEntityException("Can not convert patch request to company", e.getCause());
         }
         try {
             company = companyRepository.save(company);
         } catch (Exception e) {
             throw new EntityNotCreatedOrNotUpdatedException
-                ("Company has not been updated and saved to DB, ", e.getCause());
+                ("Company has not been patch updated and saved to DB, ", e.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.OK);
     }

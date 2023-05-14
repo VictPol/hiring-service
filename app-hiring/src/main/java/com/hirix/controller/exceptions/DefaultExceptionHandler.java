@@ -1,6 +1,7 @@
 package com.hirix.controller.exceptions;
 
 
+import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
 import com.hirix.exception.EntityNotDeletedException;
 import com.hirix.exception.EntityNotFoundException;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.hirix.exception.ApplicationErrorCodes.BAD_ARGUMENTS_IN_SEARCH_PATH;
 import static com.hirix.exception.ApplicationErrorCodes.BAD_REQUEST_USER_CREATE;
+import static com.hirix.exception.ApplicationErrorCodes.CAN_NOT_CONVERT_REQUEST_TO_ENTITY;
 import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_CREATED_OR_NOT_UPDATED;
 import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_DELETED;
 import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_FOUND;
@@ -131,18 +133,14 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(IllegalRequestException.class)
     public ResponseEntity<ErrorMessage> handleIllegalRequestException(IllegalRequestException e) {
-//        String exceptionUniqueId = generator.uuidGenerator();
         String exceptionUniqueId = UUID.randomUUID().toString();
-
         BindingResult bindingResult = e.getBindingResult();
         String collect = bindingResult
                 .getAllErrors()
                 .stream()
                 .map(ObjectError::toString)
-                .collect(Collectors.joining(","));
-
+                .collect(Collectors.joining(", "));
         log.error(exceptionUniqueId + e.getMessage(), e);
-
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -151,16 +149,23 @@ public class DefaultExceptionHandler {
                 ),
                 HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(ConvertRequestToEntityException.class)
+    public ResponseEntity<ErrorMessage> handleConvertRequestToEntityException(ConvertRequestToEntityException e) {
+        String exceptionUniqueId = UUID.randomUUID().toString();
+        log.error(exceptionUniqueId + e.getMessage(), e);
+        return new ResponseEntity<>(
+                new ErrorMessage(
+                        exceptionUniqueId,
+                        CAN_NOT_CONVERT_REQUEST_TO_ENTITY.getCodeId(),
+                        e.getClass().getName()
+                ),
+                HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ErrorMessage> handleNullPointerException(NullPointerException e) {
-        /* Handles all other unchecked exceptions. Status code 500. */
-
         String exceptionUniqueId = UUID.randomUUID().toString();
-//        String exceptionUniqueId = generator.uuidGenerator();
-
         log.error(exceptionUniqueId + e.getMessage(), e);
-
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -173,12 +178,8 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorMessage> handleRuntimeException(RuntimeException e) {
         /* Handles all other unchecked exceptions. Status code 500. */
-
         String exceptionUniqueId = UUID.randomUUID().toString();
-//        String exceptionUniqueId = generator.uuidGenerator();
-
         log.error(exceptionUniqueId + e.getMessage(), e);
-
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
@@ -191,12 +192,8 @@ public class DefaultExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {
         /* Handles all other checked exceptions. Status code 500. */
-
-//        String exceptionUniqueId = generator.uuidGenerator();
         String exceptionUniqueId = UUID.randomUUID().toString();
-
         log.error(exceptionUniqueId + e.getMessage(), e);
-
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
