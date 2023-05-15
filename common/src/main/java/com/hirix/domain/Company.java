@@ -80,5 +80,4 @@ public class Company {
 //    @JsonManagedReference
     @JsonIgnoreProperties("company")
     private Set<Requirement> requirements = Collections.emptySet();
-
 }
