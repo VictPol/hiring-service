@@ -32,7 +32,7 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
                     exception.getCause());
         }
         if (id < 1) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
                 "Id must be more then 0L");
         }
         Optional<Company> optionalCompany;
@@ -48,12 +48,12 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
             userId = request.getUserId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about user id in request body to create company. Must be Long type",
-                            e.getCause());
+                ("Poor information about user id in request body to update company. Must be Long type",
+                    e.getCause());
         }
         if (userId < 1) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company. " +
-                    "UserId must be more then 0L");
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
+                "UserId must be more then 0L");
         }
         Optional<User> optionalUser;
         try {
@@ -74,12 +74,12 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
             locationId = request.getLocationId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about location id in request body to create company. Must be Long type",
-                            e.getCause());
+                ("Poor information about location id in request body to update company. Must be Long type",
+                    e.getCause());
         }
         if (locationId < 1) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company. " +
-                    "LocationId must be more then 0L");
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
+                "LocationId must be more then 0L");
         }
         Optional<Location> optionalLocation;
         try {
@@ -92,5 +92,4 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
 
         return doConvert(request, company);
     }
-
 }

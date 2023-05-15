@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class CompanyPatchConvertor <S, T> implements Converter<CompanyPatchRequest, Company> {
+public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Company> {
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
@@ -103,5 +103,4 @@ public class CompanyPatchConvertor <S, T> implements Converter<CompanyPatchReque
         }
         return company;
     }
-
 }
