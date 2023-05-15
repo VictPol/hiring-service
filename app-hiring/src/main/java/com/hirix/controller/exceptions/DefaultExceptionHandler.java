@@ -173,7 +173,7 @@ public class DefaultExceptionHandler {
                         NULL_POINTER.getCodeId(),
                         e.getMessage() + ". " + e.getClass().getName()
                 ),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+                HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RuntimeException.class)

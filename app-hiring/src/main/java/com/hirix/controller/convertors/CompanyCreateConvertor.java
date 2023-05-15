@@ -29,18 +29,18 @@ public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRe
             userId = request.getUserId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about user id in request body to create company. Must be Long type",
+                    ("Poor information about user id in request body to create company. Must be Long type" +
                             e.getCause());
         }
-        if (userId < 1) {
+        if (userId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company. " +
-                "UserId must be more then 0L");
+                "UserId must be more than 0L");
         }
         Optional<User> optionalUser;
         try {
             optionalUser = userRepository.findById(userId);
         } catch (Exception e) {
-            throw new EntityNotFoundException("Can not get user by id from DB, ", e.getCause());
+            throw new EntityNotFoundException("Can not get user by id from DB, " + e.getCause());
         }
         User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
         if (user.getCompany() == null) {
@@ -54,18 +54,18 @@ public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRe
             locationId = request.getLocationId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to create company. Must be Long type",
+                ("Poor information about location id in request body to create company. Must be Long type" +
                     e.getCause());
         }
         if (locationId < 1) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company. " +
-                "LocationId must be more then 0L");
+                "LocationId must be more than 0L");
         }
         Optional<Location> optionalLocation;
         try {
             optionalLocation = locationRepository.findById(locationId);
         } catch (Exception e) {
-            throw new EntityNotFoundException("Can not get location by id from DB, ", e.getCause());
+            throw new EntityNotFoundException("Can not get location by id from DB, " + e.getCause());
         }
         Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException
                 ("No location with such id was found"));
