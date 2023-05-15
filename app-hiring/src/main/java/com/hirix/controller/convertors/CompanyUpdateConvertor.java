@@ -31,7 +31,7 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
                 ("Poor information about company id in request body to update company. Must be Long type",
                     exception.getCause());
         }
-        if (id < 1) {
+        if (id < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
                 "Id must be more then 0L");
         }
@@ -51,7 +51,7 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
                 ("Poor information about user id in request body to update company. Must be Long type",
                     e.getCause());
         }
-        if (userId < 1) {
+        if (userId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
                 "UserId must be more then 0L");
         }
@@ -77,7 +77,7 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
                 ("Poor information about location id in request body to update company. Must be Long type",
                     e.getCause());
         }
-        if (locationId < 1) {
+        if (locationId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
                 "LocationId must be more then 0L");
         }

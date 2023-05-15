@@ -5,8 +5,6 @@ import com.hirix.controller.requests.patch.CompanyPatchRequest;
 import com.hirix.controller.requests.search.CompanySearchCriteria;
 import com.hirix.controller.requests.update.CompanyUpdateRequest;
 import com.hirix.domain.Company;
-import com.hirix.domain.Location;
-import com.hirix.domain.User;
 import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
 import com.hirix.exception.EntityNotDeletedException;
@@ -14,8 +12,6 @@ import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.CompanyRepository;
-import com.hirix.repository.LocationRepository;
-import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
@@ -33,8 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +42,7 @@ public class CompanyController {
     private final CompanyRepository companyRepository;
     private final ConversionService conversionService;
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<Company>> getAllCompanies() throws Exception {
         List<Company> companies;
         try {
@@ -66,7 +60,11 @@ public class CompanyController {
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad company {id} in resource \'/rest/companies/{id}\'. Must be Long type");
+            throw new NumberFormatException("Bad company {id} in resource path \'/rest/companies/{id}\'. Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad company {id} in resource path \'/rest/companies/{id}\'." +
+                    "Id must be more then 0L");
         }
         Optional<Company> optionalCompany;
         try {
@@ -81,12 +79,16 @@ public class CompanyController {
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, List<Company>>> searchCompaniesByFullTitleLike
-        (@ModelAttribute CompanySearchCriteria criteria) throws Exception {
+        (@Valid @ModelAttribute CompanySearchCriteria criteria, BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException
+                ("Bad argument in search path, must be: \'search?query=word_like_full_company_title\'", result);
+        }
         String query;
         try {
             query = criteria.getQuery();
         } catch (Exception e) {
-            throw new Exception("Can not get Query from criteria", e.getCause());
+            throw new IllegalArgumentException("Can not get Query from criteria", e.getCause());
         }
         if (query == null) {
             throw new IllegalArgumentException
@@ -113,7 +115,8 @@ public class CompanyController {
         try {
             company = conversionService.convert(request, Company.class);
         } catch (Exception e) {
-            throw new ConvertRequestToEntityException("Can not convert update request to company", e.getCause());
+            throw new ConvertRequestToEntityException("Can not convert update request to company, because of: " +
+                e.getCause());
         }
         try {
             company = companyRepository.save(company);

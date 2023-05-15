@@ -6,12 +6,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Setter
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
+@Validated
 public class CompanySearchCriteria {
+    @NotNull
+//    @ElementCollection(targetClass = String.class)
+    @Size(min = 2, max = 50)
     private String query;
 
     @Override

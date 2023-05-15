@@ -24,7 +24,7 @@ public class CompanyCreateRequest {
     @Size(min = 2, max = 50)
     private String fullTitle;
     @NotNull
-    @ElementCollection(targetClass = String.class)
+//    @ElementCollection(targetClass = String.class)
     @Size(min = 2, max = 20)
     private String shortTitle;
     @NotNull

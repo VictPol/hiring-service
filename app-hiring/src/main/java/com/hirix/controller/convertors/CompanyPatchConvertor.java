@@ -34,7 +34,11 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
                 ("Poor information about company id in request body to update company. Must be Long type",
                     e.getCause());
         }
-        Optional<com.hirix.domain.Company> optionalCompany;
+        if (id < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor company id in request body to get company. " +
+                    "Id must be more then 0L");
+        }
+        Optional<Company> optionalCompany;
         try {
             optionalCompany = companyRepository.findById(id);
         } catch (Exception e) {
@@ -67,7 +71,7 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
                 ("Poor information about user id in request body to create company. Must be Long type",
                     e.getCause());
         }
-        if (userId != null && userId > 0) {
+        if (userId != null && userId > 0L) {
             Optional<User> optionalUser;
             try {
                 optionalUser = userRepository.findById(userId);
@@ -91,7 +95,7 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
                 ("Poor information about location id in request body to update company. Must be Long type",
                     e.getCause());
         }
-        if (locationId != null && locationId > 0) {
+        if (locationId != null && locationId > 0L) {
             Optional<Location> optionalLocation;
             try {
                 optionalLocation = locationRepository.findById(locationId);
