@@ -6,6 +6,7 @@ import com.hirix.repository.PositionRepository;
 import com.hirix.repository.ProfessionRepository;
 import com.hirix.repository.RankRepository;
 import com.hirix.repository.SpecializationRepository;
+import com.hirix.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,22 +16,24 @@ import javax.servlet.ServletContextListener;
 @Component
 @AllArgsConstructor
 public class CustomContextListener implements ServletContextListener {
-    private final IndustryRepository industryRepository;
     private final LocationRepository locationRepository;
-    private final PositionRepository positionRepository;
-    private final ProfessionRepository professionRepository;
-    private final RankRepository rankRepository;
-    private final SpecializationRepository specializationRepository;
+    private final UserRepository userRepository;
+//    private final IndustryRepository industryRepository;
+//    private final PositionRepository positionRepository;
+//    private final ProfessionRepository professionRepository;
+//    private final RankRepository rankRepository;
+//    private final SpecializationRepository specializationRepository;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContextListener.super.contextInitialized(sce);
-        industryRepository.findAll();
         locationRepository.findAll();
-        positionRepository.findAll();
-        professionRepository.findAll();
-        rankRepository.findAll();
-        specializationRepository.findAll();
+        userRepository.findAll();
+//        industryRepository.findAll();
+//        positionRepository.findAll();
+//        professionRepository.findAll();
+//        rankRepository.findAll();
+//        specializationRepository.findAll();
         //here logic of DB start, caches start, etc.
     }
 //
