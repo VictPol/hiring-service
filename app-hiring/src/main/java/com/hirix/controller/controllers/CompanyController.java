@@ -17,8 +17,11 @@ import org.hibernate.annotations.Parameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +75,7 @@ public class CompanyController {
         }
         Page<Company> companies;
         try {
-            companies = companyRepository.findAll(PageRequest.of(parsedPage, 1));
+            companies = companyRepository.findAll(PageRequest.of(parsedPage, 1, Sort.by("fullName").ascending()));
         } catch (Exception e) {
             throw new EntityNotFoundException
                     ("Can not get companies from required resource \'/rest/companies/page/{page}/{size}\', " + e.getCause());
@@ -106,7 +109,7 @@ public class CompanyController {
         }
         Page<Company> companies;
         try {
-            companies = companyRepository.findAll(PageRequest.of(parsedPage, parsedSize));
+            companies = companyRepository.findAll(PageRequest.of(parsedPage, parsedSize, Sort.by("fullTitle").ascending()));
         } catch (Exception e) {
             throw new EntityNotFoundException
                 ("Can not get companies from required resource \'/rest/companies/page/{page}/{size}\', " + e.getCause());
@@ -165,6 +168,7 @@ public class CompanyController {
         return new ResponseEntity<>(Collections.singletonMap("companies", companies), HttpStatus.OK);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @PostMapping
     public ResponseEntity<Company> createCompany(@Valid @RequestBody CompanyCreateRequest request, BindingResult result)
             throws Exception {
@@ -190,6 +194,7 @@ public class CompanyController {
         return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @PutMapping
     public ResponseEntity<Company> updateCompany(@Valid @RequestBody CompanyUpdateRequest request, BindingResult result)
         throws Exception {
@@ -212,6 +217,7 @@ public class CompanyController {
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @PatchMapping
     public ResponseEntity<Company> patchUpdateCompany(@Valid @RequestBody CompanyPatchRequest request, BindingResult result) throws Exception {
         if (result.hasErrors()) {
@@ -232,6 +238,7 @@ public class CompanyController {
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Company> deleteCompany(@PathVariable String id) throws Exception {
         Long parsedId;
