@@ -1,11 +1,6 @@
 package com.hirix.controller.listeners;
 
-import com.hirix.repository.IndustryRepository;
 import com.hirix.repository.LocationRepository;
-import com.hirix.repository.PositionRepository;
-import com.hirix.repository.ProfessionRepository;
-import com.hirix.repository.RankRepository;
-import com.hirix.repository.SpecializationRepository;
 import com.hirix.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

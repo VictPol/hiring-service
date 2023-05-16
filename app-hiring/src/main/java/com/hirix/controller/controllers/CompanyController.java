@@ -20,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -168,7 +169,7 @@ public class CompanyController {
         return new ResponseEntity<>(Collections.singletonMap("companies", companies), HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PostMapping
     public ResponseEntity<Company> createCompany(@Valid @RequestBody CompanyCreateRequest request, BindingResult result)
             throws Exception {
@@ -194,7 +195,7 @@ public class CompanyController {
         return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PutMapping
     public ResponseEntity<Company> updateCompany(@Valid @RequestBody CompanyUpdateRequest request, BindingResult result)
         throws Exception {
@@ -217,7 +218,7 @@ public class CompanyController {
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PatchMapping
     public ResponseEntity<Company> patchUpdateCompany(@Valid @RequestBody CompanyPatchRequest request, BindingResult result) throws Exception {
         if (result.hasErrors()) {
@@ -238,7 +239,7 @@ public class CompanyController {
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Company> deleteCompany(@PathVariable String id) throws Exception {
         Long parsedId;
