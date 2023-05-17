@@ -102,7 +102,7 @@ public class SkillController {
         return new ResponseEntity<>(skills, HttpStatus.OK);
     }
 
-    @GetMapping("/requirement/{id}/{equipment}")
+    @GetMapping("/requirement/{id}/equipment/{equipment}")
     public ResponseEntity<List<Skill>> getSkillsMatchingToRequirementIdAndEquipmentLike(@PathVariable String id,
                                                                                         @PathVariable String equipment) {
         Long parsedId;
@@ -256,7 +256,8 @@ public class SkillController {
         try {
             skills = skillRepository.findSkillsByRequirementIdAndEquipmentLike(req.getExperience(), req.isActive(),
                     req.getRecommendations(), req.getSalary(), req.getTerm(), req.getIndustry(), req.getProfession(),
-                    req.getSpecialization(), req.getRank(), req.getPosition(), "%" + equipment.toLowerCase() + "%");
+                    req.getSpecialization(), req.getRank(), req.getPosition(), req.getLocationOffered().getId(),
+                    "%" + equipment.toLowerCase() + "%");
         } catch (Exception e) {
             throw new EntityNotFoundException
                 ("Can not find skills by requirement and equipment like from required resource \'/skills/requirement/" +

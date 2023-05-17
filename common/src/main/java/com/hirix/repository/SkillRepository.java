@@ -37,6 +37,7 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
                                           Position position, Long offeredLocationId);
 
     @Query(value = "select s from Skill s where" +
+            " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
             " s.experience >= :experience and" +
             " s.active = :isActive and" +
             " s.recommendations >= :recommendations and" +
@@ -53,6 +54,6 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
     List<Skill> findSkillsByRequirementIdAndEquipmentLike(Integer experience, boolean isActive, Integer recommendations,
                                                            Integer salary, Integer term, Industry industry, Profession
                                                            profession, Specialization specialization, Rank rank,
-                                                           Position position, String equipment);
+                                                           Position position, Long offeredLocationId, String equipment);
 
 }
