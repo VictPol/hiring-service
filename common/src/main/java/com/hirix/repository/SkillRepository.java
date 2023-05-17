@@ -30,7 +30,8 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
             " s.profession = :profession and" +
             " s.specialization = :specialization and" +
             " s.rank = :rank and" +
-            " s.position = :position")
+            " s.position = :position"
+    )
     List<Skill> findSkillsByRequirementId(Integer experience, boolean isActive, Integer recommendations,
                                           Integer salary, Integer term, Industry industry,
                                           Profession profession, Specialization specialization, Rank rank,
@@ -50,10 +51,32 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
             " s.specialization = :specialization and" +
             " s.rank = :rank and" +
             " s.position = :position and" +
-            " lower(s.equipments) like :equipment")
+            " lower(s.equipments) like :equipment"
+    )
     List<Skill> findSkillsByRequirementIdAndEquipmentLike(Integer experience, boolean isActive, Integer recommendations,
-                                                           Integer salary, Integer term, Industry industry, Profession
-                                                           profession, Specialization specialization, Rank rank,
-                                                           Position position, Long offeredLocationId, String equipment);
+                                       Integer salary, Integer term, Industry industry, Profession profession,
+                                       Specialization specialization, Rank rank, Position position, Long offeredLocationId,
+                                       String equipment);
+
+    @Query(value = "select s from Skill s where" +
+            " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
+            " s.experience >= :experience and" +
+            " s.active = :isActive and" +
+            " s.recommendations >= :recommendations and" +
+            " s.salaryMax >=:salary and" +
+            " s.salaryMin <= :salary and" +
+            " s.termMax >= :term and" +
+            " s.termMin <= :term and" +
+            " s.industry = :industry and" +
+            " s.profession = :profession and" +
+            " s.specialization = :specialization and" +
+            " s.rank = :rank and" +
+            " s.position = :position and" +
+            " s.employee.location.id = :employeeLocationId"
+    )
+    List<Skill> findSkillsByRequirementIdAndEmployeeLocationId(Integer experience, boolean isActive, Integer recommendations,
+                                          Integer salary, Integer term, Industry industry,
+                                          Profession profession, Specialization specialization, Rank rank,
+                                          Position position, Long offeredLocationId, Long employeeLocationId);
 
 }
