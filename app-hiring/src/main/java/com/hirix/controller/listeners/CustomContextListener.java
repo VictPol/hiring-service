@@ -3,6 +3,7 @@ package com.hirix.controller.listeners;
 import com.hirix.repository.LocationRepository;
 import com.hirix.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContextEvent;
@@ -13,23 +14,13 @@ import javax.servlet.ServletContextListener;
 public class CustomContextListener implements ServletContextListener {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
-//    private final IndustryRepository industryRepository;
-//    private final PositionRepository positionRepository;
-//    private final ProfessionRepository professionRepository;
-//    private final RankRepository rankRepository;
-//    private final SpecializationRepository specializationRepository;
 
+//    @Cacheable
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContextListener.super.contextInitialized(sce);
         locationRepository.findAll();
         userRepository.findAll();
-//        industryRepository.findAll();
-//        positionRepository.findAll();
-//        professionRepository.findAll();
-//        rankRepository.findAll();
-//        specializationRepository.findAll();
-        //here logic of DB start, caches start, etc.
     }
 //
 //    @Override

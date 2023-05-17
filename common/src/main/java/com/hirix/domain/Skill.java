@@ -119,6 +119,12 @@ public class Skill {
 //    @JsonManagedReference
     @JsonIgnoreProperties("skill")
     private Set<Offer> offers = Collections.emptySet();
+//
+//    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
+////    @JsonBackReference
+//    @JsonManagedReference
+////    @JsonIgnoreProperties("skill")
+//    private Set<LinkSkillsLocations> linkSkillsLocations = Collections.emptySet();
 
 }
 

@@ -1,11 +1,58 @@
 package com.hirix.repository;
 
+import com.hirix.domain.Industry;
+import com.hirix.domain.Location;
+import com.hirix.domain.Position;
+import com.hirix.domain.Profession;
+import com.hirix.domain.Rank;
+import com.hirix.domain.Requirement;
 import com.hirix.domain.Skill;
+import com.hirix.domain.Specialization;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface SkillRepository extends JpaRepository<Skill, Long> {
-    List<Skill> findCompaniesByEquipmentsLike(String query);
+    List<Skill> findSkillsByEquipmentsLike(String query);
+
+    @Query(value = "select s from Skill s where" +
+            " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
+            " s.experience >= :experience and" +
+            " s.active = :isActive and" +
+            " s.recommendations >= :recommendations and" +
+            " s.salaryMax >=:salary and" +
+            " s.salaryMin <= :salary and" +
+            " s.termMax >= :term and" +
+            " s.termMin <= :term and" +
+            " s.industry = :industry and" +
+            " s.profession = :profession and" +
+            " s.specialization = :specialization and" +
+            " s.rank = :rank and" +
+            " s.position = :position")
+    List<Skill> findSkillsByRequirementId(Integer experience, boolean isActive, Integer recommendations,
+                                          Integer salary, Integer term, Industry industry,
+                                          Profession profession, Specialization specialization, Rank rank,
+                                          Position position, Long offeredLocationId);
+
+    @Query(value = "select s from Skill s where" +
+            " s.experience >= :experience and" +
+            " s.active = :isActive and" +
+            " s.recommendations >= :recommendations and" +
+            " s.salaryMax >=:salary and" +
+            " s.salaryMin <= :salary and" +
+            " s.termMax >= :term and" +
+            " s.termMin <= :term and" +
+            " s.industry = :industry and" +
+            " s.profession = :profession and" +
+            " s.specialization = :specialization and" +
+            " s.rank = :rank and" +
+            " s.position = :position and" +
+            " lower(s.equipments) like :equipment")
+    List<Skill> findSkillsByRequirementIdAndEquipmentLike(Integer experience, boolean isActive, Integer recommendations,
+                                                           Integer salary, Integer term, Industry industry, Profession
+                                                           profession, Specialization specialization, Rank rank,
+                                                           Position position, String equipment);
 
 }
