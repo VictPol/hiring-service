@@ -103,7 +103,7 @@ public class SkillController {
     }
 
     @GetMapping("/requirement/{id}/salary_min")
-    public ResponseEntity<Skill> getSkillsMatchingToRequirementIdWithMinSalary(@PathVariable String id) {
+    public ResponseEntity<List<Skill>> getSkillsMatchingToRequirementIdWithMinSalary(@PathVariable String id) {
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
@@ -123,8 +123,8 @@ public class SkillController {
                     ("Can not get requirement by id from from required resource \'/skills/requirement/salary_min/{id}\', " + e.getCause());
         }
         Requirement req = optionalRequirement.orElseThrow(() -> new NoSuchElementException("No requirement with such id"));
-        Skill skill = findSkillsByRequirementIdWithMinSalaryQuery(req);
-        return new ResponseEntity<>(skill, HttpStatus.OK);
+        List<Skill> skills = findSkillsByRequirementIdWithMinSalaryQuery(req);
+        return new ResponseEntity<>(skills, HttpStatus.OK);
     }
 
     @GetMapping("/requirement/{id}/equipment/{equipment}")
@@ -314,17 +314,17 @@ public class SkillController {
         return skills;
     }
 
-    private Skill findSkillsByRequirementIdWithMinSalaryQuery(Requirement req) {
-        Skill skill;
+    private List<Skill> findSkillsByRequirementIdWithMinSalaryQuery(Requirement req) {
+        List<Skill> skills;
         try {
-            skill = skillRepository.findSkillsByRequirementIdWithMinSalary(req.getExperience(), req.isActive(),
+            skills = skillRepository.findSkillsByRequirementIdWithMinSalary(req.getExperience(), req.isActive(),
                     req.getRecommendations(), req.getSalary(), req.getTerm(), req.getIndustry(), req.getProfession(),
                     req.getSpecialization(), req.getRank(), req.getPosition(), req.getLocationOffered().getId());
         } catch (Exception e) {
             throw new EntityNotFoundException
                     ("Can not find skills by requirement from required resource \'/skills/requirement/{id}\', " + e.getCause());
         }
-        return skill;
+        return skills;
     }
 
 
