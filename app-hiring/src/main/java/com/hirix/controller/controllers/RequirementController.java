@@ -66,15 +66,38 @@ public class RequirementController {
 
     @GetMapping
     public ResponseEntity<List<Requirement>> getAllRequirements() {
-        List<Requirement> requirements = requirementRepository.findAll();
+        List<Requirement> requirements;
+        try {
+            requirements = requirementRepository.findAll();
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                ("Can not get requirements from from required resource \'rest/requirements\', " + e.getCause());
+        }
         return new ResponseEntity<>(requirements, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Requirement> getRequirementById(@PathVariable String id) {
-        Long parsedId = Long.parseLong(id);
-        Optional<Requirement> requirement = requirementRepository.findById(parsedId);
-        return new ResponseEntity<>(requirement.get(), HttpStatus.OK);
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad requirement {id} in resource path \'rest/requirements/{id}\'. " +
+                "Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'rest/requirements/{id}\'. " +
+                "Id must be more than 0L");
+        }
+        Optional<Requirement> optionalRequirement;
+        try {
+            optionalRequirement = requirementRepository.findById(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                ("Can not get requirement by id from from required resource \'rest/requirements/{id}\', " + e.getCause());
+        }
+        Requirement requirement = optionalRequirement.orElseThrow(() -> new NoSuchElementException("No requirements with such id"));
+        return new ResponseEntity<>(requirement, HttpStatus.OK);
     }
 
     @GetMapping("/skill/{id}")
