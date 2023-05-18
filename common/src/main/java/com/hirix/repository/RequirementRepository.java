@@ -58,4 +58,25 @@ public interface RequirementRepository extends JpaRepository<Requirement, Long> 
                                                 Integer termMax, Industry industry, Profession profession, Specialization specialization,
                                                 Rank rank, Position position, Long skillId, String equipment);
 
+    @Query(value = "select r from Requirement r where" +
+            " r.locationOffered.id in (select l.locationId from  LinkSkillsLocations l where l.skillId = :skillId) and" +
+            " r.experience <= :experience and" +
+            " r.active = :isActive and" +
+            " r.recommendations <= :recommendations and" +
+            " r.salary >= :salaryMin and" +
+            " r.salary <= :salaryMax and" +
+            " r.term >= :termMin and" +
+            " r.term <= :termMax and" +
+            " r.industry = :industry and" +
+            " r.profession = :profession and" +
+            " r.specialization = :specialization and" +
+            " r.rank = :rank and" +
+            " r.position = :position and" +
+            " r.company.location.id = :companyLocationId"
+    )
+    List<Requirement> findRequirementsBySkillIdAndCompanyLocationId(Integer experience, boolean isActive,
+                                        Integer recommendations, Integer salaryMin, Integer salaryMax, Integer termMin,
+                                        Integer termMax, Industry industry, Profession profession, Specialization specialization,
+                                        Rank rank, Position position, Long skillId, Long companyLocationId);
+
 }
