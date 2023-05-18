@@ -1,16 +1,13 @@
 package com.hirix.repository;
 
 import com.hirix.domain.Industry;
-import com.hirix.domain.Location;
 import com.hirix.domain.Position;
 import com.hirix.domain.Profession;
 import com.hirix.domain.Rank;
-import com.hirix.domain.Requirement;
 import com.hirix.domain.Skill;
 import com.hirix.domain.Specialization;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 

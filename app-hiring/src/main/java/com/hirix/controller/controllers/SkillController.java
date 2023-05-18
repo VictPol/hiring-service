@@ -51,7 +51,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/skills")
+@RequestMapping("rest/skills")
 @RequiredArgsConstructor
 public class SkillController {
     private final SkillRepository skillRepository;
@@ -95,7 +95,7 @@ public class SkillController {
             optionalRequirement = requirementRepository.findById(parsedId);
         }  catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not get requirement by id from from required resource \'/skills/requirement/{id}\', ", e.getCause());
+                ("Can not get requirement by id from from required resource \'/skills/requirement/{id}\', " + e.getCause());
         }
         Requirement req = optionalRequirement.orElseThrow(() -> new NoSuchElementException("No requirement with such id"));
         List<Skill> skills = findSkillsByRequirementIdQuery(req);
@@ -108,11 +108,11 @@ public class SkillController {
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad requirement {id} in resource path \'/skills/requirement/{id}/{equipment}\'. " +
+            throw new NumberFormatException("Bad requirement {id} in resource path \'/requirement/{id}/equipment/{equipment}\'. " +
                 "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'/skills/requirement/{id}/{equipment}\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'/requirement/{id}/equipment/{equipment}\'. " +
                 "Id must be more than 0L");
         }
         Optional<Requirement> optionalRequirement;
@@ -120,7 +120,7 @@ public class SkillController {
             optionalRequirement = requirementRepository.findById(parsedId);
         }  catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not get requirement by id from from required resource \'/skills/requirement/{id}/{}\', ", e.getCause());
+                ("Can not get requirement by id from from required resource \'/requirement/{id}/equipment/{equipment}\', ", e.getCause());
         }
         Requirement req = optionalRequirement.orElseThrow(() -> new NoSuchElementException("No requirement with such id"));
         List<Skill> skills = findSkillsByRequirementIdQueryAndEquipmentLike(req, equipment);
@@ -131,37 +131,37 @@ public class SkillController {
     public ResponseEntity<List<Skill>> getSkillsMatchingToRequirementIdAndEmployeeLocationId
             (@PathVariable String id,
              @PathVariable (name = "location_id") String locationId) {
-        Long parsedlocationId;
+        Long parsedLocationId;
         try {
-            parsedlocationId = Long.parseLong(locationId);
+            parsedLocationId = Long.parseLong(locationId);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad requirement {id} in resource path \'/skills/requirement/{id}/{equipment}\'. " +
-                    "Must be Long type");
+            throw new NumberFormatException("Bad requirement {locationId} in resource path \'/requirement/{id}/employee_location/{location_id}\'. " +
+                "Must be Long type");
         }
-        if (parsedlocationId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'/skills/requirement/{id}/{equipment}\'. " +
-                    "Id must be more than 0L");
+        if (parsedLocationId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {locationId} in resource path \'/skills/requirement/{id}/{equipment}\'. " +
+                "Id must be more than 0L");
         }
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad requirement {id} in resource path \'/skills/requirement/{id}/{equipment}\'. " +
+            throw new NumberFormatException("Bad requirement {id} in resource path \'/requirement/{id}/employee_location/{location_id}\'. " +
                     "Must be Long type");
         }
         if (parsedId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'/skills/requirement/{id}/{equipment}\'. " +
-                    "Id must be more than 0L");
+                "Id must be more than 0L");
         }
         Optional<Requirement> optionalRequirement;
         try {
             optionalRequirement = requirementRepository.findById(parsedId);
         }  catch (Exception e) {
             throw new EntityNotFoundException
-                    ("Can not get requirement by id from from required resource \'/skills/requirement/{id}/{}\', ", e.getCause());
+                    ("Can not get requirement by id from from required resource \'/requirement/{id}/employee_location/{location_id}\', ", e.getCause());
         }
         Requirement req = optionalRequirement.orElseThrow(() -> new NoSuchElementException("No requirement with such id"));
-        List<Skill> skills = findSkillsByRequirementIdQueryAndEmployeeLocationId(req, parsedlocationId);
+        List<Skill> skills = findSkillsByRequirementIdQueryAndEmployeeLocationId(req, parsedLocationId);
         return new ResponseEntity<>(skills, HttpStatus.OK);
     }
 
@@ -297,8 +297,8 @@ public class SkillController {
                     "%" + equipment.toLowerCase() + "%");
         } catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not find skills by requirement and equipment like from required resource \'/skills/requirement/" +
-                    "{id}/{equipment}\', " + e.getCause());
+                ("Can not find skills by requirement and equipment like from required resource \'/requirement/{id}/" +
+                        "equipment/{equipment}\', " + e.getCause());
         }
         return skills;
     }
@@ -312,7 +312,7 @@ public class SkillController {
                     employeeLocationId);
         } catch (Exception e) {
             throw new EntityNotFoundException
-                    ("Can not find skills by requirement from required resource \'/skills/requirement/{id}\', " + e.getCause());
+                ("Can not find skills by requirement from required resource \'/requirement/{id}/employee_location/{location_id}\', " + e.getCause());
         }
         return skills;
     }
