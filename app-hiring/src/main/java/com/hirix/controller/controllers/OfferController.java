@@ -8,6 +8,8 @@ import com.hirix.domain.Offer;
 import com.hirix.domain.Requirement;
 import com.hirix.domain.Skill;
 import com.hirix.domain.User;
+import com.hirix.exception.EntityNotFoundException;
+import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.OfferRepository;
 import com.hirix.repository.RequirementRepository;
 import com.hirix.repository.SkillRepository;
@@ -26,10 +28,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/offers")
+@RequestMapping("rest/offers")
 @RequiredArgsConstructor
 public class OfferController {
     private final OfferRepository offerRepository;
@@ -47,6 +50,74 @@ public class OfferController {
         Long parsedId = Long.parseLong(id);
         Optional<Offer> offer = offerRepository.findById(parsedId);
         return new ResponseEntity<>(offer.get(), HttpStatus.OK);
+    }
+
+    @GetMapping("/skill/{id}")
+    public ResponseEntity<List<Offer>> getOfferBySkillId(@PathVariable String id) {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad skill {id} in resource path \'rest/offers/skill/{id}\'. " +
+                "Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/offers/skill/{id}\'. " +
+                "Id must be more than 0L");
+        }
+        List<Offer> offers = offerRepository.findOffersBySkillIdQuery(parsedId);
+        return new ResponseEntity<>(offers, HttpStatus.OK);
+    }
+
+    @GetMapping("/employee/{id}")
+    public ResponseEntity<List<Offer>> getOfferByEmployeeId(@PathVariable String id) {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad employee {id} in resource path \'rest/offers/employee/{id}\'. " +
+                    "Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad employee {id} in resource path \'rest/offers/employee/{id}\'. " +
+                    "Id must be more than 0L");
+        }
+        List<Offer> offers = offerRepository.findOffersByEmployeeIdQuery(parsedId);
+        return new ResponseEntity<>(offers, HttpStatus.OK);
+    }
+
+    @GetMapping("/requirement/{id}")
+    public ResponseEntity<List<Offer>> getOfferByRequirementId(@PathVariable String id) {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad requirement {id} in resource path \'rest/offers/requirement/{id}\'. " +
+                "Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'rest/offers/requirement/{id}\'. " +
+                "Id must be more than 0L");
+        }
+        List<Offer> offers = offerRepository.findOffersByRequirementIdQuery(parsedId);
+        return new ResponseEntity<>(offers, HttpStatus.OK);
+    }
+
+    @GetMapping("/company/{id}")
+    public ResponseEntity<List<Offer>> getOfferByCompanyId(@PathVariable String id) {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad company {id} in resource path \'rest/offers/company/{id}\'. " +
+                "Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad company {id} in resource path \'rest/offers/company/{id}\'. " +
+                "Id must be more than 0L");
+        }
+        List<Offer> offers = offerRepository.findOffersByCompanyIdQuery(parsedId);
+        return new ResponseEntity<>(offers, HttpStatus.OK);
     }
 
     @PostMapping
