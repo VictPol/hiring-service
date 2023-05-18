@@ -101,6 +101,32 @@ public class SkillController {
         List<Skill> skills = findSkillsByRequirementIdQuery(req);
         return new ResponseEntity<>(skills, HttpStatus.OK);
     }
+
+    @GetMapping("/requirement/{id}/salary_min")
+    public ResponseEntity<Skill> getSkillsMatchingToRequirementIdWithMinSalary(@PathVariable String id) {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad requirement {id} in resource path \'/skills/requirement/salary_min/{id}\'. " +
+                    "Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'/skills/requirement/salary_min/{id}\'. " +
+                    "Id must be more than 0L");
+        }
+        Optional<Requirement> optionalRequirement;
+        try {
+            optionalRequirement = requirementRepository.findById(parsedId);
+        }  catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not get requirement by id from from required resource \'/skills/requirement/salary_min/{id}\', " + e.getCause());
+        }
+        Requirement req = optionalRequirement.orElseThrow(() -> new NoSuchElementException("No requirement with such id"));
+        Skill skill = findSkillsByRequirementIdWithMinSalaryQuery(req);
+        return new ResponseEntity<>(skill, HttpStatus.OK);
+    }
+
     @GetMapping("/requirement/{id}/equipment/{equipment}")
     public ResponseEntity<List<Skill>> getSkillsMatchingToRequirementIdAndEquipmentLike(@PathVariable String id,
                                                                                         @PathVariable String equipment) {
@@ -287,6 +313,20 @@ public class SkillController {
         }
         return skills;
     }
+
+    private Skill findSkillsByRequirementIdWithMinSalaryQuery(Requirement req) {
+        Skill skill;
+        try {
+            skill = skillRepository.findSkillsByRequirementIdWithMinSalary(req.getExperience(), req.isActive(),
+                    req.getRecommendations(), req.getSalary(), req.getTerm(), req.getIndustry(), req.getProfession(),
+                    req.getSpecialization(), req.getRank(), req.getPosition(), req.getLocationOffered().getId());
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not find skills by requirement from required resource \'/skills/requirement/{id}\', " + e.getCause());
+        }
+        return skill;
+    }
+
 
     private List<Skill> findSkillsByRequirementIdQueryAndEquipmentLike(Requirement req, String equipment) {
         List<Skill> skills;

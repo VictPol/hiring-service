@@ -34,6 +34,29 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
                                           Profession profession, Specialization specialization, Rank rank,
                                           Position position, Long offeredLocationId);
 
+    @Query(value =
+            "select s from Skill s where s.salaryMin in (" +
+            " select min (s.salaryMin) from Skill s where" +
+            " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
+            " s.experience >= :experience and" +
+            " s.active = :isActive and" +
+            " s.recommendations >= :recommendations and" +
+            " s.salaryMax >=:salary and" +
+            " s.salaryMin <= :salary and" +
+            " s.termMax >= :term and" +
+            " s.termMin <= :term and" +
+            " s.industry = :industry and" +
+            " s.profession = :profession and" +
+            " s.specialization = :specialization and" +
+            " s.rank = :rank and" +
+            " s.position = :position)"
+    )
+    Skill findSkillsByRequirementIdWithMinSalary(Integer experience, boolean isActive, Integer recommendations,
+                                          Integer salary, Integer term, Industry industry,
+                                          Profession profession, Specialization specialization, Rank rank,
+                                          Position position, Long offeredLocationId);
+
+
     @Query(value = "select s from Skill s where" +
             " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
             " s.experience >= :experience and" +
