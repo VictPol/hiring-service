@@ -28,7 +28,7 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
             id = request.getId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about company id in request body to update company. Must be Long type",
+                ("Poor information about company id in request body to update company. Must be Long type. " +
                     e.getCause());
         }
         if (id < 1L) {
@@ -56,7 +56,7 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
                 company.setOrgType(request.getOrgType());
             }
         } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company" +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
                 e.getCause());
         }
         company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
@@ -66,7 +66,7 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
                 ("Poor information about user id in request body to patch update company. " +
-                     "Must be Null or Long type" + e.getCause());
+                     "Must be null or Long type" + e.getCause());
         }
         if (userId != null && !userId.equals(company.getUser().getId())) {
             throw new PoorInfoInRequestToCreateUpdateEntity
@@ -77,24 +77,23 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
             locationId = request.getLocationId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to update company. Must be Long type" +
+                ("Poor information about location id in request body to patch update company. Must be Long type. " +
                     e.getCause());
         }
         if (locationId != null && locationId > 0L && !locationId.equals(company.getLocation().getId())) {
             Optional<Location> optionalLocation;
             try {
                 optionalLocation = locationRepository.findById(locationId);
-            } catch (Exception exception) {
-                throw new EntityNotFoundException("Can not get location by id from DB, " + exception.getCause());
+            } catch (Exception e) {
+                throw new EntityNotFoundException("Can not get company location by id from DB, " + e.getCause());
             }
-            Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id"));
+            Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No company location with such id"));
             company.setLocation(location);
         }
         if (locationId != null && locationId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to patch update company. Must be more than 1L.");
+                ("Poor information about company location id in request body to patch update company. Must be more than 1L.");
         }
-
         return company;
     }
 }

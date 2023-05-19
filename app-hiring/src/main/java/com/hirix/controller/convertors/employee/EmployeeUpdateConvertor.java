@@ -67,16 +67,12 @@ public class EmployeeUpdateConvertor  extends EmployeeBaseConvertor<EmployeeUpda
                     "LocationId must be more than 0L");
         }
         if (!locationId.equals(employee.getLocation().getId())) {
-            Optional<Location> optionalLocation;
-            try {
-                optionalLocation = locationRepository.findById(locationId);
-            } catch (Exception e) {
-                throw new EntityNotFoundException("Can not get employee location by id from DB, " + e.getCause());
-            }
-            Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No employee location with such id"));
-            employee.setLocation(location);
+            setLocationToEmployee(employee, locationId);
         }
-
         return doConvert(request, employee);
+    }
+
+    private void setLocationToEmployee(Employee employee, Long locationId) {
+        EmployeePatchConvertor.setLocationToEmployee(employee, locationId, locationRepository);
     }
 }

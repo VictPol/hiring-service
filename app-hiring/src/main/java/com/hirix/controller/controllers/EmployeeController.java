@@ -2,6 +2,8 @@ package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.EmployeeCreateRequest;
 import com.hirix.controller.requests.create.UserCreateRequest;
+import com.hirix.controller.requests.patch.CompanyPatchRequest;
+import com.hirix.controller.requests.patch.EmployeePatchRequest;
 import com.hirix.controller.requests.search.EmployeeSearchCriteria;
 import com.hirix.controller.requests.search.EmployeeSearchCriteriaWithBirthday;
 import com.hirix.controller.requests.update.EmployeeUpdateRequest;
@@ -14,7 +16,9 @@ import com.hirix.domain.enums.Gender;
 import com.hirix.domain.enums.Health;
 import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
+import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.IllegalRequestException;
+import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.EmployeeRepository;
 import com.hirix.repository.LocationRepository;
 import com.hirix.repository.UserRepository;
@@ -28,6 +32,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,15 +40,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("rest/employees")
 @RequiredArgsConstructor
 public class EmployeeController {
     private final EmployeeRepository employeeRepository;
@@ -53,15 +60,37 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees() {
-        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> employees;
+        try {
+            employees = employeeRepository.findAll();
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get employees from required resource \'rest/employees\', " +
+                    e.getCause());
+        }
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Employee> getEmployeeById(@PathVariable String id) {
-        Long parsedId = Long.parseLong(id);
-        Optional<Employee> employee = employeeRepository.findById(parsedId);
-        return new ResponseEntity<>(employee.get(), HttpStatus.OK);
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad employee {id} in resource path \'/rest/employees/{id}\'. Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad employee {id} in resource path \'/rest/employees/{id}\'. " +
+                    "Id must be more than 0L");
+        }
+        Optional<Employee> optionalEmployee;
+        try {
+            optionalEmployee = employeeRepository.findById(parsedId);
+        }  catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not get employee by id from from required resource \'/rest/employees/{id}\', " + e.getCause());
+        }
+        Employee employee = optionalEmployee.orElseThrow(() -> new NoSuchElementException("No employee with such id"));
+        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
     @GetMapping("/search")
@@ -125,6 +154,28 @@ public class EmployeeController {
                     ("Employee has not been updated and saved to DB, " + e.getCause());
         }
        return new ResponseEntity<>(employee, HttpStatus.OK);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @PatchMapping
+    public ResponseEntity<Employee> patchUpdateEmployee(@Valid @RequestBody EmployeePatchRequest request, BindingResult result)
+            throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException(result);
+        }
+        Employee employee;
+        try {
+            employee = conversionService.convert(request, Employee.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert patch request to employee, " + e.getCause());
+        }
+        try {
+            employee = employeeRepository.save(employee);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException
+                    ("Employee has not been patch updated and saved to DB, " + e.getCause());
+        }
+        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

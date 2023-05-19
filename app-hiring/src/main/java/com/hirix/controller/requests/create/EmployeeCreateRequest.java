@@ -26,11 +26,4 @@ public class EmployeeCreateRequest {
     private String gender;
     private Long userId;
     private Long locationId;
-
-//    private Timestamp created;
-//    private Timestamp changed;
-//    private boolean deleted;
-//    private UserCreateRequest user;
-//    private Location location;
-//    private Set<Skill> skills = Collections.emptySet();
 }

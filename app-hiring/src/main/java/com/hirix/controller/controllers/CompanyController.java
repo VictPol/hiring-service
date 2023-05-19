@@ -227,7 +227,7 @@ public class CompanyController {
         try {
             company = conversionService.convert(request, Company.class);
         } catch (Exception e) {
-            throw new ConvertRequestToEntityException("Can not convert patch request to company" + e.getCause());
+            throw new ConvertRequestToEntityException("Can not convert patch request to company, " + e.getCause());
         }
         try {
             company = companyRepository.save(company);
