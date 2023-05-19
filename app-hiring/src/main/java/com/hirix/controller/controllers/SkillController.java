@@ -318,8 +318,8 @@ public class SkillController {
         List<Skill> skills;
         try {
             skills = skillRepository.findSkillsByRequirementIdWithMinSalary(req.getExperience(), req.isActive(),
-                    req.getRecommendations(), req.getSalary(), req.getTerm(), req.getIndustry(), req.getProfession(),
-                    req.getSpecialization(), req.getRank(), req.getPosition(), req.getLocationOffered().getId());
+                    req.getRecommendations(), req.getSalary(), req.getTerm(), req.getIndustry().getId(), req.getProfession().getId(),
+                    req.getSpecialization().getId(), req.getRank().getId(), req.getPosition().getId(), req.getLocationOffered().getId());
         } catch (Exception e) {
             throw new EntityNotFoundException
                     ("Can not find skills by requirement from required resource \'/skills/requirement/{id}\', " + e.getCause());

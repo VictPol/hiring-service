@@ -45,16 +45,29 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
             " s.salaryMin <= :salary and" +
             " s.termMax >= :term and" +
             " s.termMin <= :term and" +
-            " s.industry = :industry and" +
-            " s.profession = :profession and" +
-            " s.specialization = :specialization and" +
-            " s.rank = :rank and" +
-            " s.position = :position)"
+            " s.industry.id = :industryId and" +
+            " s.profession.id = :professionId and" +
+            " s.specialization.id = :specializationId and" +
+            " s.rank.id = :rankId and" +
+            " s.position.id = :positionId) and" +
+                    " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
+                    " s.experience >= :experience and" +
+                    " s.active = :isActive and" +
+                    " s.recommendations >= :recommendations and" +
+                    " s.salaryMax >=:salary and" +
+                    " s.salaryMin <= :salary and" +
+                    " s.termMax >= :term and" +
+                    " s.termMin <= :term and" +
+                    " s.industry.id = :industryId and" +
+                    " s.profession.id = :professionId and" +
+                    " s.specialization.id = :specializationId and" +
+                    " s.rank.id = :rankId and" +
+                    " s.position.id = :positionId"
     )
     List<Skill> findSkillsByRequirementIdWithMinSalary(Integer experience, boolean isActive, Integer recommendations,
-                                          Integer salary, Integer term, Industry industry,
-                                          Profession profession, Specialization specialization, Rank rank,
-                                          Position position, Long offeredLocationId);
+                                          Integer salary, Integer term, Long industryId,
+                                          Long professionId, Long specializationId, Long rankId,
+                                          Long positionId, Long offeredLocationId);
 
 
     @Query(value = "select s from Skill s where" +
