@@ -5,6 +5,7 @@ import com.hirix.controller.requests.create.UserCreateRequest;
 import com.hirix.controller.requests.search.EmployeeSearchCriteria;
 import com.hirix.controller.requests.search.EmployeeSearchCriteriaWithBirthday;
 import com.hirix.controller.requests.update.EmployeeUpdateRequest;
+import com.hirix.domain.Company;
 import com.hirix.domain.Employee;
 import com.hirix.domain.Location;
 import com.hirix.domain.User;
@@ -98,32 +99,32 @@ public class EmployeeController {
         try {
             employee = employeeRepository.save(employee);
         } catch (Exception e) {
-            throw new EntityNotCreatedOrNotUpdatedException("Employee has not saved to DB, because of: " + e.getCause());
+            throw new EntityNotCreatedOrNotUpdatedException("Employee has not created and saved to DB, because of: " + e.getCause());
         }
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PutMapping
-    public ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeUpdateRequest request) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<Employee> optionalEmployee = employeeRepository.findById(request.getId());
-        Employee employee = optionalEmployee.get();
-        employee.setFullName(request.getFullName());
-        employee.setBirthday(Timestamp.valueOf(request.getBirthday()));
-        employee.setEducation(Education.valueOf(request.getEducation()));
-        employee.setHealth(Health.valueOf(request.getHealth()));
-        employee.setGender(Gender.valueOf(request.getGender()));
-        employee.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-//        Optional<User> optionalUser = userRepository.findById(request.getUserId());
-//        User user = optionalUser.get();
-//        employee.setUser(user);
-        Optional<Location> optionalLocation = locationRepository.findById(request.getLocationId());
-        Location location = optionalLocation.get();
-        employee.setLocation(location);
-        employee = employeeRepository.save(employee);
-        return new ResponseEntity<>(employee, HttpStatus.OK);
+    public ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeUpdateRequest request, BindingResult result)
+            throws Exception {
+       if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to update employee", result);
+       }
+        Employee employee;
+        try {
+            employee = conversionService.convert(request, Employee.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert update request to employee, because of: " +
+                    e.getCause());
+        }
+        try {
+            employee = employeeRepository.save(employee);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException
+                    ("Employee has not been updated and saved to DB, " + e.getCause());
+        }
+       return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

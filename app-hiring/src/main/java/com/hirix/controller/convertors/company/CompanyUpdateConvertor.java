@@ -46,10 +46,6 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
                 ("Poor information about user id in request body to update company. Must be Long type" +
                     e.getCause());
         }
-//        if (userId < 1L) {
-//            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
-//                "UserId must be more then 0L");
-//        }
         if (!userId.equals(company.getUser().getId())) {
             throw new PoorInfoInRequestToCreateUpdateEntity
                 ("Can not update company, because user id does not correspond to this company");

@@ -189,7 +189,7 @@ public class CompanyController {
         try {
             company = companyRepository.save(company);
         } catch (Exception e) {
-            throw new EntityNotCreatedOrNotUpdatedException("Company has not saved to DB, because of: " + e.getCause());
+            throw new EntityNotCreatedOrNotUpdatedException("Company has not created and saved to DB, because of: " + e.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
