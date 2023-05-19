@@ -1,4 +1,4 @@
-package com.hirix.controller.convertors;
+package com.hirix.controller.convertors.company;
 
 import com.hirix.controller.requests.update.CompanyUpdateRequest;
 import com.hirix.domain.Company;
@@ -7,7 +7,6 @@ import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.CompanyRepository;
 import com.hirix.repository.LocationRepository;
-import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.hirix.controller.convertors;
+package com.hirix.controller.convertors.company;
 
 import com.hirix.controller.requests.patch.CompanyPatchRequest;
 import com.hirix.domain.Company;

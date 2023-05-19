@@ -11,12 +11,19 @@ import com.hirix.domain.User;
 import com.hirix.domain.enums.Education;
 import com.hirix.domain.enums.Gender;
 import com.hirix.domain.enums.Health;
+import com.hirix.exception.ConvertRequestToEntityException;
+import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
+import com.hirix.exception.IllegalRequestException;
 import com.hirix.repository.EmployeeRepository;
 import com.hirix.repository.LocationRepository;
 import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,6 +46,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EmployeeController {
     private final EmployeeRepository employeeRepository;
+    private final ConversionService conversionService;
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
 
@@ -71,26 +79,27 @@ public class EmployeeController {
         return new ResponseEntity<>(Collections.singletonMap("employees", employees), HttpStatus.OK);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeCreateRequest request) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Employee employee = new Employee();
-        employee.setFullName(request.getFullName());
-        employee.setBirthday(Timestamp.valueOf(request.getBirthday()));
-        employee.setEducation(Education.valueOf(request.getEducation()));
-        employee.setHealth(Health.valueOf(request.getHealth()));
-        employee.setGender(Gender.valueOf(request.getGender()));
-        employee.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        employee.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        Optional<User> optionalUser = userRepository.findById(request.getUserId());
-        User user = optionalUser.get();
-        employee.setUser(user);
-        Optional<Location> optionalLocation = locationRepository.findById(request.getLocationId());
-        Location location = optionalLocation.get();
-        employee.setLocation(location);
-        employee = employeeRepository.save(employee);
+    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeCreateRequest request, BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to create employee", result);
+        }
+        Employee employee;
+        try {
+            employee = conversionService.convert(request, Employee.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert create request to employee, because of: " +
+                    e.getCause());
+        }
+        if (employee == null) {
+            throw new NullPointerException("Employee has not created, check request body");
+        }
+        try {
+            employee = employeeRepository.save(employee);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException("Employee has not saved to DB, because of: " + e.getCause());
+        }
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 

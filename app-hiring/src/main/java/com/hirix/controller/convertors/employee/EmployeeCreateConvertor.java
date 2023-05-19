@@ -1,7 +1,7 @@
-package com.hirix.controller.convertors;
+package com.hirix.controller.convertors.employee;
 
-import com.hirix.controller.requests.create.CompanyCreateRequest;
-import com.hirix.domain.Company;
+import com.hirix.controller.requests.create.EmployeeCreateRequest;
+import com.hirix.domain.Employee;
 import com.hirix.domain.Location;
 import com.hirix.domain.User;
 import com.hirix.exception.EntityNotFoundException;
@@ -16,25 +16,27 @@ import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+
 @Component
 @RequiredArgsConstructor
-public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRequest, Company>{
+public class EmployeeCreateConvertor extends EmployeeBaseConvertor<EmployeeCreateRequest, Employee> {
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
+
     @Override
-    public Company convert(CompanyCreateRequest request) {
-        Company company = new Company();
+    public Employee convert(EmployeeCreateRequest request) {
+        Employee employee = new Employee();
         Long userId;
         try {
             userId = request.getUserId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about user id in request body to create company. Must be Long type" +
+                    ("Poor information about user id in request body to create employee. Must be Long type" +
                             e.getCause());
         }
         if (userId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company. " +
-                "UserId must be more than 0L");
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create employee. " +
+                    "UserId must be more than 0L");
         }
         Optional<User> optionalUser;
         try {
@@ -44,22 +46,22 @@ public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRe
         }
         User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
         if (user.getCompany() == null) {
-            company.setUser(user);
+            employee.setUser(user);
         } else {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Can not create company, because company with such user id exists yet");
+                    ("Can not create employee, because employee with such user id exists yet");
         }
         Long locationId;
         try {
             locationId = request.getLocationId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to create company. Must be Long type" +
-                    e.getCause());
+                    ("Poor information about location id in request body to create employee. Must be Long type" +
+                            e.getCause());
         }
         if (locationId < 1) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company. " +
-                "LocationId must be more than 0L");
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create employee. " +
+                    "LocationId must be more than 0L");
         }
         Optional<Location> optionalLocation;
         try {
@@ -67,11 +69,10 @@ public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRe
         } catch (Exception e) {
             throw new EntityNotFoundException("Can not get location by id from DB, " + e.getCause());
         }
-        Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException
-                ("No location with such id was found"));
-        company.setLocation(location);
-        company.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+        Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id"));
+        employee.setLocation(location);
+        employee.setCreated(Timestamp.valueOf(LocalDateTime.now()));
 
-        return doConvert(request, company);
+        return doConvert(request, employee);
     }
 }

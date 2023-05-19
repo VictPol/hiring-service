@@ -184,13 +184,12 @@ public class CompanyController {
                 e.getCause());
         }
         if (company == null) {
-            throw new NullPointerException("Company has not created, check request body.");
+            throw new NullPointerException("Company has not created, check request body");
         }
         try {
             company = companyRepository.save(company);
         } catch (Exception e) {
-            throw new EntityNotCreatedOrNotUpdatedException("Company has not created and saved to DB, because of: " +
-                e.getCause());
+            throw new EntityNotCreatedOrNotUpdatedException("Company has not saved to DB, because of: " + e.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.CREATED);
     }
