@@ -13,7 +13,6 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     )
     List<Offer> findOffersBySkillIdQuery(Long skillId);
 
-
     @Query(value =
             "select o from Offer o inner join Requirement r on o.requirement.id = r.id" +
             " where o.skill.id = :skillId and" +
@@ -21,6 +20,14 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
             " (select o.requirement.id from o where o.skill.id = :skillId))"
     )
     List<Offer> findOffersBySkillIdQueryAndSalaryMax(Long skillId);
+
+    @Query(value =
+            "select o from Offer o inner join Skill s on o.skill.id = s.id" +
+            " where o.requirement.id = :requirementId and" +
+            " o.skill.salaryMin = (select min(s.salaryMin) from s where s.id in" +
+            " (select o.skill.id from o where o.requirement.id = :requirementId))"
+    )
+    List<Offer> findOffersByRequirementIdQueryAndSalaryMin(Long requirementId);
 
 
     @Query(value = "select o from Offer o where" +

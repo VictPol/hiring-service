@@ -69,17 +69,17 @@ public class OfferController {
         return new ResponseEntity<>(offers, HttpStatus.OK);
     }
 
-    @GetMapping("/skill/{id}/salary_max")
+    @GetMapping("/skill/{id}/requirement_salary_max")
     public ResponseEntity<List<Offer>> getOfferBySkillIdAndSalaryMax(@PathVariable String id) {
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad skill {id} in resource path \'rest/offers/skill/{id}/salary_max\'. " +
+            throw new NumberFormatException("Bad skill {id} in resource path \'rest/offers/skill/{id}/requirement_salary_max\'. " +
                 "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/offers/skill/{id}/salary_max\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/offers/skill/{id}/requirement_salary_max\'. " +
                 "Id must be more than 0L");
         }
         List<Offer> offers;
@@ -87,8 +87,32 @@ public class OfferController {
             offers = offerRepository.findOffersBySkillIdQueryAndSalaryMax(parsedId);
         } catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not find offers by skill id with salary_max from required resource \'rest/offers/skill/{id}/salary_max\', " +
+                ("Can not find offers by skill id with salary_max from required resource \'rest/offers/skill/{id}/requirement_salary_max\', " +
                     e.getCause());
+        }
+        return new ResponseEntity<>(offers, HttpStatus.OK);
+    }
+
+    @GetMapping("/requirement/{id}/skill_salary_min")
+    public ResponseEntity<List<Offer>> getOfferByRequirementIdAndSalaryMin(@PathVariable String id) {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad skill {id} in resource path \'rest/offers/requirement/{id}/skill_salary_min\'. " +
+                    "Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/offers/requirement/{id}/skill_salary_min\'. " +
+                    "Id must be more than 0L");
+        }
+        List<Offer> offers;
+        try {
+            offers = offerRepository.findOffersByRequirementIdQueryAndSalaryMin(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not find offers by skill id with salary_max from required resource \'rest/offers/requirement/{id}/skill_salary_min\', " +
+                            e.getCause());
         }
         return new ResponseEntity<>(offers, HttpStatus.OK);
     }
