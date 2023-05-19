@@ -347,8 +347,8 @@ public class SkillController {
         List<Skill> skills;
         try {
             skills = skillRepository.findSkillsByRequirementIdAndEmployeeLocationId(req.getExperience(), req.isActive(),
-                    req.getRecommendations(), req.getSalary(), req.getTerm(), req.getIndustry(), req.getProfession(),
-                    req.getSpecialization(), req.getRank(), req.getPosition(), req.getLocationOffered().getId(),
+                    req.getRecommendations(), req.getSalary(), req.getTerm(), req.getIndustry().getId(), req.getProfession().getId(),
+                    req.getSpecialization().getId(), req.getRank().getId(), req.getPosition().getId(), req.getLocationOffered().getId(),
                     employeeLocationId);
         } catch (Exception e) {
             throw new EntityNotFoundException

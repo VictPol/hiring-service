@@ -87,16 +87,16 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
             " s.salaryMin <= :salary and" +
             " s.termMax >= :term and" +
             " s.termMin <= :term and" +
-            " s.industry = :industry and" +
-            " s.profession = :profession and" +
-            " s.specialization = :specialization and" +
-            " s.rank = :rank and" +
-            " s.position = :position and" +
+            " s.industry.id = :industryId and" +
+            " s.profession.id = :professionId and" +
+            " s.specialization.id = :specializationId and" +
+            " s.rank.id = :rankId and" +
+            " s.position.id = :positionId and" +
             " s.employee.location.id = :employeeLocationId"
     )
     List<Skill> findSkillsByRequirementIdAndEmployeeLocationId(Integer experience, boolean isActive, Integer recommendations,
-                                          Integer salary, Integer term, Industry industry,
-                                          Profession profession, Specialization specialization, Rank rank,
-                                          Position position, Long offeredLocationId, Long employeeLocationId);
+                                          Integer salary, Integer term, Long industryId,
+                                          Long professionId, Long specializationId, Long rankId,
+                                          Long positionId, Long offeredLocationId, Long employeeLocationId);
 
 }
