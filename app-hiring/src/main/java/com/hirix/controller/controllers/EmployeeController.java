@@ -16,6 +16,7 @@ import com.hirix.domain.enums.Gender;
 import com.hirix.domain.enums.Health;
 import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
+import com.hirix.exception.EntityNotDeletedException;
 import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
@@ -24,6 +25,9 @@ import com.hirix.repository.LocationRepository;
 import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Propagation;
@@ -55,8 +59,6 @@ import java.util.Optional;
 public class EmployeeController {
     private final EmployeeRepository employeeRepository;
     private final ConversionService conversionService;
-    private final UserRepository userRepository;
-    private final LocationRepository locationRepository;
 
     @GetMapping
     public ResponseEntity<List<Employee>> getAllEmployees() {
@@ -68,6 +70,63 @@ public class EmployeeController {
                     e.getCause());
         }
         return new ResponseEntity<>(employees, HttpStatus.OK);
+    }
+
+    @GetMapping("/page_one_employee/{page}")
+    public ResponseEntity<Map<String, Page<Employee>>> findAllShowPageWithOneEmployee(@PathVariable String page) {
+        Integer parsedPage;
+        try {
+            parsedPage = Integer.parseInt(page);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad {page} in resource path \'/rest/employees/page_one_employee/{page}\'. " +
+                    "Must be Integer type");
+        }
+        if (parsedPage < 0) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/employees/page_one_employee/{page}\'. " +
+                    "Id must be not less than 0L");
+        }
+        Page<Employee> employees;
+        try {
+            employees = employeeRepository.findAll(PageRequest.of(parsedPage, 1, Sort.by("fullName").ascending()));
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not get companies from required resource \'/rest/companies/page/{page}/{size}\', " + e.getCause());
+        }
+        return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, employees), HttpStatus.OK);
+    }
+
+    @GetMapping("/page_size_employees/{page}/{size}")
+    public ResponseEntity<Map<String, Page<Employee>>> findAllShowPageBySize(@PathVariable String page, @PathVariable String size) {
+        Integer parsedPage;
+        try {
+            parsedPage = Integer.parseInt(page);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad {page} in resource path \'/rest/employees/page_size_employees/{page}/{size}\'. " +
+                    "Must be Integer type");
+        }
+        if (parsedPage < 0) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/employees/page_size_employees/{page}/{size}\'. " +
+                    "Id must be not less than 0L");
+        }
+        Integer parsedSize;
+        try {
+            parsedSize = Integer.parseInt(size);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad {size} in resource path \'/rest/employees/page_size_employees/{page}/{size}\'. " +
+                    "Must be Integer type");
+        }
+        if (parsedSize < 1) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {size} in resource path \'/rest/employees/page_size_employees/{page}/{size}\'. " +
+                    "Id must be more than 0L");
+        }
+        Page<Employee> employees;
+        try {
+            employees = employeeRepository.findAll(PageRequest.of(parsedPage, parsedSize, Sort.by("fullName").ascending()));
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not get employees from required resource \'/rest/employees/page_size_employees/{page}/{size}\', " + e.getCause());
+        }
+        return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, employees), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -95,23 +154,71 @@ public class EmployeeController {
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, List<Employee>>> searchEmployeesByFullNameLike
-            (@ModelAttribute EmployeeSearchCriteria criteria) {
-        List<Employee> employees = employeeRepository.findEmployeesByFullNameLike("%" + criteria.getQuery() + "%");
+            (@Valid @ModelAttribute EmployeeSearchCriteria criteria, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException
+                    ("Bad argument in search path, must be: \'search?query=word_like_employee_fullName\'", result);
+        }
+        String query;
+        try {
+            query = criteria.getQuery();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can not get Query from criteria. " + e.getCause());
+        }
+        if (query == null) {
+            throw new IllegalArgumentException
+                    ("Bad argument in search path, must be: \'search?query=word_like_employee_fullName\'");
+        }
+        List<Employee> employees;
+        try {
+            employees = employeeRepository.findEmployeesByFullNameLike("%" + query + "%");
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not search employees from required resource \'/rest/employees/search?query=query\'" +
+                            criteria.getQuery() + ", " + e.getCause());
+        }
         return new ResponseEntity<>(Collections.singletonMap("employees", employees), HttpStatus.OK);
     }
 
     @GetMapping("/search_name_birthday")
     public ResponseEntity<Map<String, List<Employee>>> searchEmployeesByFullNameLikeAndBirthdayAfter
-            (@ModelAttribute EmployeeSearchCriteriaWithBirthday criteria) {
-        Timestamp birthday = Timestamp.valueOf(criteria.getBirthday());
-        List<Employee> employees = employeeRepository.findEmployeesByFullNameLikeAndBirthdayAfter
-                ("%" + criteria.getQuery() + "%", birthday);
+            (@Valid @ModelAttribute EmployeeSearchCriteriaWithBirthday criteria, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException
+                    ("Bad argument in search path, must be: \'search?query=word_like_employee_fullName" +
+                            "&birthday=yyyy-mm-dd HH:mm:ss.000\'", result);
+        }
+        String query;
+        try {
+            query = criteria.getQuery();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can not get Query from criteria. " + e.getCause());
+        }
+        if (query == null) {
+            throw new IllegalArgumentException
+                    ("Bad argument in search path, must be: \'search?query=word_like_employee_fullName\'");
+        }
+        Timestamp birthday;
+        try {
+            birthday = Timestamp.valueOf(criteria.getBirthday());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can not get birthday from criteria. " + e.getCause());
+        }
+        List<Employee> employees;
+        try {
+            employees = employeeRepository.findEmployeesByFullNameLikeAndBirthdayAfter("%" + criteria.getQuery() + "%",
+                    birthday);
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not search employees from required resource \'/rest/employees/search?query=query&birthday=birthday\'" +
+                            criteria.getQuery() + ", " + e.getCause());
+        }
         return new ResponseEntity<>(Collections.singletonMap("employees", employees), HttpStatus.OK);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PostMapping
-    public ResponseEntity<Employee> createEmployee(@RequestBody EmployeeCreateRequest request, BindingResult result) throws Exception {
+    public ResponseEntity<Employee> createEmployee(@Valid @RequestBody EmployeeCreateRequest request, BindingResult result) throws Exception {
         if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to create employee", result);
         }
@@ -135,7 +242,7 @@ public class EmployeeController {
 
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PutMapping
-    public ResponseEntity<Employee> updateEmployee(@RequestBody EmployeeUpdateRequest request, BindingResult result)
+    public ResponseEntity<Employee> updateEmployee(@Valid @RequestBody EmployeeUpdateRequest request, BindingResult result)
             throws Exception {
        if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to update employee", result);
@@ -179,13 +286,26 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Employee> deleteEmployee(@PathVariable Long id) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
-        Employee employee = optionalEmployee.get();
-        employeeRepository.delete(employee);
+    public ResponseEntity<Employee> deleteEmployee(@PathVariable String id) throws Exception {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad information about employee id in resource \'/rest/employees/{id}\'. " +
+                    "Must be Long type");
+        }
+        Optional<Employee> optionalEmployee;
+        try {
+            optionalEmployee = employeeRepository.findById(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get employee to be deleted from DB, " + e.getCause());
+        }
+        Employee employee = optionalEmployee.orElseThrow(() -> new NoSuchElementException("No employee with such id"));
+        try {
+            employeeRepository.delete(employee);
+        } catch (Exception e) {
+            throw new EntityNotDeletedException("Employee has not been deleted, " + e.getCause());
+        }
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 

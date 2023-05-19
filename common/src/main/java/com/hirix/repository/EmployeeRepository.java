@@ -10,5 +10,4 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> findEmployeesByFullNameLike(String query);
     List<Employee> findEmployeesByFullNameLikeAndBirthdayAfter(String query, Timestamp birthday);
 
-
 }

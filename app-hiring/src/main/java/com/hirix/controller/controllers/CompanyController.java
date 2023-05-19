@@ -62,50 +62,50 @@ public class CompanyController {
     }
 
     @GetMapping("/page_one_company/{page}")
-    public ResponseEntity<Object> findAllShowPageWithOneCompany(@PathVariable String page) {
+    public ResponseEntity<Map<String, Page<Company>>> findAllShowPageWithOneCompany(@PathVariable String page) {
         Integer parsedPage;
         try {
             parsedPage = Integer.parseInt(page);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad {page} in resource path \'/rest/companies/page/{page}\'. " +
+            throw new NumberFormatException("Bad {page} in resource path \'/rest/companies/page_one_company/{page}\'. " +
                     "Must be Integer type");
         }
         if (parsedPage < 0) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/companies/page/{page}\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/companies/page_one_company/{page}\'. " +
                     "Id must be not less than 0L");
         }
         Page<Company> companies;
         try {
-            companies = companyRepository.findAll(PageRequest.of(parsedPage, 1, Sort.by("fullName").ascending()));
+            companies = companyRepository.findAll(PageRequest.of(parsedPage, 1, Sort.by("fullTitle").ascending()));
         } catch (Exception e) {
             throw new EntityNotFoundException
-                    ("Can not get companies from required resource \'/rest/companies/page/{page}/{size}\', " + e.getCause());
+                    ("Can not get companies from required resource \'/rest/companies/page_one_company/{page}/{size}\', " + e.getCause());
         }
         return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, companies), HttpStatus.OK);
     }
 
     @GetMapping("/page_number_of_companies/{page}/{size}")
-    public ResponseEntity<Object> findAllShowPageBySize(@PathVariable String page, @PathVariable String size) {
+    public ResponseEntity<Map<String, Page<Company>>> findAllShowPageBySize(@PathVariable String page, @PathVariable String size) {
         Integer parsedPage;
         try {
             parsedPage = Integer.parseInt(page);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad {page} in resource path \'/rest/companies/page/{page}/{size}\'. " +
+            throw new NumberFormatException("Bad {page} in resource path \'/rest/companies/page_number_of_companies/{page}/{size}\'. " +
                 "Must be Integer type");
         }
         if (parsedPage < 0) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/companies/page/{page}/{size}\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/companies/page_number_of_companies/{page}/{size}\'. " +
                 "Id must be not less than 0L");
         }
         Integer parsedSize;
         try {
             parsedSize = Integer.parseInt(size);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad {size} in resource path \'/rest/companies/page/{page}/{size}\'. " +
+            throw new NumberFormatException("Bad {size} in resource path \'/rest/companies/page_number_of_companies/{page}/{size}\'. " +
                     "Must be Integer type");
         }
         if (parsedSize < 1) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {size} in resource path \'/rest/companies/page/{page}/{size}\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {size} in resource path \'/rest/companies/page_number_of_companies/{page}/{size}\'. " +
                 "Id must be more than 0L");
         }
         Page<Company> companies;
@@ -113,7 +113,7 @@ public class CompanyController {
             companies = companyRepository.findAll(PageRequest.of(parsedPage, parsedSize, Sort.by("fullTitle").ascending()));
         } catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not get companies from required resource \'/rest/companies/page/{page}/{size}\', " + e.getCause());
+                ("Can not get companies from required resource \'/rest/companies/page_number_of_companies/{page}/{size}\', " + e.getCause());
         }
         return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, companies), HttpStatus.OK);
     }
@@ -143,20 +143,20 @@ public class CompanyController {
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, List<Company>>> searchCompaniesByFullTitleLike
-        (@Valid @ModelAttribute CompanySearchCriteria criteria, BindingResult result) throws Exception {
+        (@Valid @ModelAttribute CompanySearchCriteria criteria, BindingResult result) {
         if (result.hasErrors()) {
             throw new IllegalRequestException
-                ("Bad argument in search path, must be: \'search?query=word_like_full_company_title\'", result);
+                ("Bad argument in search path, must be: \'search?query=word_like_company_fullTitle\'", result);
         }
         String query;
         try {
             query = criteria.getQuery();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Can not get Query from criteria" + e.getCause());
+            throw new IllegalArgumentException("Can not get Query from criteria. " + e.getCause());
         }
         if (query == null) {
             throw new IllegalArgumentException
-                ("Bad argument in search path, must be: \'search?query=word_like_full_company_title\'");
+                ("Bad argument in search path, must be: \'search?query=word_like_company_fullTitle\'");
         }
         List<Company> companies;
         try {
