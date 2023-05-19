@@ -13,6 +13,16 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     )
     List<Offer> findOffersBySkillIdQuery(Long skillId);
 
+
+    @Query(value =
+            "select o from Offer o inner join Requirement r on o.requirement.id = r.id" +
+            " where o.skill.id = :skillId and" +
+            " o.requirement.salary = (select max(r.salary) from r where r.id in" +
+            " (select o.requirement.id from o where o.skill.id = :skillId))"
+    )
+    List<Offer> findOffersBySkillIdQueryAndSalaryMax(Long skillId);
+
+
     @Query(value = "select o from Offer o where" +
             " o.skill.employee.id = :employeeId"
     )

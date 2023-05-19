@@ -69,6 +69,30 @@ public class OfferController {
         return new ResponseEntity<>(offers, HttpStatus.OK);
     }
 
+    @GetMapping("/skill/{id}/salary_max")
+    public ResponseEntity<List<Offer>> getOfferBySkillIdAndSalaryMax(@PathVariable String id) {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad skill {id} in resource path \'rest/offers/skill/{id}/salary_max\'. " +
+                "Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/offers/skill/{id}/salary_max\'. " +
+                "Id must be more than 0L");
+        }
+        List<Offer> offers;
+        try {
+            offers = offerRepository.findOffersBySkillIdQueryAndSalaryMax(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                ("Can not find offers by skill id with salary_max from required resource \'rest/offers/skill/{id}/salary_max\', " +
+                    e.getCause());
+        }
+        return new ResponseEntity<>(offers, HttpStatus.OK);
+    }
+
     @GetMapping("/employee/{id}")
     public ResponseEntity<List<Offer>> getOfferByEmployeeId(@PathVariable String id) {
         Long parsedId;
@@ -76,13 +100,20 @@ public class OfferController {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Bad employee {id} in resource path \'rest/offers/employee/{id}\'. " +
-                    "Must be Long type");
+                "Must be Long type");
         }
         if (parsedId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad employee {id} in resource path \'rest/offers/employee/{id}\'. " +
-                    "Id must be more than 0L");
+               "Id must be more than 0L");
         }
-        List<Offer> offers = offerRepository.findOffersByEmployeeIdQuery(parsedId);
+        List<Offer> offers;
+        try {
+            offers = offerRepository.findOffersByEmployeeIdQuery(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                ("Can not find offers by employee id from required resource \'rest/offers/employee/{id}\', " +
+                    e.getCause());
+        }
         return new ResponseEntity<>(offers, HttpStatus.OK);
     }
 
