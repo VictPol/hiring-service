@@ -3,11 +3,15 @@ package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.EmployeeCreateRequest;
 import com.hirix.controller.requests.create.UserCreateRequest;
+import com.hirix.controller.requests.patch.EmployeePatchRequest;
+import com.hirix.controller.requests.patch.UserPatchRequest;
+import com.hirix.controller.requests.update.EmployeeUpdateRequest;
 import com.hirix.controller.requests.update.UserUpdateRequest;
 import com.hirix.domain.Employee;
 import com.hirix.domain.LinkUsersRoles;
 import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
+import com.hirix.exception.EntityNotDeletedException;
 import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
@@ -202,56 +206,155 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PutMapping
-    public ResponseEntity<User> updateUser(@RequestBody UserUpdateRequest request) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<User> optionalUser = userRepository.findById(request.getId());
-        User user = optionalUser.get();
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        user.setNickName(request.getNickName());
-        user.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        user = userRepository.save(user);
+    public ResponseEntity<User> updateUser(@Valid @RequestBody UserUpdateRequest request, BindingResult result)
+            throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to update user", result);
+        }
+        User user;
+        try {
+            user = conversionService.convert(request, User.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert update request to user, because of: " +
+                    e.getCause());
+        }
+        try {
+            user = userRepository.save(user);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException
+                    ("User has not been updated and saved to DB, " + e.getCause());
+        }
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @PatchMapping
+    public ResponseEntity<User> patchUpdateUser(@Valid @RequestBody UserPatchRequest request, BindingResult result)
+            throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException(result);
+        }
+        User user;
+        try {
+            user = conversionService.convert(request, User.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert patch request to user, " + e.getCause());
+        }
+        try {
+            user = userRepository.save(user);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException
+                    ("User has not been patch updated and saved to DB, " + e.getCause());
+        }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PatchMapping("/update_nick_name/{id}/{nick_name}")
-    public ResponseEntity<User> updateUserNickName(@PathVariable Long id, @PathVariable(name = "nick_name") String nickName) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<User> optionalUser = userRepository.findById(id);
-        User user = optionalUser.get();
-        user.setNickName(nickName);
-        user.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        user = userRepository.save(user);
+    public ResponseEntity<User> updateUserNickName(@PathVariable String id, @PathVariable(name = "nick_name") String nickName)
+            throws Exception {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad information about user id in resource \'/update_nick_name/{id}/{nick_name}\'. " +
+                    "Must be Long type");
+        }
+        Optional<User> optionalUser;
+        try {
+            optionalUser = userRepository.findById(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get user to update nick_name  from DB, " + e.getCause());
+        }
+        User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
+
+        try {
+            user.setNickName(nickName);
+            user.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+        } catch (Exception e) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to patch update user. " +
+                    e.getCause());
+        }
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException("User has not been saved with new nick_name, " + e.getCause());
+        }
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<User> deleteUser(@PathVariable Long id) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<User> optionalUser = userRepository.findById(id);
-        User user = optionalUser.get();
-        userRepository.delete(user);
-        return new ResponseEntity<>(user, HttpStatus.OK);
-    }
-
-    @PostMapping("/add_role/{user_id}/{role_id}")
-    public ResponseEntity<LinkUsersRoles> addRoleToUser(@PathVariable Long user_id, @PathVariable Long role_id) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
+    @PostMapping("/add_role/{id}/{role_id}")
+    public ResponseEntity<LinkUsersRoles> addRoleToUser(@PathVariable String id, @PathVariable(name = "role_id") String roleId)
+            throws Exception {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad information about user id in resource \'/add_role/{id}/{role_id\'. " +
+                    "Must be Long type");
+        }
+        Optional<User> optionalUser;
+        try {
+            optionalUser = userRepository.findById(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get user to add role to user from DB, " + e.getCause());
+        }
+        User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
+        Long parsedRoleId;
+        try {
+            parsedRoleId = Long.parseLong(roleId);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad information about role id in resource \'/add_role/{id}/{role_id\'. " +
+                    "Must be Long type");
+        }
+        Optional<Role> optionalRole;
+        try {
+            optionalRole = roleRepository.findById(parsedRoleId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get role to add role to user from DB, " + e.getCause());
+        }
+        Role role = optionalRole.orElseThrow(() -> new NoSuchElementException("No role with such id"));
         LinkUsersRoles link = new LinkUsersRoles();
-        link.setUserId(user_id);
-        link.setRoleId(role_id);
-        link.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        link.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        link = linkUsersRolesRepository.save(link);
+        try {
+            link.setUserId(user.getId());
+            link.setRoleId(role.getId());
+            link.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+            link.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+        } catch (Exception e) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in resource to add role to user. " +
+                    e.getCause());
+        }
+        try {
+            link = linkUsersRolesRepository.save(link);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException("New role has not been added to user, " + e.getCause());
+        }
         return new ResponseEntity<>(link, HttpStatus.CREATED);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @DeleteMapping("/{id}")
+    public ResponseEntity<User> deleteUser(@PathVariable String id) throws Exception {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad information about user id in resource \'/rest/users/{id}\'. " +
+                    "Must be Long type");
+        }
+        Optional<User> optionalUser;
+        try {
+            optionalUser = userRepository.findById(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get user to be deleted from DB, " + e.getCause());
+        }
+        User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
+        try {
+            userRepository.delete(user);
+        } catch (Exception e) {
+            throw new EntityNotDeletedException("User has not been deleted, " + e.getCause());
+        }
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
