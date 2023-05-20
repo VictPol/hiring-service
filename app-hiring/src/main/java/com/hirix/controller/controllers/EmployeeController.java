@@ -146,7 +146,7 @@ public class EmployeeController {
             optionalEmployee = employeeRepository.findById(parsedId);
         }  catch (Exception e) {
             throw new EntityNotFoundException
-                    ("Can not get employee by id from from required resource \'/rest/employees/{id}\', " + e.getCause());
+                    ("Can not get employee by id from from required resource \'/rest/employees/{id}\'. " + e.getCause());
         }
         Employee employee = optionalEmployee.orElseThrow(() -> new NoSuchElementException("No employee with such id"));
         return new ResponseEntity<>(employee, HttpStatus.OK);
@@ -174,7 +174,7 @@ public class EmployeeController {
             employees = employeeRepository.findEmployeesByFullNameLike("%" + query + "%");
         } catch (Exception e) {
             throw new EntityNotFoundException
-                    ("Can not search employees from required resource \'/rest/employees/search?query=query\'" +
+                    ("Can not search employees from required resource \'/rest/employees/search?query=\'" +
                             criteria.getQuery() + ", " + e.getCause());
         }
         return new ResponseEntity<>(Collections.singletonMap("employees", employees), HttpStatus.OK);
@@ -274,13 +274,13 @@ public class EmployeeController {
         try {
             employee = conversionService.convert(request, Employee.class);
         } catch (Exception e) {
-            throw new ConvertRequestToEntityException("Can not convert patch request to employee, " + e.getCause());
+            throw new ConvertRequestToEntityException("Can not convert patch request to employee. " + e.getCause());
         }
         try {
             employee = employeeRepository.save(employee);
         } catch (Exception e) {
             throw new EntityNotCreatedOrNotUpdatedException
-                    ("Employee has not been patch updated and saved to DB, " + e.getCause());
+                    ("Employee has not been patch updated and saved to DB. " + e.getCause());
         }
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
