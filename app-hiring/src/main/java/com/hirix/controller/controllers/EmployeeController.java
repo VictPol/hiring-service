@@ -90,7 +90,7 @@ public class EmployeeController {
             employees = employeeRepository.findAll(PageRequest.of(parsedPage, 1, Sort.by("fullName").ascending()));
         } catch (Exception e) {
             throw new EntityNotFoundException
-                    ("Can not get companies from required resource \'/rest/companies/page/{page}/{size}\', " + e.getCause());
+                    ("Can not get employees from required resource \'/rest/page_one_employee/page/{page}/{size}\', " + e.getCause());
         }
         return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, employees), HttpStatus.OK);
     }
