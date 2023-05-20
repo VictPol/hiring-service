@@ -39,7 +39,7 @@ public class EmployeeUpdateConvertor  extends EmployeeBaseConvertor<EmployeeUpda
         try {
             optionalEmployee = employeeRepository.findById(id);
         } catch (Exception e) {
-            throw new EntityNotFoundException("Can not get company by id from DB, " + e.getCause());
+            throw new EntityNotFoundException("Can not get employee by id from DB, " + e.getCause());
         }
         Employee employee = optionalEmployee.orElseThrow(() -> new NoSuchElementException("No employee with such id"));
         Long userId;

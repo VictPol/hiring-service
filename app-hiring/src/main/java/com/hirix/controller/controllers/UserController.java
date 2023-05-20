@@ -3,12 +3,14 @@ package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.UserCreateRequest;
 import com.hirix.controller.requests.update.UserUpdateRequest;
+import com.hirix.domain.Employee;
 import com.hirix.domain.LinkUsersRoles;
+import com.hirix.exception.EntityNotFoundException;
 import com.hirix.repository.LinkUsersRolesRepository;
 import com.hirix.repository.RoleRepository;
 import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Instanceof;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,16 +36,23 @@ import com.hirix.domain.User;
 import com.hirix.domain.Role;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("rest/users")
 @RequiredArgsConstructor
 public class UserController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final LinkUsersRolesRepository linkUsersRolesRepository;
+    private final ConversionService conversionService;
 
     @GetMapping
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users;
+        try {
+            users = userRepository.findAll();
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get users from required resource \'rest/users\', " +
+                    e.getCause());
+        }
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -136,5 +145,4 @@ public class UserController {
         link = linkUsersRolesRepository.save(link);
         return new ResponseEntity<>(link, HttpStatus.CREATED);
     }
-
 }

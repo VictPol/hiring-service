@@ -17,7 +17,4 @@ public class UserCreateRequest {
     private String email;
     private String password;
     private String nickName;
-//    private Timestamp created;
-//    private Timestamp changed;
-//    private Set<Role> roles;
 }

@@ -1,9 +1,7 @@
 package com.hirix.controller.convertors.employee;
 
 
-import com.hirix.controller.requests.patch.CompanyPatchRequest;
 import com.hirix.controller.requests.patch.EmployeePatchRequest;
-import com.hirix.domain.Company;
 import com.hirix.domain.Employee;
 import com.hirix.domain.Location;
 import com.hirix.domain.enums.Education;
@@ -11,7 +9,6 @@ import com.hirix.domain.enums.Gender;
 import com.hirix.domain.enums.Health;
 import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
-import com.hirix.repository.CompanyRepository;
 import com.hirix.repository.EmployeeRepository;
 import com.hirix.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
