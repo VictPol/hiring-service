@@ -1,13 +1,8 @@
 package com.hirix.controller.controllers;
 
-
-import com.hirix.controller.requests.create.EmployeeCreateRequest;
 import com.hirix.controller.requests.create.UserCreateRequest;
-import com.hirix.controller.requests.patch.EmployeePatchRequest;
 import com.hirix.controller.requests.patch.UserPatchRequest;
-import com.hirix.controller.requests.update.EmployeeUpdateRequest;
 import com.hirix.controller.requests.update.UserUpdateRequest;
-import com.hirix.domain.Employee;
 import com.hirix.domain.LinkUsersRoles;
 import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
@@ -104,7 +99,7 @@ public class UserController {
         try {
             parsedPage = Integer.parseInt(page);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad {page} in resource path \'/rest/users/page_size_employees/{page}/{size}\'. " +
+            throw new NumberFormatException("Bad {page} in resource path \'/rest/users/page_size_users/{page}/{size}\'. " +
                     "Must be Integer type");
         }
         if (parsedPage < 0) {
@@ -141,7 +136,7 @@ public class UserController {
             throw new NumberFormatException("Bad user {id} in resource path \'/rest/users/{id}\'. Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad employee {id} in resource path \'/rest/users/{id}\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad user {id} in resource path \'/rest/users/{id}\'. " +
                     "Id must be more than 0L");
         }
         Optional<User> optionalUser;

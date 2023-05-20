@@ -163,7 +163,7 @@ public class EmployeeController {
         try {
             query = criteria.getQuery();
         } catch (Exception e) {
-            throw new IllegalArgumentException("Can not get Query from criteria. " + e.getCause());
+            throw new IllegalArgumentException("Can not get query=word_like_employee_fullName from criteria. " + e.getCause());
         }
         if (query == null) {
             throw new IllegalArgumentException

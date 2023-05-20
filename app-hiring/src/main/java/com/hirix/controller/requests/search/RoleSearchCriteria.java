@@ -13,11 +13,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 @AllArgsConstructor
 public class RoleSearchCriteria {
     private String query;
-//    private String birthday;
 
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
-
 }
