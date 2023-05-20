@@ -42,18 +42,20 @@ public class EmployeeUpdateConvertor  extends EmployeeBaseConvertor<EmployeeUpda
             throw new EntityNotFoundException("Can not get employee by id from DB, " + e.getCause());
         }
         Employee employee = optionalEmployee.orElseThrow(() -> new NoSuchElementException("No employee with such id"));
-        Long userId;
-        try {
-            userId = request.getUserId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about user id in request body to update employee. Must be Long type" +
-                            e.getCause());
-        }
-        if (!userId.equals(employee.getUser().getId())) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Can not update employee, because user id does not correspond to this employee");
-        }
+
+//        Long userId;
+//        try {
+//            userId = request.getUserId();
+//        } catch (Exception e) {
+//            throw new PoorInfoInRequestToCreateUpdateEntity
+//                    ("Poor information about user id in request body to update employee. Must be Long type" +
+//                            e.getCause());
+//        }
+//        if (!userId.equals(employee.getUser().getId())) {
+//            throw new PoorInfoInRequestToCreateUpdateEntity
+//                    ("Can not update employee, because user id does not correspond to this employee");
+//        }
+
         Long locationId;
         try {
             locationId = request.getLocationId();

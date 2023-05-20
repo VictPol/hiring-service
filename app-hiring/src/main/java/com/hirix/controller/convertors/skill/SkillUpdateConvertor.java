@@ -27,7 +27,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SkillUpdateConvertor extends SkillBaseConvertor<SkillUpdateRequest, Skill> {
     private final SkillRepository skillRepository;
-    private final EmployeeRepository employeeRepository;
     private final IndustryRepository industryRepository;
     private final ProfessionRepository professionRepository;
     private final SpecializationRepository specializationRepository;
@@ -55,21 +54,21 @@ public class SkillUpdateConvertor extends SkillBaseConvertor<SkillUpdateRequest,
         }
         Skill skill = optionalSkill.orElseThrow(() -> new NoSuchElementException("No skill with such id"));
 
-        Long employeeId;
-        try {
-            employeeId = request.getEmployeeId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about employee id in request body to update skill. Must be Long type. " +
-                            e.getCause());
-        }
-        if (employeeId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update skill. " +
-                    "Employee id must be more than 0L");
-        }
-        if (!employeeId.equals(skill.getEmployee().getId())) {
-            setEmployeeToSkill(skill, employeeId, employeeRepository);
-        }
+//        Long employeeId;
+//        try {
+//            employeeId = request.getEmployeeId();
+//        } catch (Exception e) {
+//            throw new PoorInfoInRequestToCreateUpdateEntity
+//                    ("Poor information about employee id in request body to update skill. Must be Long type. " +
+//                            e.getCause());
+//        }
+//        if (employeeId < 1L) {
+//            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update skill. " +
+//                    "Employee id must be more than 0L");
+//        }
+//        if (!employeeId.equals(skill.getEmployee().getId())) {
+//            setEmployeeToSkill(skill, employeeId, employeeRepository);
+//        }
 
         Long industryId;
         try {

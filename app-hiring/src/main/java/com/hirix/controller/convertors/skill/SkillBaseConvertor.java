@@ -23,10 +23,10 @@ public abstract class SkillBaseConvertor<S, T> implements Converter<S, T> {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create skill. " +
                     e.getCause());
         }
-        if (skillForSave.getSalaryMin() == 0 ||
-            skillForSave.getSalaryMax() == 0 ||
-            skillForSave.getTermMin() == 0 ||
-            skillForSave.getTermMax() == 0) {
+        if (skillForSave.getSalaryMin() == null || skillForSave.getSalaryMin() < 0 ||
+            skillForSave.getSalaryMax() == null || skillForSave.getSalaryMax() < 0 ||
+            skillForSave.getTermMin() == null || skillForSave.getTermMin() < 0 ||
+            skillForSave.getTermMax() == null || skillForSave.getTermMax() < 0) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create skill");
         }
         skillForSave.setChanged(Timestamp.valueOf(LocalDateTime.now()));

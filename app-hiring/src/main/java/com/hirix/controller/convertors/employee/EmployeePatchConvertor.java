@@ -66,19 +66,20 @@ public class EmployeePatchConvertor implements Converter<EmployeePatchRequest, E
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to patch update employee. " +
                     e.getCause());
         }
-        employee.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        Long userId;
-        try {
-            userId = request.getUserId();
-        } catch (Exception e) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about user id in request body to patch update employee. " +
-                            "Must be null or Long type. " + e.getCause());
-        }
-        if (userId != null && !userId.equals(employee.getUser().getId())) {
-            throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Can not patch update employee, because user id does not correspond to this employee");
-        }
+
+//        Long userId;
+//        try {
+//            userId = request.getUserId();
+//        } catch (Exception e) {
+//            throw new PoorInfoInRequestToCreateUpdateEntity
+//                    ("Poor information about user id in request body to patch update employee. " +
+//                            "Must be null or Long type. " + e.getCause());
+//        }
+//        if (userId != null && !userId.equals(employee.getUser().getId())) {
+//            throw new PoorInfoInRequestToCreateUpdateEntity
+//                    ("Can not patch update employee, because user id does not correspond to this employee");
+//        }
+
         Long locationId;
         try {
             locationId = request.getLocationId();
@@ -94,6 +95,9 @@ public class EmployeePatchConvertor implements Converter<EmployeePatchRequest, E
             throw new PoorInfoInRequestToCreateUpdateEntity
                     ("Poor information about employee location id in request body to patch update employee. Must be more than 1L.");
         }
+
+        employee.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+
         return employee;
     }
 
