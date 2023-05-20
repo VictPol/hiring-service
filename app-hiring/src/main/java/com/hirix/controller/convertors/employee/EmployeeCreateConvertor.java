@@ -36,7 +36,7 @@ public class EmployeeCreateConvertor extends EmployeeBaseConvertor<EmployeeCreat
         }
         if (userId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create employee. " +
-                    "UserId must be more than 0L");
+                    "User id must be more than 0L");
         }
         Optional<User> optionalUser;
         try {
@@ -45,7 +45,7 @@ public class EmployeeCreateConvertor extends EmployeeBaseConvertor<EmployeeCreat
             throw new EntityNotFoundException("Can not get user by id from DB, " + e.getCause());
         }
         User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
-        if (user.getCompany() == null) {
+        if (user.getEmployee() == null) {
             employee.setUser(user);
         } else {
             throw new PoorInfoInRequestToCreateUpdateEntity

@@ -204,14 +204,7 @@ public class SkillController {
 //            throw new IllegalRequestException(result);
 //        }
         Skill skill = new Skill();
-        skill.setExperience(request.getExperience());
-        skill.setActive(request.isActive());
-        skill.setRecommendations(request.getRecommendations());
-        skill.setEquipments(request.getEquipments());
-        skill.setSalaryMin(request.getSalaryMin());
-        skill.setSalaryMax(request.getSalaryMax());
-        skill.setTermMin(request.getTermMin());
-        skill.setTermMax(request.getTermMax());
+
         skill.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         skill.setChanged(Timestamp.valueOf(LocalDateTime.now()));
         Optional<Employee> optionalEmployee = employeeRepository.findById(request.getEmployeeId());
@@ -243,15 +236,7 @@ public class SkillController {
 //        }
         Optional<Skill> optionalSkill = skillRepository.findById(request.getId());
         Skill skill = optionalSkill.get();
-        skill.setExperience(request.getExperience());
-        skill.setActive(request.isActive());
-        skill.setRecommendations(request.getRecommendations());
-        skill.setEquipments(request.getEquipments());
-        skill.setSalaryMin(request.getSalaryMin());
-        skill.setSalaryMax(request.getSalaryMax());
-        skill.setTermMin(request.getTermMin());
-        skill.setTermMax(request.getTermMax());
-//        skill.setCreated(Timestamp.valueOf(LocalDateTime.now()));
+
         skill.setChanged(Timestamp.valueOf(LocalDateTime.now()));
 //        Optional<Employee> optionalEmployee = employeeRepository.findById(request.getEmployeeId());
 //        Employee employee = optionalEmployee.get();
