@@ -29,7 +29,7 @@ public class EmployeeUpdateConvertor  extends EmployeeBaseConvertor<EmployeeUpda
             id = request.getId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                    ("Poor information about employee id in request body to update employee. Must be Long type" + e.getCause());
+                    ("Poor information about employee id in request body to update employee. Must be Long type. " + e.getCause());
         }
         if (id < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update employee. " +
