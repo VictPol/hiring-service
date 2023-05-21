@@ -8,16 +8,28 @@ import com.hirix.domain.Offer;
 import com.hirix.domain.Requirement;
 import com.hirix.domain.Skill;
 import com.hirix.domain.User;
+import com.hirix.exception.ConvertRequestToEntityException;
+import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
+import com.hirix.exception.EntityNotDeletedException;
 import com.hirix.exception.EntityNotFoundException;
+import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.OfferRepository;
 import com.hirix.repository.RequirementRepository;
 import com.hirix.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,9 +37,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -36,20 +51,101 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OfferController {
     private final OfferRepository offerRepository;
+
+    private final ConversionService conversionService;
     private final SkillRepository skillRepository;
     private final RequirementRepository requirementRepository;
 
     @GetMapping
     public ResponseEntity<List<Offer>> getAllOffers() {
-        List<Offer> offers = offerRepository.findAll();
+        List<Offer> offers;
+        try {
+            offers = offerRepository.findAll();
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get offers from required resource \'rest/offers\'. " +
+                    e.getCause());
+        }
         return new ResponseEntity<>(offers, HttpStatus.OK);
+    }
+
+    @GetMapping("/page_one_offer/{page}")
+    public ResponseEntity<Map<String, Page<Offer>>> findAllShowPageWithOneOffer(@PathVariable String page) {
+        Integer parsedPage;
+        try {
+            parsedPage = Integer.parseInt(page);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad {page} in resource path \'/rest/offers/page_one_offer/{page}\'. " +
+                    "Must be Integer type");
+        }
+        if (parsedPage < 0) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/offers/page_one_offer/{page}\'. " +
+                    "Id must be not less than 0L");
+        }
+        Page<Offer> offers;
+        try {
+            offers = offerRepository.findAll(PageRequest.of(parsedPage, 1, Sort.by("id").ascending()));
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not get offers from required resource \'/rest/offers/page_one_offer/{page}\', " + e.getCause());
+        }
+        return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, offers), HttpStatus.OK);
+    }
+
+    @GetMapping("/page_size_offers/{page}/{size}")
+    public ResponseEntity<Map<String, Page<Offer>>> findAllShowPageBySize(@PathVariable String page, @PathVariable String size) {
+        Integer parsedPage;
+        try {
+            parsedPage = Integer.parseInt(page);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad {page} in resource path \'/rest/offers/page_size_offers/{page}/{size}\'. " +
+                    "Must be Integer type");
+        }
+        if (parsedPage < 0) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/offers/page_size_offers/{page}/{size}\'. " +
+                    "Id must be not less than 0L");
+        }
+        Integer parsedSize;
+        try {
+            parsedSize = Integer.parseInt(size);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad {size} in resource path \'/rest/offers/page_size_offers/{page}/{size}\'. " +
+                    "Must be Integer type");
+        }
+        if (parsedSize < 1) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {size} in resource path \'/rest/offers/page_size_offers/{page}/{size}\'. " +
+                    "Id must be more than 0L");
+        }
+        Page<Offer> offers;
+        try {
+            offers = offerRepository.findAll(PageRequest.of(parsedPage, parsedSize, Sort.by("id").ascending()));
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not get skills from required resource \'/rest/offers/page_size_offers/{page}/{size}\', " + e.getCause());
+        }
+        return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, offers), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Offer> getOfferById(@PathVariable String id) {
-        Long parsedId = Long.parseLong(id);
-        Optional<Offer> offer = offerRepository.findById(parsedId);
-        return new ResponseEntity<>(offer.get(), HttpStatus.OK);
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad offer {id} in resource path \'/rest/offers/{id}\'. Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad offer {id} in resource path \'/rest/offers/{id}\'. " +
+                    "Id must be more than 0L");
+        }
+        Optional<Offer> optionalOffer;
+        try {
+            optionalOffer = offerRepository.findById(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not get offer by id from from required resource \'/rest/skills/{id}\'. " + e.getCause());
+        }
+        Offer offer = optionalOffer.orElseThrow(() -> new NoSuchElementException("No offer with such id"));
+        return new ResponseEntity<>(offer, HttpStatus.OK);
     }
 
     @GetMapping("/skill/{id}")
@@ -175,76 +271,99 @@ public class OfferController {
         return new ResponseEntity<>(offers, HttpStatus.OK);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PostMapping
-    public ResponseEntity<Offer> createOffer(@RequestBody OfferCreateRequest request) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Offer offer = new Offer();
-        offer.setCommentsCompany(request.getCommentsCompany());
-        Optional<Skill> optionalSkill = skillRepository.findById(request.getSkillId());
-        Skill skill = optionalSkill.get();
-        offer.setSkill(skill);
-        Optional<Requirement> optionalRequirement = requirementRepository.findById(request.getRequirementId());
-        Requirement requirement = optionalRequirement.get();
-        offer.setRequirement(requirement);
-        offer.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        offer.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        offer = offerRepository.save(offer);
+    public ResponseEntity<Offer> createOffer(@Valid @RequestBody OfferCreateRequest request, BindingResult result)
+            throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to create offer", result);
+        }
+        Offer offer;
+        try {
+            offer = conversionService.convert(request, Offer.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert create request to offer, because of: " +
+                    e.getCause());
+        }
+        if (offer == null) {
+            throw new NullPointerException("Offer has not created, check request body");
+        }
+        try {
+            offer = offerRepository.save(offer);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException("Offer has not created and saved to DB, because of: " + e.getCause());
+        }
         return new ResponseEntity<>(offer, HttpStatus.CREATED);
     }
 
-    @PutMapping("/company")
-    public ResponseEntity<Offer> updateOfferByCompany(@RequestBody OfferUpdateRequestCompany request) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<Offer> optionalOffer = offerRepository.findById(request.getId());
-        Offer offer = optionalOffer.get();
-        offer.setContracted(request.isContracted());
-        offer.setCommentsCompany(request.getCommentsCompany());
-//        Optional<Skill> optionalSkill = skillRepository.findById(request.getSkillId());
-//        Skill skill = optionalSkill.get();
-//        offer.setSkill(skill);
-//        Optional<Requirement> optionalRequirement = requirementRepository.findById(request.getRequirementId());
-//        Requirement requirement = optionalRequirement.get();
-//        offer.setRequirement(requirement);
-//        offer.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        offer.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        offer = offerRepository.save(offer);
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @PatchMapping("/company")
+    public ResponseEntity<Offer> updateOfferByCompany(@Valid @RequestBody OfferUpdateRequestCompany request, BindingResult result)
+            throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to update offer", result);
+        }
+        Offer offer;
+        try {
+            offer = conversionService.convert(request, Offer.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert update request to offer, because of: " +
+                    e.getCause());
+        }
+        try {
+            offer = offerRepository.save(offer);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException
+                    ("Offer has not been updated and saved to DB, " + e.getCause());
+        }
         return new ResponseEntity<>(offer, HttpStatus.OK);
     }
 
-    @PutMapping("/employee")
-    public ResponseEntity<Offer> updateOfferByEmployee(@RequestBody OfferUpdateRequestEmployee request) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<Offer> optionalOffer = offerRepository.findById(request.getId());
-        Offer offer = optionalOffer.get();
-        offer.setAccepted(request.isAccepted());
-        offer.setCommentsEmployee(request.getCommentsEmployee());
-//        Optional<Skill> optionalSkill = skillRepository.findById(request.getSkillId());
-//        Skill skill = optionalSkill.get();
-//        offer.setSkill(skill);
-//        Optional<Requirement> optionalRequirement = requirementRepository.findById(request.getRequirementId());
-//        Requirement requirement = optionalRequirement.get();
-//        offer.setRequirement(requirement);
-//        offer.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        offer.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        offer = offerRepository.save(offer);
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @PatchMapping("/employee")
+    public ResponseEntity<Offer> updateOfferByEmployee(@Valid @RequestBody OfferUpdateRequestEmployee request, BindingResult result)
+            throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to update offer by employee", result);
+        }
+        Offer offer;
+        try {
+            offer = conversionService.convert(request, Offer.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert update request by employee to offer, because of: " +
+                    e.getCause());
+        }
+        try {
+            offer = offerRepository.save(offer);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException
+                    ("Offer has not been updated and saved to DB, " + e.getCause());
+        }
         return new ResponseEntity<>(offer, HttpStatus.OK);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Offer> deleteOffer(@PathVariable Long id) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<Offer> optionalOffer = offerRepository.findById(id);
-        Offer offer = optionalOffer.get();
-        offerRepository.delete(offer);
+    public ResponseEntity<Offer> deleteOffer(@PathVariable String id) throws Exception {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad information about offer id in resource \'/rest/offers/{id}\'. " +
+                    "Must be Long type");
+        }
+        Optional<Offer> optionalOffer;
+        try {
+            optionalOffer = offerRepository.findById(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get offer to be deleted from DB, " + e.getCause());
+        }
+        Offer offer = optionalOffer.orElseThrow(() -> new NoSuchElementException("No offer with such id"));
+        try {
+            offerRepository.delete(offer);
+        } catch (Exception e) {
+            throw new EntityNotDeletedException("Offer has not been deleted. " + e.getCause());
+        }
         return new ResponseEntity<>(offer, HttpStatus.OK);
     }
-
 }

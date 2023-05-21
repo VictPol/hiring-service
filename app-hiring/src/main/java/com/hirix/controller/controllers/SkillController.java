@@ -362,6 +362,7 @@ public class SkillController {
         return new ResponseEntity<>(skill, HttpStatus.OK);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PostMapping("/add_location/{skill_id}/{location_id}")
     public ResponseEntity<LinkSkillsLocations> addLocationToSkill(@PathVariable (name = "skill_id") String skillId,
                                                                   @PathVariable (name = "location_id") String locationId)
