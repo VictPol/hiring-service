@@ -45,6 +45,7 @@
         <validation-api.version>2.0.1.Final</validation-api.version>
         <jjwt.version>0.9.1</jjwt.version>
         <springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
+        <springdoc-openapi-security.version>1.7.0</springdoc-openapi-security.version>
     </properties>
 
     <packaging>pom</packaging>
@@ -262,7 +263,7 @@
 <!--        <dependency>-->
 <!--            <groupId>org.springdoc</groupId>-->
 <!--            <artifactId>springdoc-openapi-security</artifactId>-->
-<!--            <version>1.7.0</version>-->
+<!--            <version>${springdoc-openapi-security.version}</version>-->
 <!--        </dependency>-->
     </dependencies>
 
