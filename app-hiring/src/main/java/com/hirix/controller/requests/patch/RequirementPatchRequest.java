@@ -11,17 +11,15 @@ import org.springframework.validation.annotation.Validated;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Validated
-public class SkillPatchRequest {
+public class RequirementPatchRequest {
     private Long id;
     private Integer experience;
     private boolean active;
     private Integer recommendations;
     private String equipments;
-    private Integer salaryMin;
-    private Integer salaryMax;
-    private Integer termMin;
-    private Integer termMax;
-//    private Long employeeId;
+    private Integer salary;
+    private Integer term;
+    //    private Long companyId;
     private Long industryId;
     private Long professionId;
     private Long specializationId;

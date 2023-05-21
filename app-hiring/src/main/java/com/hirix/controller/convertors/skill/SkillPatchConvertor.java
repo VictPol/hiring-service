@@ -58,7 +58,7 @@ public class SkillPatchConvertor implements Converter<SkillPatchRequest, Skill> 
             if (request.getExperience() != null && request.getExperience() >= 0) {
                 skill.setExperience(request.getExperience());
             }
-            request.setActive(request.isActive());
+            skill.setActive(request.isActive());
             if (request.getRecommendations() != null && request.getRecommendations() >= 0) {
                 skill.setRecommendations(request.getRecommendations());
             }
