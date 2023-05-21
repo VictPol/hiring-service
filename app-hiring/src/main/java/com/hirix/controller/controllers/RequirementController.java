@@ -1,6 +1,8 @@
 package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.RequirementCreateRequest;
+import com.hirix.controller.requests.patch.RequirementPatchRequest;
+import com.hirix.controller.requests.patch.SkillPatchRequest;
 import com.hirix.controller.requests.search.RequirementSearchCriteria;
 import com.hirix.controller.requests.update.RequirementUpdateRequest;
 import com.hirix.domain.Company;
@@ -14,6 +16,7 @@ import com.hirix.domain.Skill;
 import com.hirix.domain.Specialization;
 import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
+import com.hirix.exception.EntityNotDeletedException;
 import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
@@ -39,6 +42,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -331,57 +335,75 @@ public class RequirementController {
         return new ResponseEntity<>(requirement, HttpStatus.CREATED);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PutMapping
-    public ResponseEntity<Requirement> updateRequirement(@RequestBody RequirementUpdateRequest request) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<Requirement> optionalRequirement = requirementRepository.findById(request.getId());
-        Requirement requirement = optionalRequirement.get();
-        requirement.setExperience(request.getExperience());
-        requirement.setActive(request.isActive());
-        requirement.setRecommendations(request.getRecommendations());
-        requirement.setEquipments(request.getEquipments());
-        requirement.setSalary(request.getSalary());
-        requirement.setTerm(request.getTerm());
-//        requirement.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        requirement.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-//        Optional<Company> optionalCompany = companyRepository.findById(request.getCompanyId());
-//        Company company = optionalCompany.get();
-//        requirement.setCompany(company);
-        Optional<Industry> optionalIndustry = industryRepository.findById(request.getIndustryId());
-        Industry industry = optionalIndustry.get();
-        requirement.setIndustry(industry);
-        Optional<Profession> optionalProfession = professionRepository.findById(request.getProfessionId());
-        Profession profession = optionalProfession.get();
-        requirement.setProfession(profession);
-        Optional<Specialization> optionalSpecialization = specializationRepository.findById(request.getSpecializationId());
-        Specialization specialization = optionalSpecialization.get();
-        requirement.setSpecialization(specialization);
-        Optional<Rank> optionalRank = rankRepository.findById(request.getRankId());
-        Rank rank = optionalRank.get();
-        requirement.setRank(rank);
-        Optional<Position> optionalPosition = positionRepository.findById(request.getPositionId());
-        Position position = optionalPosition.get();
-        requirement.setPosition(position);
-        Optional<Location> locationOfferedOptional = locationRepository.findById(request.getLocationOfferedId());
-        Location locationOffered = locationOfferedOptional.get();
-        requirement.setLocationOffered(locationOffered);
-        requirement = requirementRepository.save(requirement);
+    public ResponseEntity<Requirement> updateRequirement(@Valid @RequestBody RequirementUpdateRequest request, BindingResult result)
+            throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to update requirement", result);
+        }
+        Requirement requirement;
+        try {
+            requirement = conversionService.convert(request, Requirement.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert update request to requirement, because of: " +
+                    e.getCause());
+        }
+        try {
+            requirement = requirementRepository.save(requirement);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException
+                    ("Requirement has not been updated and saved to DB, " + e.getCause());
+        }
         return new ResponseEntity<>(requirement, HttpStatus.OK);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @PatchMapping
+    public ResponseEntity<Requirement> patchUpdateRequirement(@Valid @RequestBody RequirementPatchRequest request, BindingResult result)
+            throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to patch update requirement",result);
+        }
+        Requirement requirement;
+        try {
+            requirement = conversionService.convert(request, Requirement.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert patch request to requirement. " + e.getCause());
+        }
+        try {
+            requirement = requirementRepository.save(requirement);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException
+                    ("Requirement has not been patch updated and saved to DB. " + e.getCause());
+        }
+        return new ResponseEntity<>(requirement, HttpStatus.OK);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Requirement> deleteRequirement(@PathVariable Long id) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Optional<Requirement> optionalRequirement = requirementRepository.findById(id);
-        Requirement requirement = optionalRequirement.get();
-        requirementRepository.delete(requirement);
+    public ResponseEntity<Requirement> deleteRequirement(@PathVariable String id) throws Exception {
+        Long parsedId;
+        try {
+            parsedId = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad information about requirement id in resource \'/rest/requirements/{id}\'. " +
+                    "Must be Long type");
+        }
+        Optional<Requirement> optionalRequirement;
+        try {
+            optionalRequirement = requirementRepository.findById(parsedId);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can not get requirement to be deleted from DB, " + e.getCause());
+        }
+        Requirement requirement = optionalRequirement.orElseThrow(() -> new NoSuchElementException("No requirement with such id"));
+        try {
+            requirementRepository.delete(requirement);
+        } catch (Exception e) {
+            throw new EntityNotDeletedException("Requirement has not been deleted. " + e.getCause());
+        }
         return new ResponseEntity<>(requirement, HttpStatus.OK);
     }
-
 
     private List<Requirement> findRequirementsBySkillIdQuery(Skill skill) {
         List<Requirement> requirements;

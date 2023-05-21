@@ -345,7 +345,7 @@ public class SkillController {
     public ResponseEntity<Skill> patchUpdateSkill(@Valid @RequestBody SkillPatchRequest request, BindingResult result)
             throws Exception {
         if (result.hasErrors()) {
-            throw new IllegalRequestException(result);
+            throw new IllegalRequestException("Poor information in request body to patch update skill", result);
         }
         Skill skill;
         try {
