@@ -1,8 +1,8 @@
 package com.hirix.controller.convertors.requirement;
 
 import com.hirix.controller.requests.update.RequirementUpdateRequest;
-import com.hirix.domain.Company;
 import com.hirix.domain.Industry;
+import com.hirix.domain.Location;
 import com.hirix.domain.Position;
 import com.hirix.domain.Profession;
 import com.hirix.domain.Rank;
@@ -10,8 +10,8 @@ import com.hirix.domain.Requirement;
 import com.hirix.domain.Specialization;
 import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
-import com.hirix.repository.CompanyRepository;
 import com.hirix.repository.IndustryRepository;
+import com.hirix.repository.LocationRepository;
 import com.hirix.repository.PositionRepository;
 import com.hirix.repository.ProfessionRepository;
 import com.hirix.repository.RankRepository;
@@ -32,6 +32,7 @@ public class RequirementUpdateConvertor extends RequirementBaseConvertor<Require
     private final SpecializationRepository specializationRepository;
     private final RankRepository rankRepository;
     private final PositionRepository positionRepository;
+    private final LocationRepository locationRepository;
 
     @Override
     public Requirement convert(RequirementUpdateRequest request) {
@@ -53,22 +54,6 @@ public class RequirementUpdateConvertor extends RequirementBaseConvertor<Require
             throw new EntityNotFoundException("Can not get requirement by id from DB. " + e.getCause());
         }
         Requirement requirement = optionalRequirement.orElseThrow(() -> new NoSuchElementException("No requirement with such id"));
-
-//        Long employeeId;
-//        try {
-//            employeeId = request.getEmployeeId();
-//        } catch (Exception e) {
-//            throw new PoorInfoInRequestToCreateUpdateEntity
-//                    ("Poor information about employee id in request body to update skill. Must be Long type. " +
-//                            e.getCause());
-//        }
-//        if (employeeId < 1L) {
-//            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update skill. " +
-//                    "Employee id must be more than 0L");
-//        }
-//        if (!employeeId.equals(skill.getEmployee().getId())) {
-//            setEmployeeToSkill(skill, employeeId, employeeRepository);
-//        }
 
         Long industryId;
         try {
@@ -150,6 +135,22 @@ public class RequirementUpdateConvertor extends RequirementBaseConvertor<Require
             setPositionToRequirement(requirement, positionId, positionRepository);
         }
 
+        Long locationOfferedId;
+        try {
+            locationOfferedId = request.getLocationOfferedId();
+        } catch (Exception e) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about location id in request body to update requirement. Must be Long type. " +
+                            e.getCause());
+        }
+        if (locationOfferedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update requirement. " +
+                    "Location id must be more than 0L");
+        }
+        if(!locationOfferedId.equals(requirement.getLocationOffered().getId())) {
+            setLocationToRequirement(requirement, locationOfferedId, locationRepository);
+        }
+
         return doConvert(request, requirement);
     }
 
@@ -208,15 +209,15 @@ public class RequirementUpdateConvertor extends RequirementBaseConvertor<Require
         requirement.setIndustry(industry);
     }
 
-    static void setCompanyToRequirement(Requirement requirement, Long employeeId, CompanyRepository companyRepository) {
-        Optional<Company> optionalCompany;
+    static void setLocationToRequirement(Requirement requirement, Long locationOfferedId, LocationRepository locationRepository) {
+        Optional<Location> optionalLocation;
         try {
-            optionalCompany = companyRepository.findById(employeeId);
+            optionalLocation = locationRepository.findById(locationOfferedId);
         } catch (Exception e) {
-            throw new EntityNotFoundException("Can not get company by id from DB. " + e.getCause());
+            throw new EntityNotFoundException("Can not get location by id from DB. " + e.getCause());
         }
-        Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id"));
-        requirement.setCompany(company);
+        Location locationOffered = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id"));
+        requirement.setLocationOffered(locationOffered);
     }
 }
 

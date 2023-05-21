@@ -5,6 +5,7 @@ import com.hirix.domain.Requirement;
 import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.IndustryRepository;
+import com.hirix.repository.LocationRepository;
 import com.hirix.repository.PositionRepository;
 import com.hirix.repository.ProfessionRepository;
 import com.hirix.repository.RankRepository;
@@ -20,6 +21,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.hirix.controller.convertors.requirement.RequirementUpdateConvertor.setIndustryToRequirement;
+import static com.hirix.controller.convertors.requirement.RequirementUpdateConvertor.setLocationToRequirement;
 import static com.hirix.controller.convertors.requirement.RequirementUpdateConvertor.setPositionToRequirement;
 import static com.hirix.controller.convertors.requirement.RequirementUpdateConvertor.setProfessionToRequirement;
 import static com.hirix.controller.convertors.requirement.RequirementUpdateConvertor.setRankToRequirement;
@@ -34,6 +36,7 @@ public class RequirementPatchConvertor implements Converter<RequirementPatchRequ
     private final SpecializationRepository specializationRepository;
     private final RankRepository rankRepository;
     private final PositionRepository positionRepository;
+    private final LocationRepository locationRepository;
     @Override
     public Requirement convert(RequirementPatchRequest request) {
         Long id;
@@ -154,6 +157,22 @@ public class RequirementPatchConvertor implements Converter<RequirementPatchRequ
         if (positionId != null && positionId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity
                     ("Poor information about requirement position id in request body to patch update requirement. Must be more than 1L.");
+        }
+
+        Long locationOfferedId;
+        try {
+            locationOfferedId = request.getLocationOfferedId();
+        } catch (Exception e) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about requirement location id in request body to patch update requirement. Must be Long type. " +
+                            e.getCause());
+        }
+        if (locationOfferedId != null && locationOfferedId > 0L && !locationOfferedId.equals(requirement.getLocationOffered().getId())) {
+            setLocationToRequirement(requirement, locationOfferedId, locationRepository);
+        }
+        if (locationOfferedId != null && locationOfferedId < 1L) {
+            throw new PoorInfoInRequestToCreateUpdateEntity
+                    ("Poor information about requirement location id in request body to patch update requirement. Must be more than 1L.");
         }
 
         requirement.setChanged(Timestamp.valueOf(LocalDateTime.now()));

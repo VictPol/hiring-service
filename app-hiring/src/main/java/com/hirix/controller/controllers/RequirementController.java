@@ -1,12 +1,9 @@
 package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.RequirementCreateRequest;
-import com.hirix.controller.requests.create.SkillCreateRequest;
 import com.hirix.controller.requests.search.RequirementSearchCriteria;
-import com.hirix.controller.requests.search.SkillSearchCriteria;
 import com.hirix.controller.requests.update.RequirementUpdateRequest;
 import com.hirix.domain.Company;
-import com.hirix.domain.Employee;
 import com.hirix.domain.Industry;
 import com.hirix.domain.Location;
 import com.hirix.domain.Position;
@@ -15,10 +12,12 @@ import com.hirix.domain.Rank;
 import com.hirix.domain.Requirement;
 import com.hirix.domain.Skill;
 import com.hirix.domain.Specialization;
+import com.hirix.exception.ConvertRequestToEntityException;
+import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
 import com.hirix.exception.EntityNotFoundException;
+import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.CompanyRepository;
-import com.hirix.repository.EmployeeRepository;
 import com.hirix.repository.IndustryRepository;
 import com.hirix.repository.LocationRepository;
 import com.hirix.repository.PositionRepository;
@@ -28,8 +27,15 @@ import com.hirix.repository.RequirementRepository;
 import com.hirix.repository.SkillRepository;
 import com.hirix.repository.SpecializationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -40,21 +46,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("rest/requirements")
 @RequiredArgsConstructor
 public class RequirementController {
     private final RequirementRepository requirementRepository;
+    private final ConversionService conversionService;
     private final SkillRepository skillRepository;
     private final CompanyRepository companyRepository;
     private final IndustryRepository industryRepository;
@@ -75,6 +81,64 @@ public class RequirementController {
         }
         return new ResponseEntity<>(requirements, HttpStatus.OK);
     }
+
+    @GetMapping("/page_one_requirement/{page}")
+    public ResponseEntity<Map<String, Page<Requirement>>> findAllShowPageWithOneSkill(@PathVariable String page) {
+        Integer parsedPage;
+        try {
+            parsedPage = Integer.parseInt(page);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad {page} in resource path \'/rest/requirements/page_one_requirement/{page}\'. " +
+                    "Must be Integer type");
+        }
+        if (parsedPage < 0) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/requirements/page_one_requirement/{page}\'. " +
+                    "Id must be not less than 0L");
+        }
+        Page<Requirement> requirements;
+        try {
+            requirements = requirementRepository.findAll(PageRequest.of(parsedPage, 1, Sort.by("salary").ascending()));
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not get requirements from required resource \'/rest/requirements/page_one_requirement/{page}\', " + e.getCause());
+        }
+        return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, requirements), HttpStatus.OK);
+    }
+
+    @GetMapping("/page_size_requirements/{page}/{size}")
+    public ResponseEntity<Map<String, Page<Requirement>>> findAllShowPageBySize(@PathVariable String page, @PathVariable String size) {
+        Integer parsedPage;
+        try {
+            parsedPage = Integer.parseInt(page);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad {page} in resource path \'/rest/requirements/page_size_requirements/{page}/{size}\'. " +
+                    "Must be Integer type");
+        }
+        if (parsedPage < 0) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/requirements/page_size_requirements/{page}/{size}\'. " +
+                    "Id must be not less than 0L");
+        }
+        Integer parsedSize;
+        try {
+            parsedSize = Integer.parseInt(size);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Bad {size} in resource path \'/rest/requirements/page_size_requirements/{page}/{size}\'. " +
+                    "Must be Integer type");
+        }
+        if (parsedSize < 1) {
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {size} in resource path \'/rest/requirements/page_size_requirements/{page}/{size}\'. " +
+                    "Id must be more than 0L");
+        }
+        Page<Requirement> requirements;
+        try {
+            requirements = requirementRepository.findAll(PageRequest.of(parsedPage, parsedSize, Sort.by("salary").ascending()));
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not get requirements from required resource \'/rest/requirements/page_size_requirements/{page}/{size}\', " + e.getCause());
+        }
+        return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, requirements), HttpStatus.OK);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Requirement> getRequirementById(@PathVariable String id) {
@@ -216,50 +280,56 @@ public class RequirementController {
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, List<Requirement>>> searchRequirementsByEquipmentsLike
-            (@ModelAttribute RequirementSearchCriteria criteria) {
-        List<Requirement> requirements = requirementRepository.findRequirementsByEquipmentsLike("%" + criteria.getQuery() + "%");
+            (@Valid @ModelAttribute RequirementSearchCriteria criteria, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException
+                    ("Bad argument in search path, must be: \'search?query=word_like_equipment\'", result);
+        }
+        String query;
+        try {
+            query = criteria.getQuery();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Can not get query=word_like_equipment from criteria. " + e.getCause());
+        }
+        if (query == null) {
+            throw new IllegalArgumentException
+                    ("Bad argument in search path, must be: \'search?query=word_like_equipment\'");
+        }
+        List<Requirement> requirements;
+        try {
+            requirements = requirementRepository.findRequirementsByEquipmentsLike("%" + criteria.getQuery() + "%");
+        } catch (Exception e) {
+            throw new EntityNotFoundException
+                    ("Can not search skills from required resource \'/rest/skills/search?query=\'" +
+                            criteria.getQuery() + ". " + e.getCause());
+        }
         return new ResponseEntity<>(Collections.singletonMap("requirements", requirements), HttpStatus.OK);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PostMapping
-    public ResponseEntity<Requirement> createRequirement(@RequestBody RequirementCreateRequest request) {
-//        if (result.hasErrors()) {
-//            throw new IllegalRequestException(result);
-//        }
-        Requirement requirement = new Requirement();
-        requirement.setExperience(request.getExperience());
-        requirement.setActive(request.isActive());
-        requirement.setRecommendations(request.getRecommendations());
-        requirement.setEquipments(request.getEquipments());
-        requirement.setSalary(request.getSalary());
-        requirement.setTerm(request.getTerm());
-        requirement.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-        requirement.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-        Optional<Company> optionalCompany = companyRepository.findById(request.getCompanyId());
-        Company company = optionalCompany.get();
-        requirement.setCompany(company);
-        Optional<Industry> optionalIndustry = industryRepository.findById(request.getIndustryId());
-        Industry industry = optionalIndustry.get();
-        requirement.setIndustry(industry);
-        Optional<Profession> optionalProfession = professionRepository.findById(request.getProfessionId());
-        Profession profession = optionalProfession.get();
-        requirement.setProfession(profession);
-        Optional<Specialization> optionalSpecialization = specializationRepository.findById(request.getSpecializationId());
-        Specialization specialization = optionalSpecialization.get();
-        requirement.setSpecialization(specialization);
-        Optional<Rank> optionalRank = rankRepository.findById(request.getRankId());
-        Rank rank = optionalRank.get();
-        requirement.setRank(rank);
-        Optional<Position> optionalPosition = positionRepository.findById(request.getPositionId());
-        Position position = optionalPosition.get();
-        requirement.setPosition(position);
-        Optional<Location> locationOfferedOptional = locationRepository.findById(request.getLocationOfferedId());
-        Location locationOffered = locationOfferedOptional.get();
-        requirement.setLocationOffered(locationOffered);
-        requirement = requirementRepository.save(requirement);
+    public ResponseEntity<Requirement> createRequirement(@Valid @RequestBody RequirementCreateRequest request,
+                                                         BindingResult result) throws Exception {
+        if (result.hasErrors()) {
+            throw new IllegalRequestException("Poor information in request body to create requirement", result);
+        }
+        Requirement requirement;
+        try {
+            requirement = conversionService.convert(request, Requirement.class);
+        } catch (Exception e) {
+            throw new ConvertRequestToEntityException("Can not convert create request to requirement, because of: " +
+                    e.getCause());
+        }
+        if (requirement == null) {
+            throw new NullPointerException("Requirement has not created, check request body");
+        }
+        try {
+            requirement = requirementRepository.save(requirement);
+        } catch (Exception e) {
+            throw new EntityNotCreatedOrNotUpdatedException("Requirement has not created and saved to DB, because of: " + e.getCause());
+        }
         return new ResponseEntity<>(requirement, HttpStatus.CREATED);
     }
-
 
     @PutMapping
     public ResponseEntity<Requirement> updateRequirement(@RequestBody RequirementUpdateRequest request) {

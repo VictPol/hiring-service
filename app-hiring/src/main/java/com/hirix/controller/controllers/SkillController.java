@@ -294,7 +294,8 @@ public class SkillController {
 
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PostMapping
-    public ResponseEntity<Skill> createSkill(@RequestBody SkillCreateRequest request, BindingResult result) throws Exception {
+    public ResponseEntity<Skill> createSkill(@Valid @RequestBody SkillCreateRequest request, BindingResult result)
+            throws Exception {
         if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to create skill", result);
         }

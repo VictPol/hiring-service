@@ -25,4 +25,5 @@ public class RequirementPatchRequest {
     private Long specializationId;
     private Long rankId;
     private Long positionId;
+    private Long locationOfferedId;
 }
