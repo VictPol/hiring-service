@@ -16,7 +16,7 @@ import javax.persistence.ManyToOne;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class OfferCreateRequest {
-    private String commentsCompany;
     private Long skillId;
     private Long requirementId;
+    private String commentsCompany;
 }

@@ -10,7 +10,8 @@ import lombok.Setter;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class OfferUpdateRequestCompany extends OfferCreateRequest {
+public class OfferUpdateRequestCompany {
     private Long id;
     private boolean contracted;
+    private String commentsCompany;
 }

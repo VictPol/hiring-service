@@ -206,9 +206,9 @@ public class OfferController {
 //        Optional<Skill> optionalSkill = skillRepository.findById(request.getSkillId());
 //        Skill skill = optionalSkill.get();
 //        offer.setSkill(skill);
-        Optional<Requirement> optionalRequirement = requirementRepository.findById(request.getRequirementId());
-        Requirement requirement = optionalRequirement.get();
-        offer.setRequirement(requirement);
+//        Optional<Requirement> optionalRequirement = requirementRepository.findById(request.getRequirementId());
+//        Requirement requirement = optionalRequirement.get();
+//        offer.setRequirement(requirement);
 //        offer.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         offer.setChanged(Timestamp.valueOf(LocalDateTime.now()));
         offer = offerRepository.save(offer);
