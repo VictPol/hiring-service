@@ -1,6 +1,5 @@
 package com.hirix.controller.convertors.employee;
 
-
 import com.hirix.controller.requests.patch.EmployeePatchRequest;
 import com.hirix.domain.Employee;
 import com.hirix.domain.Location;
@@ -25,6 +24,7 @@ import java.util.Optional;
 public class EmployeePatchConvertor implements Converter<EmployeePatchRequest, Employee> {
     private final EmployeeRepository employeeRepository;
     private final LocationRepository locationRepository;
+
     @Override
     public Employee convert(EmployeePatchRequest request) {
         Long id;
@@ -45,7 +45,7 @@ public class EmployeePatchConvertor implements Converter<EmployeePatchRequest, E
         } catch (Exception e) {
             throw new EntityNotFoundException("Can not get employee by id from DB, " + e.getCause());
         }
-        Employee employee = optionalEmployee.orElseThrow(() -> new NoSuchElementException("No company with such id"));
+        Employee employee = optionalEmployee.orElseThrow(() -> new NoSuchElementException("No employee with such id"));
         try {
             if (request.getFullName() != null) {
                 employee.setFullName(request.getFullName());
@@ -67,19 +67,6 @@ public class EmployeePatchConvertor implements Converter<EmployeePatchRequest, E
                     e.getCause());
         }
 
-//        Long userId;
-//        try {
-//            userId = request.getUserId();
-//        } catch (Exception e) {
-//            throw new PoorInfoInRequestToCreateUpdateEntity
-//                    ("Poor information about user id in request body to patch update employee. " +
-//                            "Must be null or Long type. " + e.getCause());
-//        }
-//        if (userId != null && !userId.equals(employee.getUser().getId())) {
-//            throw new PoorInfoInRequestToCreateUpdateEntity
-//                    ("Can not patch update employee, because user id does not correspond to this employee");
-//        }
-
         Long locationId;
         try {
             locationId = request.getLocationId();
@@ -97,7 +84,6 @@ public class EmployeePatchConvertor implements Converter<EmployeePatchRequest, E
         }
 
         employee.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-
         return employee;
     }
 

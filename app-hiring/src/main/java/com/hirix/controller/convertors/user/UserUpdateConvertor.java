@@ -15,6 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserUpdateConvertor extends UserBaseConvertor<UserUpdateRequest, User> {
     private final UserRepository userRepository;
+
     @Override
     public User convert(UserUpdateRequest request) {
         Long id;
@@ -37,5 +38,4 @@ public class UserUpdateConvertor extends UserBaseConvertor<UserUpdateRequest, Us
         User user = optionalUser.orElseThrow(() -> new NoSuchElementException("No user with such id"));
         return doConvert(request, user);
     }
-
 }

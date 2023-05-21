@@ -37,6 +37,7 @@ public class RequirementPatchConvertor implements Converter<RequirementPatchRequ
     private final RankRepository rankRepository;
     private final PositionRepository positionRepository;
     private final LocationRepository locationRepository;
+
     @Override
     public Requirement convert(RequirementPatchRequest request) {
         Long id;
@@ -176,7 +177,6 @@ public class RequirementPatchConvertor implements Converter<RequirementPatchRequ
         }
 
         requirement.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-
         return requirement;
     }
 }

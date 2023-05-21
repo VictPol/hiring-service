@@ -26,7 +26,6 @@ public abstract class CompanyBaseConvertor<S, T> implements Converter<S, T> {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company");
         }
         companyForSave.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-
         return companyForSave;
     }
 }

@@ -21,6 +21,7 @@ import java.util.Optional;
 public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRequest, Company>{
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
+
     @Override
     public Company convert(CompanyCreateRequest request) {
         Company company = new Company();
@@ -71,7 +72,6 @@ public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRe
                 ("No location with such id was found"));
         company.setLocation(location);
         company.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-
         return doConvert(request, company);
     }
 }

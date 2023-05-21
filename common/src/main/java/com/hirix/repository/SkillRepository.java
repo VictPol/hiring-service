@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface SkillRepository extends JpaRepository<Skill, Long> {
+
     List<Skill> findSkillsByEquipmentsLike(String query);
 
     @Query(value = "select s from Skill s where" +
@@ -111,5 +112,4 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
                                           Integer salary, Integer term, Long industryId,
                                           Long professionId, Long specializationId, Long rankId,
                                           Long positionId, Long offeredLocationId, Long employeeLocationId);
-
 }

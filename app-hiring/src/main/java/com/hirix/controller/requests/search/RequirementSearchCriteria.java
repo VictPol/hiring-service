@@ -18,5 +18,4 @@ public class RequirementSearchCriteria {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
-
 }

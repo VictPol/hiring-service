@@ -18,7 +18,6 @@ import javax.validation.constraints.Size;
 @Validated
 public class CompanySearchCriteria {
     @NotNull
-//    @ElementCollection(targetClass = String.class)
     @Size(min = 2, max = 50)
     private String query;
 
@@ -26,5 +25,4 @@ public class CompanySearchCriteria {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
-
 }

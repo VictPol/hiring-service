@@ -3,7 +3,6 @@ package com.hirix.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -42,25 +41,32 @@ public class Rank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "rank_name")
     private String rankName;
+
     @Column
     @JsonIgnore
     private Timestamp created;
+
     @Column
     @JsonIgnore
     private Timestamp changed;
+
     @Column(name = "is_deleted")
     @JsonIgnore
     private boolean deleted;
+
     @Column(name = "is_visible")
     @JsonIgnore
     private boolean visible;
+
     @OneToMany(mappedBy = "rank", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
 //    @JsonManagedReference
     @JsonBackReference
 //    @JsonIgnoreProperties("rank")
     private Set<Skill> skills = Collections.emptySet();
+
     @OneToMany(mappedBy = "rank", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
 //    @JsonManagedReference
     @JsonBackReference

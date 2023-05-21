@@ -24,20 +24,22 @@ public class EmployeePatchRequest {
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
     private Long id;
+
     @Size(min = 2, max = 50)
     private String fullName;
+
     @Size(min = 19, max = 25)
     private String birthday;
+
     @Size(min = 2, max = 20)
     private String education;
+
     @Size(min = 2, max = 20)
     private String health;
+
     @Size(min = 2, max = 20)
     private String gender;
-//    @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
-//    @Min(value = 1L)
-//    @Max(value = 9223372036854775807L)
-//    private Long userId;
+
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)

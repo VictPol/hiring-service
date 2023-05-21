@@ -44,5 +44,4 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
             " o.requirement.company.id = :companyId"
     )
     List<Offer> findOffersByCompanyIdQuery(Long companyId);
-
 }

@@ -18,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserPatchConvertor implements Converter<UserPatchRequest, User> {
     private final UserRepository userRepository;
+
     @Override
     public User convert(UserPatchRequest request) {
         Long id;

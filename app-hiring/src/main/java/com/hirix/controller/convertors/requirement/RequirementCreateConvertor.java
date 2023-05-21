@@ -133,7 +133,6 @@ public class RequirementCreateConvertor extends RequirementBaseConvertor<Require
         RequirementUpdateConvertor.setLocationToRequirement(requirement, positionId, locationRepository);
 
         requirement.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-
         return doConvert(request, requirement);
     }
 

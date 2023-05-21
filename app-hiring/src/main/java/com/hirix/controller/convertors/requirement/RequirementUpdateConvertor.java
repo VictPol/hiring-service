@@ -150,7 +150,6 @@ public class RequirementUpdateConvertor extends RequirementBaseConvertor<Require
         if(!locationOfferedId.equals(requirement.getLocationOffered().getId())) {
             setLocationToRequirement(requirement, locationOfferedId, locationRepository);
         }
-
         return doConvert(request, requirement);
     }
 

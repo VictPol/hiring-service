@@ -1,13 +1,9 @@
 package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.OfferCreateRequest;
-import com.hirix.controller.requests.create.UserCreateRequest;
 import com.hirix.controller.requests.update.OfferUpdateRequestCompany;
 import com.hirix.controller.requests.update.OfferUpdateRequestEmployee;
 import com.hirix.domain.Offer;
-import com.hirix.domain.Requirement;
-import com.hirix.domain.Skill;
-import com.hirix.domain.User;
 import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
 import com.hirix.exception.EntityNotDeletedException;
@@ -32,14 +28,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -51,10 +44,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OfferController {
     private final OfferRepository offerRepository;
-
     private final ConversionService conversionService;
-    private final SkillRepository skillRepository;
-    private final RequirementRepository requirementRepository;
 
     @GetMapping
     public ResponseEntity<List<Offer>> getAllOffers() {

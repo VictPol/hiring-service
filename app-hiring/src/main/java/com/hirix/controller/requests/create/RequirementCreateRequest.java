@@ -12,16 +12,27 @@ import lombok.Setter;
 public class RequirementCreateRequest {
     private Integer experience;
     private boolean active;
+
     private Integer recommendations;
+
     private String equipments;
+
     private Integer salary;
+
     private Integer term;
+
     private Long companyId;
+
     private Long industryId;
+
     private Long professionId;
+
     private Long specializationId;
+
     private Long rankId;
+
     private Long positionId;
+
     private Long locationOfferedId;
 }
 

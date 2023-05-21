@@ -72,7 +72,6 @@ public class EmployeeCreateConvertor extends EmployeeBaseConvertor<EmployeeCreat
         Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id"));
         employee.setLocation(location);
         employee.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-
         return doConvert(request, employee);
     }
 }

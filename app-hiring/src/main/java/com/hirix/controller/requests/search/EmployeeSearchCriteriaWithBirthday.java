@@ -18,5 +18,4 @@ public class EmployeeSearchCriteriaWithBirthday extends EmployeeSearchCriteria {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
-
 }

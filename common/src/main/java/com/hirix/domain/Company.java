@@ -1,6 +1,5 @@
 package com.hirix.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -45,23 +44,31 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "full_title")
     private String fullTitle;
+
     @Column(name = "short_title")
     private String shortTitle;
+
     @Column(name = "reg_number")
     private String regNumber;
+
     @Column(name = "org_type")
     private String orgType;
+
     @Column
     @JsonIgnore
     private Timestamp created;
+
     @Column
     @JsonIgnore
     private Timestamp changed;
+
     @Column(name = "is_deleted")
     @JsonIgnore
     private boolean deleted;
+
     @OneToOne
     @JoinColumn(name = "user_id")
 //    @JsonBackReference
@@ -69,12 +76,14 @@ public class Company {
     @JsonIgnoreProperties("company")
     @JsonIgnore
     private User user;
+
     @ManyToOne
     @JoinColumn(name = "location_id")
 //    @JsonBackReference
     @JsonManagedReference
 //    @JsonIgnoreProperties("company")
     private Location location;
+
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
 //    @JsonBackReference
 //    @JsonManagedReference

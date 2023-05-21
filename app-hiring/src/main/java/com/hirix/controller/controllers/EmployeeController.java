@@ -1,19 +1,11 @@
 package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.EmployeeCreateRequest;
-import com.hirix.controller.requests.create.UserCreateRequest;
-import com.hirix.controller.requests.patch.CompanyPatchRequest;
 import com.hirix.controller.requests.patch.EmployeePatchRequest;
 import com.hirix.controller.requests.search.EmployeeSearchCriteria;
 import com.hirix.controller.requests.search.EmployeeSearchCriteriaWithBirthday;
 import com.hirix.controller.requests.update.EmployeeUpdateRequest;
-import com.hirix.domain.Company;
 import com.hirix.domain.Employee;
-import com.hirix.domain.Location;
-import com.hirix.domain.User;
-import com.hirix.domain.enums.Education;
-import com.hirix.domain.enums.Gender;
-import com.hirix.domain.enums.Health;
 import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
 import com.hirix.exception.EntityNotDeletedException;
@@ -21,8 +13,6 @@ import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.EmployeeRepository;
-import com.hirix.repository.LocationRepository;
-import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
@@ -46,7 +36,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -309,5 +298,4 @@ public class EmployeeController {
         }
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
-
 }

@@ -1,9 +1,7 @@
 package com.hirix.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -39,35 +37,43 @@ public class Offer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column
     @JsonIgnore
     private Timestamp created;
+
     @Column
     @JsonIgnore
     private Timestamp changed;
+
     @Column(name = "is_deleted")
     @JsonIgnore
     private boolean deleted;
+
     @Column(name = "is_accepted")
     @JsonIgnore
     private boolean accepted;
+
     @Column(name = "is_contracted")
     private boolean contracted;
+
     @Column(name = "comments_employee")
     private String commentsEmployee = "NO_COMMENTS";
+
     @Column(name = "comments_company")
     private String commentsCompany = "NO_COMMENTS";
+
     @ManyToOne
     @JoinColumn(name = "skill_id")
 //    @JsonManagedReference
 //    @JsonBackReference
     @JsonIgnoreProperties("offers")
     private Skill skill;
+
     @ManyToOne
     @JoinColumn(name = "requirement_id")
 //    @JsonManagedReference
 //    @JsonBackReference
     @JsonIgnoreProperties("offers")
     private Requirement requirement;
-
 }

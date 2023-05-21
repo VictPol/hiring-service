@@ -2,8 +2,6 @@ package com.hirix.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -45,43 +43,56 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "global_region")
     private String globalRegion;
+
     @Column
     private String country;
+
     @Column(name = "local_region")
     private String localRegion;
+
     @Column
     private String city;
+
     @Column(name = "is_countryside")
     private boolean locationIsCountryside;
+
     @Column
     @JsonIgnore
     private Timestamp created;
+
     @Column
     @JsonIgnore
     private Timestamp changed;
+
     @Column(name = "is_deleted")
     @JsonIgnore
     private boolean deleted;
+
     @Column(name = "is_visible")
     @JsonIgnore
     private boolean visible;
+
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
     @JsonBackReference
 //    @JsonManagedReference
 //    @JsonIgnoreProperties("location")
     private Set<Employee> employees = Collections.emptySet();
+
     @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
     @JsonBackReference
 //    @JsonManagedReference
 //    @JsonIgnoreProperties("location")
     private Set<Company> companies = Collections.emptySet();
+
     @OneToMany(mappedBy = "locationOffered", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
     @JsonBackReference
 //    @JsonManagedReference
 //    @JsonIgnoreProperties("locationOffered")
     private Set<Requirement> requirements = Collections.emptySet();
+
     @ManyToMany
     @JoinTable(name = "l_skills_locations",
             joinColumns = @JoinColumn(name = "location_id"),
@@ -91,5 +102,4 @@ public class Location {
 //    @JsonManagedReference
 //    @JsonIgnoreProperties("locationsDesired")
     private Set<Skill> skills = Collections.emptySet();
-
 }

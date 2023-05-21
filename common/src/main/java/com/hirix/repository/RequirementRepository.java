@@ -1,7 +1,6 @@
 package com.hirix.repository;
 
 import com.hirix.domain.Industry;
-import com.hirix.domain.Location;
 import com.hirix.domain.Position;
 import com.hirix.domain.Profession;
 import com.hirix.domain.Rank;
@@ -113,5 +112,4 @@ public interface RequirementRepository extends JpaRepository<Requirement, Long> 
                                         Integer recommendations, Integer salaryMin, Integer salaryMax, Integer termMin,
                                         Integer termMax, Industry industry, Profession profession, Specialization specialization,
                                         Rank rank, Position position, Long skillId, Long companyLocationId);
-
 }

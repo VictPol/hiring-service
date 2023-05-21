@@ -113,7 +113,6 @@ public class SkillCreateConvertor extends SkillBaseConvertor<SkillCreateRequest,
         SkillUpdateConvertor.setPositionToSkill(skill, positionId, positionRepository);
 
         skill.setCreated(Timestamp.valueOf(LocalDateTime.now()));
-
         return doConvert(request, skill);
     }
 }

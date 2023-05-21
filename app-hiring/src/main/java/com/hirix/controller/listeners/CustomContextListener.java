@@ -3,7 +3,6 @@ package com.hirix.controller.listeners;
 import com.hirix.repository.LocationRepository;
 import com.hirix.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletContextEvent;
@@ -15,7 +14,6 @@ public class CustomContextListener implements ServletContextListener {
     private final LocationRepository locationRepository;
     private final UserRepository userRepository;
 
-//    @Cacheable
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContextListener.super.contextInitialized(sce);

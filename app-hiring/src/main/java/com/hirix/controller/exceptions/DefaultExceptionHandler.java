@@ -38,7 +38,6 @@ import static com.hirix.exception.ApplicationErrorCodes.RUNTIME_EXCEPTION;
 @RequiredArgsConstructor
 public class DefaultExceptionHandler {
     private static final Logger log = Logger.getLogger(DefaultExceptionHandler.class);
-//    private final RandomValuesGenerator generator;
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorMessage> handleIllegalArgumentException(IllegalArgumentException e) {
@@ -203,5 +202,4 @@ public class DefaultExceptionHandler {
                 ),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 }

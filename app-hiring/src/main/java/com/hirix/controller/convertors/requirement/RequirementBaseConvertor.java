@@ -26,7 +26,6 @@ public abstract class RequirementBaseConvertor <S, T> implements Converter<S, T>
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create requirement");
         }
         skillForSave.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-
         return skillForSave;
     }
 }

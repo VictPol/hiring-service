@@ -16,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OfferUpdateConvertorByEmployee implements Converter<OfferUpdateRequestEmployee, Offer> {
     private final OfferRepository offerRepository;
+
     @Override
     public Offer convert(OfferUpdateRequestEmployee request) {
         Long id;
@@ -36,9 +37,9 @@ public class OfferUpdateConvertorByEmployee implements Converter<OfferUpdateRequ
             throw new EntityNotFoundException("Can not get offer by id from DB. " + e.getCause());
         }
         Offer offer = optionalOffer.orElseThrow(() -> new NoSuchElementException("No offer with such id"));
+
         offer.setAccepted(request.isAccepted());
         offer.setCommentsEmployee(request.getCommentsEmployee());
-
         return offer;
     }
 }

@@ -18,7 +18,6 @@ import javax.validation.constraints.NotNull;
 @Validated
 public class CompanyUpdateRequest extends CompanyCreateRequest {
     @NotNull
-//    @ElementCollection(targetClass = Long.class)
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)

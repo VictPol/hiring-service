@@ -50,28 +50,37 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "full_name")
     private String fullName;
+
     @Column
     private Timestamp birthday;
+
     @Column
     @Enumerated(EnumType.STRING)
     private Education education = Education.NOT_SELECTED;
+
     @Column
     @Enumerated(EnumType.STRING)
     private Health health = Health.NOT_SELECTED;
+
     @Column
     @Enumerated(EnumType.STRING)
     private Gender gender = Gender.NOT_SELECTED;
+
     @Column
     @JsonIgnore
     private Timestamp created;
+
     @Column
     @JsonIgnore
     private Timestamp changed;
+
     @Column(name = "is_deleted")
     @JsonIgnore
     private boolean deleted;
+
     @OneToOne
     @JoinColumn(name = "user_id")
 //    @JsonBackReference
@@ -79,12 +88,14 @@ public class Employee {
     @JsonIgnoreProperties("employee")
     @JsonIgnore
     private User user;
+
     @ManyToOne
     @JoinColumn(name = "location_id")
 //    @JsonBackReference
     @JsonManagedReference
 //    @JsonIgnoreProperties("employees")
     private Location location;
+
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)
 //    @JsonBackReference
 //    @JsonManagedReference

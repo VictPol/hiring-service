@@ -2,13 +2,11 @@ package com.hirix.controller.convertors.offer;
 
 
 import com.hirix.controller.requests.create.OfferCreateRequest;
-import com.hirix.controller.requests.patch.RequirementPatchRequest;
 import com.hirix.domain.Offer;
 import com.hirix.domain.Requirement;
 import com.hirix.domain.Skill;
 import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
-import com.hirix.repository.OfferRepository;
 import com.hirix.repository.RequirementRepository;
 import com.hirix.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +21,7 @@ import java.util.Optional;
 public class OfferCreateConvertor implements Converter<OfferCreateRequest, Offer> {
     private final RequirementRepository requirementRepository;
     private final SkillRepository skillRepository;
-    private final OfferRepository offerRepository;
+
     @Override
     public Offer convert(OfferCreateRequest request) {
         Offer offer = new Offer();
@@ -69,7 +67,6 @@ public class OfferCreateConvertor implements Converter<OfferCreateRequest, Offer
         offer.setRequirement(requirement);
 
         offer.setCommentsCompany(request.getCommentsCompany());
-
         return offer;
     }
 }

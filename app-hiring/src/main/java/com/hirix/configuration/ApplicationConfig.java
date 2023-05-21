@@ -11,10 +11,6 @@ import javax.sql.DataSource;
 
 @Configuration
 public class ApplicationConfig {
-//    @Bean
-//    public RandomValuesGenerator getRandomGenerator() {
-//        return new RandomValuesGenerator();
-//    }
 
     @Bean
     public FlywayMigrationInitializer flywayInitializer() {

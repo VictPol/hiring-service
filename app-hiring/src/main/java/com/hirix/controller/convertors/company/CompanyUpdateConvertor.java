@@ -18,6 +18,7 @@ import java.util.Optional;
 public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRequest, Company> {
     private final CompanyRepository companyRepository;
     private final LocationRepository locationRepository;
+
     @Override
     public Company convert(CompanyUpdateRequest request) {
         Long id;
@@ -72,7 +73,6 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
             Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id"));
             company.setLocation(location);
         }
-
         return doConvert(request, company);
     }
 }

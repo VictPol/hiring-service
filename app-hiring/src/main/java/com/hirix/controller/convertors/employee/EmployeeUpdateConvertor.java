@@ -1,16 +1,12 @@
 package com.hirix.controller.convertors.employee;
 
 
-import com.hirix.controller.requests.create.EmployeeCreateRequest;
 import com.hirix.controller.requests.update.EmployeeUpdateRequest;
-import com.hirix.domain.Company;
 import com.hirix.domain.Employee;
-import com.hirix.domain.Location;
 import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.EmployeeRepository;
 import com.hirix.repository.LocationRepository;
-import com.hirix.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +18,7 @@ import java.util.Optional;
 public class EmployeeUpdateConvertor  extends EmployeeBaseConvertor<EmployeeUpdateRequest, Employee> {
     private final EmployeeRepository employeeRepository;
     private final LocationRepository locationRepository;
+
     @Override
     public Employee convert(EmployeeUpdateRequest request) {
         Long id;
@@ -42,19 +39,6 @@ public class EmployeeUpdateConvertor  extends EmployeeBaseConvertor<EmployeeUpda
             throw new EntityNotFoundException("Can not get employee by id from DB, " + e.getCause());
         }
         Employee employee = optionalEmployee.orElseThrow(() -> new NoSuchElementException("No employee with such id"));
-
-//        Long userId;
-//        try {
-//            userId = request.getUserId();
-//        } catch (Exception e) {
-//            throw new PoorInfoInRequestToCreateUpdateEntity
-//                    ("Poor information about user id in request body to update employee. Must be Long type" +
-//                            e.getCause());
-//        }
-//        if (!userId.equals(employee.getUser().getId())) {
-//            throw new PoorInfoInRequestToCreateUpdateEntity
-//                    ("Can not update employee, because user id does not correspond to this employee");
-//        }
 
         Long locationId;
         try {

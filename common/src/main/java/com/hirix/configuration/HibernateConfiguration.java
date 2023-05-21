@@ -17,30 +17,22 @@ import java.util.Properties;
 public class HibernateConfiguration {
     @Bean(name = "sessionFactory")
     public SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
-
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
-
-        // Package contain entity classes
         factoryBean.setPackagesToScan("com.hirix");
         factoryBean.setDataSource(dataSource);
         factoryBean.setHibernateProperties(getAdditionalProperties());
         factoryBean.afterPropertiesSet();
-        //
         SessionFactory sf = factoryBean.getObject();
-        //System.out.println("## getSessionFactory: " + sf);
         return sf;
     }
 
-    //Entity Manager
     @Primary
     @Autowired
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
-        LocalContainerEntityManagerFactoryBean em
-                = new LocalContainerEntityManagerFactoryBean();
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setPackagesToScan("com.hirix");
         em.setDataSource(dataSource);
-
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         em.setJpaProperties(getAdditionalProperties());
@@ -49,7 +41,6 @@ public class HibernateConfiguration {
 
     private Properties getAdditionalProperties() {
         Properties properties = new Properties();
-
         properties.put("hibernate.show_sql", "true");
         return properties;
     }

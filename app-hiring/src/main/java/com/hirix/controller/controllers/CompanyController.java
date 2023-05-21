@@ -1,46 +1,22 @@
 package com.hirix.controller.controllers;
 
-import com.hirix.controller.requests.create.CompanyCreateRequest;
-import com.hirix.controller.requests.patch.CompanyPatchRequest;
-import com.hirix.controller.requests.search.CompanySearchCriteria;
-import com.hirix.controller.requests.update.CompanyUpdateRequest;
-import com.hirix.domain.Company;
-import com.hirix.exception.ConvertRequestToEntityException;
-import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
-import com.hirix.exception.EntityNotDeletedException;
-import com.hirix.exception.EntityNotFoundException;
-import com.hirix.exception.IllegalRequestException;
-import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
-import com.hirix.repository.CompanyRepository;
-import lombok.RequiredArgsConstructor;
-import org.hibernate.annotations.Parameter;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.hirix.controller.requests.create.*;
+import com.hirix.controller.requests.patch.*;
+import com.hirix.controller.requests.search.*;
+import com.hirix.controller.requests.update.*;
+import com.hirix.domain.*;
+import com.hirix.exception.*;
+import com.hirix.repository.*;
+import lombok.*;
+import org.springframework.core.convert.*;
+import org.springframework.data.domain.*;
+import org.springframework.http.*;
+import org.springframework.transaction.annotation.*;
+import org.springframework.validation.*;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import javax.validation.*;
+import java.util.*;
 
 @RestController
 @RequestMapping("rest/companies")
@@ -262,5 +238,4 @@ public class CompanyController {
         }
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
-
 }

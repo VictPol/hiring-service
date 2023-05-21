@@ -31,7 +31,6 @@ public abstract class EmployeeBaseConvertor<S, T> implements Converter<S, T> {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create employee");
         }
         employeeForSave.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-
         return employeeForSave;
     }
 }

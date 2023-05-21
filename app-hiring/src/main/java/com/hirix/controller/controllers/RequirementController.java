@@ -2,18 +2,10 @@ package com.hirix.controller.controllers;
 
 import com.hirix.controller.requests.create.RequirementCreateRequest;
 import com.hirix.controller.requests.patch.RequirementPatchRequest;
-import com.hirix.controller.requests.patch.SkillPatchRequest;
 import com.hirix.controller.requests.search.RequirementSearchCriteria;
 import com.hirix.controller.requests.update.RequirementUpdateRequest;
-import com.hirix.domain.Company;
-import com.hirix.domain.Industry;
-import com.hirix.domain.Location;
-import com.hirix.domain.Position;
-import com.hirix.domain.Profession;
-import com.hirix.domain.Rank;
 import com.hirix.domain.Requirement;
 import com.hirix.domain.Skill;
-import com.hirix.domain.Specialization;
 import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
 import com.hirix.exception.EntityNotDeletedException;
@@ -51,8 +43,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -66,13 +56,6 @@ public class RequirementController {
     private final RequirementRepository requirementRepository;
     private final ConversionService conversionService;
     private final SkillRepository skillRepository;
-    private final CompanyRepository companyRepository;
-    private final IndustryRepository industryRepository;
-    private final ProfessionRepository professionRepository;
-    private final SpecializationRepository specializationRepository;
-    private final RankRepository rankRepository;
-    private final PositionRepository positionRepository;
-    private final LocationRepository locationRepository;
 
     @GetMapping
     public ResponseEntity<List<Requirement>> getAllRequirements() {
@@ -464,5 +447,4 @@ public class RequirementController {
         }
         return requirements;
     }
-
 }

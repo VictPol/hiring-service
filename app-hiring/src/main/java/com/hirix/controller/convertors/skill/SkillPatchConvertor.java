@@ -34,6 +34,7 @@ public class SkillPatchConvertor implements Converter<SkillPatchRequest, Skill> 
     private final SpecializationRepository specializationRepository;
     private final RankRepository rankRepository;
     private final PositionRepository positionRepository;
+
     @Override
     public Skill convert(SkillPatchRequest request) {
         Long id;
@@ -163,7 +164,6 @@ public class SkillPatchConvertor implements Converter<SkillPatchRequest, Skill> 
         }
 
         skill.setChanged(Timestamp.valueOf(LocalDateTime.now()));
-
         return skill;
     }
 }

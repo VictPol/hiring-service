@@ -21,6 +21,7 @@ import java.util.Optional;
 public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Company> {
     private final CompanyRepository companyRepository;
     private final LocationRepository locationRepository;
+
     @Override
     public Company convert(CompanyPatchRequest request) {
         Long id;
