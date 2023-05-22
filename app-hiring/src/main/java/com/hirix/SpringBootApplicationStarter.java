@@ -1,5 +1,6 @@
 package com.hirix;
 
+import com.hirix.configuration.ApplicationCacheConfiguration;
 import com.hirix.configuration.ApplicationConfig;
 import com.hirix.configuration.HibernateConfiguration;
 import org.springframework.boot.SpringApplication;
@@ -14,8 +15,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableWebMvc
 @EnableTransactionManagement
 @Import(
-        {ApplicationConfig.class,
-                HibernateConfiguration.class}
+        { ApplicationConfig.class,
+            HibernateConfiguration.class,
+                ApplicationCacheConfiguration.class }
 )
 public class SpringBootApplicationStarter {
     public static void main(String[] args) {

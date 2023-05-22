@@ -12,13 +12,12 @@ import javax.servlet.ServletContextListener;
 @AllArgsConstructor
 public class CustomContextListener implements ServletContextListener {
 
-    private final LocationRepository locationRepository;
     private final UserRepository userRepository;
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContextListener.super.contextInitialized(sce);
-        locationRepository.findAll();
+        //Add all auxiliary tables from DB but not users and make them cacheable
         userRepository.findAll();
     }
 }

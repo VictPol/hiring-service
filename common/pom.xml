@@ -21,6 +21,7 @@
     </properties>
 
     <dependencies>
+<!--        Spring boot cashing-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
