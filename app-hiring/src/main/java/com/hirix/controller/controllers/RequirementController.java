@@ -17,12 +17,14 @@ import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.RequirementRepository;
 import com.hirix.repository.SkillRepository;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -85,8 +87,36 @@ public class RequirementController {
         return new ResponseEntity<>(requirements, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Show all requirements paged",
+            description = "Show all professional requirements of all companies to employees skills, " +
+                    "paged with only one skill on one page and by page number",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully loaded requirements paged with only one skill",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PageImpl.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad page number. Must be Integer type",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad page number. Must be not less than 0",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "NOT_FOUND",
+                            description = "Failed to load requirements from required resource",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @GetMapping("/page_one_requirement/{page}")
-    public ResponseEntity<Map<String, Page<Requirement>>> findAllShowPageWithOneSkill(@PathVariable String page) {
+    public ResponseEntity<Map<String, Page<Requirement>>> findAllShowPageWithOneSkill
+            (@Parameter(name = "page", description = "number of page", example = "0", required = true) @PathVariable String page) {
         Integer parsedPage;
         try {
             parsedPage = Integer.parseInt(page);
@@ -96,7 +126,7 @@ public class RequirementController {
         }
         if (parsedPage < 0) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/requirements/page_one_requirement/{page}\'. " +
-                    "Id must be not less than 0L");
+                    "Must be not less than 0");
         }
         Page<Requirement> requirements;
         try {
