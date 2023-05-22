@@ -17,6 +17,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class UserPatchConvertor implements Converter<UserPatchRequest, User> {
+
     private final UserRepository userRepository;
 
     @Override
@@ -54,6 +55,7 @@ public class UserPatchConvertor implements Converter<UserPatchRequest, User> {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to patch update user. " +
                     e.getCause());
         }
+
         user.setChanged(Timestamp.valueOf(LocalDateTime.now()));
         return user;
     }

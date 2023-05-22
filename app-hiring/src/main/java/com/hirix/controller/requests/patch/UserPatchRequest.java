@@ -25,13 +25,13 @@ public class UserPatchRequest {
     @Max(value = 9223372036854775807L)
     private Long id;
 
-    @Size(min = 10, max = 180)
+    @Size(min = 10, max = 360)
     private String email;
 
-    @Size(min = 5, max = 25)
+    @Size(min = 6, max = 25)
     private String password;
 
-    @Size(min = 5, max = 50)
+    @Size(min = 2, max = 50)
     private String nickName;
 }
 

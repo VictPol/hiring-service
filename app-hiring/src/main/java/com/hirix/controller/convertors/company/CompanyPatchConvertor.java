@@ -19,6 +19,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Company> {
+
     private final CompanyRepository companyRepository;
     private final LocationRepository locationRepository;
 
@@ -29,8 +30,8 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
             id = request.getId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about company id in request body to update company. Must be Long type. " +
-                    e.getCause());
+                    ("Poor information about company id in request body to update company. Must be Long type. " +
+                            e.getCause());
         }
         if (id < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor company id in request body to get company. " +
@@ -58,28 +59,30 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
             }
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
-                e.getCause());
+                    e.getCause());
         }
         company.setChanged(Timestamp.valueOf(LocalDateTime.now()));
+
         Long userId;
         try {
             userId = request.getUserId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about user id in request body to patch update company. " +
-                     "Must be null or Long type" + e.getCause());
+                    ("Poor information about user id in request body to patch update company. " +
+                            "Must be null or Long type" + e.getCause());
         }
         if (userId != null && !userId.equals(company.getUser().getId())) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Can not patch update company, because user id does not correspond to this company");
+                    ("Can not patch update company, because user id does not correspond to this company");
         }
+
         Long locationId;
         try {
             locationId = request.getLocationId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to patch update company. Must be Long type. " +
-                    e.getCause());
+                    ("Poor information about location id in request body to patch update company. Must be Long type. " +
+                            e.getCause());
         }
         if (locationId != null && locationId > 0L && !locationId.equals(company.getLocation().getId())) {
             Optional<Location> optionalLocation;
@@ -93,7 +96,7 @@ public class CompanyPatchConvertor implements Converter<CompanyPatchRequest, Com
         }
         if (locationId != null && locationId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about company location id in request body to patch update company. Must be more than 1L.");
+                    ("Poor information about company location id in request body to patch update company. Must be more than 1L.");
         }
         return company;
     }

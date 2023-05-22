@@ -1,19 +1,19 @@
 spring:
-#  main:
-#    allow-circular-references: true
+  #  main:
+  #    allow-circular-references: true
   datasource:
     hikari:
-#      jdbc-url: "jdbc:postgresql://localhost:5432/apptest?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      #      jdbc-url: "jdbc:postgresql://localhost:5432/apptest?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
       maximum-pool-size: 20
-#      driver-class-name: org.postgresql.Driver
+    #      driver-class-name: org.postgresql.Driver
     username: dev
-#    username: postgres
+    #    username: postgres
     password: dev
-#    password: root
+    #    password: root
     url: "jdbc:postgresql://localhost:5432/hiring_service?useUnicode=true
     &useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
-#    url: "jdbc:postgresql://localhost:5432/apptest?useUnicode=true
-#  &useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+    #    url: "jdbc:postgresql://localhost:5432/apptest?useUnicode=true
+    #  &useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
     driver-class-name: org.postgresql.Driver
 #  flyway:
 #    enabled: true

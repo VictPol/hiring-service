@@ -41,7 +41,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column (name = "role_name")
+    @Column(name = "role_name")
     private String roleName;
 
     @Column
@@ -52,11 +52,11 @@ public class Role {
     @JsonIgnore
     private Timestamp changed;
 
-    @Column (name = "is_deleted")
+    @Column(name = "is_deleted")
     @JsonIgnore
     private boolean deleted;
 
-    @Column (name = "is_visible")
+    @Column(name = "is_visible")
     @JsonIgnore
     private boolean visible = true;
 

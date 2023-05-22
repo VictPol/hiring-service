@@ -1,27 +1,51 @@
 package com.hirix.controller.controllers;
 
-import com.hirix.controller.requests.create.*;
-import com.hirix.controller.requests.patch.*;
-import com.hirix.controller.requests.search.*;
-import com.hirix.controller.requests.update.*;
-import com.hirix.domain.*;
-import com.hirix.exception.*;
-import com.hirix.repository.*;
-import lombok.*;
-import org.springframework.core.convert.*;
-import org.springframework.data.domain.*;
-import org.springframework.http.*;
-import org.springframework.transaction.annotation.*;
-import org.springframework.validation.*;
-import org.springframework.web.bind.annotation.*;
 
-import javax.validation.*;
-import java.util.*;
+import com.hirix.controller.requests.create.CompanyCreateRequest;
+import com.hirix.controller.requests.patch.CompanyPatchRequest;
+import com.hirix.controller.requests.search.CompanySearchCriteria;
+import com.hirix.controller.requests.update.CompanyUpdateRequest;
+import com.hirix.domain.Company;
+import com.hirix.exception.ConvertRequestToEntityException;
+import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
+import com.hirix.exception.EntityNotDeletedException;
+import com.hirix.exception.EntityNotFoundException;
+import com.hirix.exception.IllegalRequestException;
+import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
+import com.hirix.repository.CompanyRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("rest/companies")
 @RequiredArgsConstructor
 public class CompanyController {
+
     private final CompanyRepository companyRepository;
     private final ConversionService conversionService;
 
@@ -32,7 +56,7 @@ public class CompanyController {
             companies = companyRepository.findAll();
         } catch (Exception e) {
             throw new EntityNotFoundException("Can not get companies from required resource \'/rest/companies\', " +
-                e.getCause());
+                    e.getCause());
         }
         return new ResponseEntity<>(companies, HttpStatus.OK);
     }
@@ -55,7 +79,8 @@ public class CompanyController {
             companies = companyRepository.findAll(PageRequest.of(parsedPage, 1, Sort.by("fullTitle").ascending()));
         } catch (Exception e) {
             throw new EntityNotFoundException
-                    ("Can not get companies from required resource \'/rest/companies/page_one_company/{page}/{size}\', " + e.getCause());
+                    ("Can not get companies from required resource \'/rest/companies/page_one_company/{page}/{size}\', " +
+                            e.getCause());
         }
         return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, companies), HttpStatus.OK);
     }
@@ -67,11 +92,11 @@ public class CompanyController {
             parsedPage = Integer.parseInt(page);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Bad {page} in resource path \'/rest/companies/page_number_of_companies/{page}/{size}\'. " +
-                "Must be Integer type");
+                    "Must be Integer type");
         }
         if (parsedPage < 0) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/companies/page_number_of_companies/{page}/{size}\'. " +
-                "Id must be not less than 0L");
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/companies/" +
+                    "page_number_of_companies/{page}/{size}\'. Id must be not less than 0L");
         }
         Integer parsedSize;
         try {
@@ -82,14 +107,14 @@ public class CompanyController {
         }
         if (parsedSize < 1) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad {size} in resource path \'/rest/companies/page_number_of_companies/{page}/{size}\'. " +
-                "Id must be more than 0L");
+                    "Id must be more than 0L");
         }
         Page<Company> companies;
         try {
             companies = companyRepository.findAll(PageRequest.of(parsedPage, parsedSize, Sort.by("fullTitle").ascending()));
         } catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not get companies from required resource \'/rest/companies/page_number_of_companies/{page}/{size}\', " + e.getCause());
+                    ("Can not get companies from required resource \'/rest/companies/page_number_of_companies/{page}/{size}\', " + e.getCause());
         }
         return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, companies), HttpStatus.OK);
     }
@@ -109,9 +134,9 @@ public class CompanyController {
         Optional<Company> optionalCompany;
         try {
             optionalCompany = companyRepository.findById(parsedId);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not get company by id from from required resource \'/rest/companies/{id}\', ", e.getCause());
+                    ("Can not get company by id from from required resource \'/rest/companies/{id}\', ", e.getCause());
         }
         Company company = optionalCompany.orElseThrow(() -> new NoSuchElementException("No company with such id"));
         return new ResponseEntity<>(company, HttpStatus.OK);
@@ -119,10 +144,10 @@ public class CompanyController {
 
     @GetMapping("/search")
     public ResponseEntity<Map<String, List<Company>>> searchCompaniesByFullTitleLike
-        (@Valid @ModelAttribute CompanySearchCriteria criteria, BindingResult result) {
+            (@Valid @ModelAttribute CompanySearchCriteria criteria, BindingResult result) {
         if (result.hasErrors()) {
             throw new IllegalRequestException
-                ("Bad argument in search path, must be: \'search?query=word_like_company_fullTitle\'", result);
+                    ("Bad argument in search path, must be: \'search?query=word_like_company_fullTitle\'", result);
         }
         String query;
         try {
@@ -132,15 +157,15 @@ public class CompanyController {
         }
         if (query == null) {
             throw new IllegalArgumentException
-                ("Bad argument in search path, must be: \'search?query=word_like_company_fullTitle\'");
+                    ("Bad argument in search path, must be: \'search?query=word_like_company_fullTitle\'");
         }
         List<Company> companies;
         try {
             companies = companyRepository.findCompaniesByFullTitleLike("%" + query + "%");
         } catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not search companies from required resource \'/rest/companies/search?query=\'" +
-                    criteria.getQuery() + ", " + e.getCause());
+                    ("Can not search companies from required resource \'/rest/companies/search?query=\'" +
+                            criteria.getQuery() + ", " + e.getCause());
         }
         return new ResponseEntity<>(Collections.singletonMap("companies", companies), HttpStatus.OK);
     }
@@ -157,7 +182,7 @@ public class CompanyController {
             company = conversionService.convert(request, Company.class);
         } catch (Exception e) {
             throw new ConvertRequestToEntityException("Can not convert create request to company, because of: " +
-                e.getCause());
+                    e.getCause());
         }
         if (company == null) {
             throw new NullPointerException("Company has not created, check request body");
@@ -173,7 +198,7 @@ public class CompanyController {
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PutMapping
     public ResponseEntity<Company> updateCompany(@Valid @RequestBody CompanyUpdateRequest request, BindingResult result)
-        throws Exception {
+            throws Exception {
         if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to update company", result);
         }
@@ -188,7 +213,7 @@ public class CompanyController {
             company = companyRepository.save(company);
         } catch (Exception e) {
             throw new EntityNotCreatedOrNotUpdatedException
-                ("Company has not been updated and saved to DB, " + e.getCause());
+                    ("Company has not been updated and saved to DB, " + e.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
@@ -209,7 +234,7 @@ public class CompanyController {
             company = companyRepository.save(company);
         } catch (Exception e) {
             throw new EntityNotCreatedOrNotUpdatedException
-                ("Company has not been patch updated and saved to DB, " + e.getCause());
+                    ("Company has not been patch updated and saved to DB, " + e.getCause());
         }
         return new ResponseEntity<>(company, HttpStatus.OK);
     }
@@ -222,7 +247,7 @@ public class CompanyController {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Bad information about company id in resource \'/rest/companies/{id}\'. " +
-                "Must be Long type");
+                    "Must be Long type");
         }
         Optional<Company> optionalCompany;
         try {

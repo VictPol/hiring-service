@@ -46,6 +46,7 @@ import java.util.Optional;
 @RequestMapping("rest/employees")
 @RequiredArgsConstructor
 public class EmployeeController {
+
     private final EmployeeRepository employeeRepository;
     private final ConversionService conversionService;
 
@@ -133,7 +134,7 @@ public class EmployeeController {
         Optional<Employee> optionalEmployee;
         try {
             optionalEmployee = employeeRepository.findById(parsedId);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new EntityNotFoundException
                     ("Can not get employee by id from from required resource \'/rest/employees/{id}\'. " + e.getCause());
         }
@@ -233,9 +234,9 @@ public class EmployeeController {
     @PutMapping
     public ResponseEntity<Employee> updateEmployee(@Valid @RequestBody EmployeeUpdateRequest request, BindingResult result)
             throws Exception {
-       if (result.hasErrors()) {
+        if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to update employee", result);
-       }
+        }
         Employee employee;
         try {
             employee = conversionService.convert(request, Employee.class);
@@ -249,7 +250,7 @@ public class EmployeeController {
             throw new EntityNotCreatedOrNotUpdatedException
                     ("Employee has not been updated and saved to DB, " + e.getCause());
         }
-       return new ResponseEntity<>(employee, HttpStatus.OK);
+        return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)

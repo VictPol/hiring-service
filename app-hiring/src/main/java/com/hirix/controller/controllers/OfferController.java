@@ -11,8 +11,6 @@ import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.OfferRepository;
-import com.hirix.repository.RequirementRepository;
-import com.hirix.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
@@ -43,6 +41,7 @@ import java.util.Optional;
 @RequestMapping("rest/offers")
 @RequiredArgsConstructor
 public class OfferController {
+
     private final OfferRepository offerRepository;
     private final ConversionService conversionService;
 
@@ -145,11 +144,11 @@ public class OfferController {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Bad skill {id} in resource path \'rest/offers/skill/{id}\'. " +
-                "Must be Long type");
+                    "Must be Long type");
         }
         if (parsedId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/offers/skill/{id}\'. " +
-                "Id must be more than 0L");
+                    "Id must be more than 0L");
         }
         List<Offer> offers = offerRepository.findOffersBySkillIdQuery(parsedId);
         return new ResponseEntity<>(offers, HttpStatus.OK);
@@ -162,19 +161,19 @@ public class OfferController {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Bad skill {id} in resource path \'rest/offers/skill/{id}/requirement_salary_max\'. " +
-                "Must be Long type");
+                    "Must be Long type");
         }
         if (parsedId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/offers/skill/{id}/requirement_salary_max\'. " +
-                "Id must be more than 0L");
+                    "Id must be more than 0L");
         }
         List<Offer> offers;
         try {
             offers = offerRepository.findOffersBySkillIdQueryAndSalaryMax(parsedId);
         } catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not find offers by skill id with salary_max from required resource \'rest/offers/skill/{id}/requirement_salary_max\', " +
-                    e.getCause());
+                    ("Can not find offers by skill id with salary_max from required resource \'rest/offers/skill/{id}/requirement_salary_max\', " +
+                            e.getCause());
         }
         return new ResponseEntity<>(offers, HttpStatus.OK);
     }
@@ -210,19 +209,19 @@ public class OfferController {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Bad employee {id} in resource path \'rest/offers/employee/{id}\'. " +
-                "Must be Long type");
+                    "Must be Long type");
         }
         if (parsedId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad employee {id} in resource path \'rest/offers/employee/{id}\'. " +
-               "Id must be more than 0L");
+                    "Id must be more than 0L");
         }
         List<Offer> offers;
         try {
             offers = offerRepository.findOffersByEmployeeIdQuery(parsedId);
         } catch (Exception e) {
             throw new EntityNotFoundException
-                ("Can not find offers by employee id from required resource \'rest/offers/employee/{id}\', " +
-                    e.getCause());
+                    ("Can not find offers by employee id from required resource \'rest/offers/employee/{id}\', " +
+                            e.getCause());
         }
         return new ResponseEntity<>(offers, HttpStatus.OK);
     }
@@ -234,11 +233,11 @@ public class OfferController {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Bad requirement {id} in resource path \'rest/offers/requirement/{id}\'. " +
-                "Must be Long type");
+                    "Must be Long type");
         }
         if (parsedId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'rest/offers/requirement/{id}\'. " +
-                "Id must be more than 0L");
+                    "Id must be more than 0L");
         }
         List<Offer> offers = offerRepository.findOffersByRequirementIdQuery(parsedId);
         return new ResponseEntity<>(offers, HttpStatus.OK);
@@ -251,11 +250,11 @@ public class OfferController {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Bad company {id} in resource path \'rest/offers/company/{id}\'. " +
-                "Must be Long type");
+                    "Must be Long type");
         }
         if (parsedId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad company {id} in resource path \'rest/offers/company/{id}\'. " +
-                "Id must be more than 0L");
+                    "Id must be more than 0L");
         }
         List<Offer> offers = offerRepository.findOffersByCompanyIdQuery(parsedId);
         return new ResponseEntity<>(offers, HttpStatus.OK);

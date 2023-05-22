@@ -28,6 +28,7 @@ import static com.hirix.controller.convertors.skill.SkillUpdateConvertor.setSpec
 @Component
 @RequiredArgsConstructor
 public class SkillPatchConvertor implements Converter<SkillPatchRequest, Skill> {
+
     private final SkillRepository skillRepository;
     private final IndustryRepository industryRepository;
     private final ProfessionRepository professionRepository;

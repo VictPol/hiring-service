@@ -22,6 +22,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class EmployeePatchConvertor implements Converter<EmployeePatchRequest, Employee> {
+
     private final EmployeeRepository employeeRepository;
     private final LocationRepository locationRepository;
 

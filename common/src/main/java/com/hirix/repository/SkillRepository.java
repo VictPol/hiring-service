@@ -37,20 +37,20 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
 
     @Query(value =
             "select s from Skill s where s.salaryMin in (" +
-            " select min (s.salaryMin) from Skill s where" +
-            " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
-            " s.experience >= :experience and" +
-            " s.active = :isActive and" +
-            " s.recommendations >= :recommendations and" +
-            " s.salaryMax >=:salary and" +
-            " s.salaryMin <= :salary and" +
-            " s.termMax >= :term and" +
-            " s.termMin <= :term and" +
-            " s.industry.id = :industryId and" +
-            " s.profession.id = :professionId and" +
-            " s.specialization.id = :specializationId and" +
-            " s.rank.id = :rankId and" +
-            " s.position.id = :positionId) and" +
+                    " select min (s.salaryMin) from Skill s where" +
+                    " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
+                    " s.experience >= :experience and" +
+                    " s.active = :isActive and" +
+                    " s.recommendations >= :recommendations and" +
+                    " s.salaryMax >=:salary and" +
+                    " s.salaryMin <= :salary and" +
+                    " s.termMax >= :term and" +
+                    " s.termMin <= :term and" +
+                    " s.industry.id = :industryId and" +
+                    " s.profession.id = :professionId and" +
+                    " s.specialization.id = :specializationId and" +
+                    " s.rank.id = :rankId and" +
+                    " s.position.id = :positionId) and" +
                     " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
                     " s.experience >= :experience and" +
                     " s.active = :isActive and" +
@@ -66,9 +66,9 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
                     " s.position.id = :positionId"
     )
     List<Skill> findSkillsByRequirementIdWithMinSalary(Integer experience, boolean isActive, Integer recommendations,
-                                          Integer salary, Integer term, Long industryId,
-                                          Long professionId, Long specializationId, Long rankId,
-                                          Long positionId, Long offeredLocationId);
+                                                       Integer salary, Integer term, Long industryId,
+                                                       Long professionId, Long specializationId, Long rankId,
+                                                       Long positionId, Long offeredLocationId);
 
 
     @Query(value = "select s from Skill s where" +
@@ -88,9 +88,9 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
             " lower(s.equipments) like :equipment"
     )
     List<Skill> findSkillsByRequirementIdAndEquipmentLike(Integer experience, boolean isActive, Integer recommendations,
-                                       Integer salary, Integer term, Industry industry, Profession profession,
-                                       Specialization specialization, Rank rank, Position position, Long offeredLocationId,
-                                       String equipment);
+                                                          Integer salary, Integer term, Industry industry, Profession profession,
+                                                          Specialization specialization, Rank rank, Position position, Long offeredLocationId,
+                                                          String equipment);
 
     @Query(value = "select s from Skill s where" +
             " s.id in (select l.skillId from LinkSkillsLocations l where l.locationId = :offeredLocationId) and" +
@@ -109,7 +109,7 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
             " s.employee.location.id = :employeeLocationId"
     )
     List<Skill> findSkillsByRequirementIdAndEmployeeLocationId(Integer experience, boolean isActive, Integer recommendations,
-                                          Integer salary, Integer term, Long industryId,
-                                          Long professionId, Long specializationId, Long rankId,
-                                          Long positionId, Long offeredLocationId, Long employeeLocationId);
+                                                               Integer salary, Integer term, Long industryId,
+                                                               Long professionId, Long specializationId, Long rankId,
+                                                               Long positionId, Long offeredLocationId, Long employeeLocationId);
 }

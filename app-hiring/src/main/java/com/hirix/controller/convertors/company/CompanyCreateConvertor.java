@@ -18,7 +18,8 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRequest, Company>{
+public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRequest, Company> {
+
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
 
@@ -35,7 +36,7 @@ public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRe
         }
         if (userId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company. " +
-                "UserId must be more than 0L");
+                    "UserId must be more than 0L");
         }
         Optional<User> optionalUser;
         try {
@@ -55,12 +56,12 @@ public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRe
             locationId = request.getLocationId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to create company. Must be Long type" +
-                    e.getCause());
+                    ("Poor information about location id in request body to create company. Must be Long type" +
+                            e.getCause());
         }
         if (locationId < 1) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company. " +
-                "LocationId must be more than 0L");
+                    "LocationId must be more than 0L");
         }
         Optional<Location> optionalLocation;
         try {
@@ -71,6 +72,7 @@ public class CompanyCreateConvertor extends CompanyBaseConvertor<CompanyCreateRe
         Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException
                 ("No location with such id was found"));
         company.setLocation(location);
+
         company.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         return doConvert(request, company);
     }

@@ -20,6 +20,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class EmployeeCreateConvertor extends EmployeeBaseConvertor<EmployeeCreateRequest, Employee> {
+
     private final UserRepository userRepository;
     private final LocationRepository locationRepository;
 
@@ -71,6 +72,7 @@ public class EmployeeCreateConvertor extends EmployeeBaseConvertor<EmployeeCreat
         }
         Location location = optionalLocation.orElseThrow(() -> new NoSuchElementException("No location with such id"));
         employee.setLocation(location);
+
         employee.setCreated(Timestamp.valueOf(LocalDateTime.now()));
         return doConvert(request, employee);
     }

@@ -8,7 +8,8 @@ import org.springframework.core.convert.converter.Converter;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-public abstract class RequirementBaseConvertor <S, T> implements Converter<S, T> {
+public abstract class RequirementBaseConvertor<S, T> implements Converter<S, T> {
+
     public Requirement doConvert(RequirementCreateRequest request, Requirement skillForSave) {
         try {
             skillForSave.setExperience(request.getExperience());
@@ -22,9 +23,10 @@ public abstract class RequirementBaseConvertor <S, T> implements Converter<S, T>
                     e.getCause());
         }
         if (skillForSave.getSalary() == null || skillForSave.getSalary() < 0 ||
-            skillForSave.getTerm() == null || skillForSave.getTerm() < 0) {
+                skillForSave.getTerm() == null || skillForSave.getTerm() < 0) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create requirement");
         }
+
         skillForSave.setChanged(Timestamp.valueOf(LocalDateTime.now()));
         return skillForSave;
     }

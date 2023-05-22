@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class SkillCreateConvertor extends SkillBaseConvertor<SkillCreateRequest, Skill> {
+
     private final EmployeeRepository employeeRepository;
     private final IndustryRepository industryRepository;
     private final ProfessionRepository professionRepository;

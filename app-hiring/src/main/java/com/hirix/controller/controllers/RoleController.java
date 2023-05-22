@@ -37,6 +37,7 @@ import java.util.Optional;
 @RequestMapping("rest/roles")
 @RequiredArgsConstructor
 public class RoleController {
+
     private final RoleRepository roleRepository;
 
     @GetMapping
@@ -119,7 +120,7 @@ public class RoleController {
         Optional<Role> optionalRole;
         try {
             optionalRole = roleRepository.findRoleByRoleName(roleName);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new EntityNotFoundException
                     ("Can not get role by ROLE_NAME from required resource \'/rest/roles/role/{ROLE_NAME}\', " + e.getCause());
         }
@@ -157,7 +158,7 @@ public class RoleController {
 
     @PostMapping("/role/{ROLE_NAME}")
     public ResponseEntity<Role> createRole(@PathVariable("ROLE_NAME") String roleName) throws Exception {
-        if(!roleName.startsWith("ROLE_")) {
+        if (!roleName.startsWith("ROLE_")) {
             throw new PoorInfoInRequestToCreateUpdateEntity("ROLE_NAME must start with prefix \"ROLE_\"");
         }
         Role role = new Role();
@@ -179,13 +180,13 @@ public class RoleController {
     @PutMapping("/role/{old_ROLE_NAME}/{new_ROLE_NAME}")
     public ResponseEntity<Role> updateRole(@PathVariable("old_ROLE_NAME") String oldRoleName,
                                            @PathVariable("new_ROLE_NAME") String newRoleName) throws Exception {
-        if(!oldRoleName.startsWith("ROLE_") || !newRoleName.startsWith("ROLE_")) {
+        if (!oldRoleName.startsWith("ROLE_") || !newRoleName.startsWith("ROLE_")) {
             throw new PoorInfoInRequestToCreateUpdateEntity("ROLE_NAME must start with prefix \"ROLE_\"");
         }
         Optional<Role> optionalRole;
         try {
             optionalRole = roleRepository.findRoleByRoleName(oldRoleName);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new EntityNotFoundException
                     ("Can not get role by old_ROLE_NAME from required resource \'/rest/roles/role/{old_ROLE_NAME/{new_ROLE_NAME}\', " +
                             e.getCause());
@@ -230,7 +231,7 @@ public class RoleController {
         Optional<Role> optionalRole;
         try {
             optionalRole = roleRepository.findById(parsedId);
-        }  catch (Exception e) {
+        } catch (Exception e) {
             throw new EntityNotFoundException
                     ("Can not get role by id from from required resource \'/rest/roles/{id}\', " + e.getCause());
         }

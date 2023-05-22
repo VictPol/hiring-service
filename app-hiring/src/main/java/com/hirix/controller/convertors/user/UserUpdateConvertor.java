@@ -14,6 +14,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class UserUpdateConvertor extends UserBaseConvertor<UserUpdateRequest, User> {
+
     private final UserRepository userRepository;
 
     @Override

@@ -30,6 +30,7 @@ import static com.hirix.controller.convertors.requirement.RequirementUpdateConve
 @Component
 @RequiredArgsConstructor
 public class RequirementPatchConvertor implements Converter<RequirementPatchRequest, Requirement> {
+
     private final RequirementRepository requirementRepository;
     private final IndustryRepository industryRepository;
     private final ProfessionRepository professionRepository;

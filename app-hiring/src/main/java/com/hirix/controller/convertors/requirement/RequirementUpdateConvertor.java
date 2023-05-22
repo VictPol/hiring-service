@@ -26,6 +26,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class RequirementUpdateConvertor extends RequirementBaseConvertor<RequirementUpdateRequest, Requirement> {
+
     private final RequirementRepository requirementRepository;
     private final IndustryRepository industryRepository;
     private final ProfessionRepository professionRepository;
@@ -67,7 +68,7 @@ public class RequirementUpdateConvertor extends RequirementBaseConvertor<Require
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update requirement. " +
                     "Industry id must be more than 0L");
         }
-        if(!industryId.equals(requirement.getIndustry().getId())) {
+        if (!industryId.equals(requirement.getIndustry().getId())) {
             setIndustryToRequirement(requirement, industryId, industryRepository);
         }
 
@@ -83,7 +84,7 @@ public class RequirementUpdateConvertor extends RequirementBaseConvertor<Require
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update requirement. " +
                     "Profession id must be more than 0L");
         }
-        if(!professionId.equals(requirement.getProfession().getId())) {
+        if (!professionId.equals(requirement.getProfession().getId())) {
             setProfessionToRequirement(requirement, professionId, professionRepository);
         }
 
@@ -131,7 +132,7 @@ public class RequirementUpdateConvertor extends RequirementBaseConvertor<Require
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update requirement. " +
                     "Position id must be more than 0L");
         }
-        if(!positionId.equals(requirement.getPosition().getId())) {
+        if (!positionId.equals(requirement.getPosition().getId())) {
             setPositionToRequirement(requirement, positionId, positionRepository);
         }
 
@@ -147,7 +148,7 @@ public class RequirementUpdateConvertor extends RequirementBaseConvertor<Require
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update requirement. " +
                     "Location id must be more than 0L");
         }
-        if(!locationOfferedId.equals(requirement.getLocationOffered().getId())) {
+        if (!locationOfferedId.equals(requirement.getLocationOffered().getId())) {
             setLocationToRequirement(requirement, locationOfferedId, locationRepository);
         }
         return doConvert(request, requirement);

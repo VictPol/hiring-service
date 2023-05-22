@@ -11,6 +11,7 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class WebMVCConvertorConfig implements WebMvcConfigurer {
+
     private final List<Converter<?, ?>> converters;
 
     @Override

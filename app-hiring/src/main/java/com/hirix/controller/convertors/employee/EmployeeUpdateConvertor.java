@@ -15,7 +15,8 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class EmployeeUpdateConvertor  extends EmployeeBaseConvertor<EmployeeUpdateRequest, Employee> {
+public class EmployeeUpdateConvertor extends EmployeeBaseConvertor<EmployeeUpdateRequest, Employee> {
+
     private final EmployeeRepository employeeRepository;
     private final LocationRepository locationRepository;
 

@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 @Validated
 public class CompanySearchCriteria {
     @NotNull
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 200)
     private String query;
 
     @Override

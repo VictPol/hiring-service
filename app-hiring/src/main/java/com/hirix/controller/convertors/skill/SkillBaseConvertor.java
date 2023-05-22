@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public abstract class SkillBaseConvertor<S, T> implements Converter<S, T> {
+
     public Skill doConvert(SkillCreateRequest request, Skill skillForSave) {
         try {
             skillForSave.setExperience(request.getExperience());
@@ -24,11 +25,12 @@ public abstract class SkillBaseConvertor<S, T> implements Converter<S, T> {
                     e.getCause());
         }
         if (skillForSave.getSalaryMin() == null || skillForSave.getSalaryMin() < 0 ||
-            skillForSave.getSalaryMax() == null || skillForSave.getSalaryMax() < 0 ||
-            skillForSave.getTermMin() == null || skillForSave.getTermMin() < 0 ||
-            skillForSave.getTermMax() == null || skillForSave.getTermMax() < 0) {
+                skillForSave.getSalaryMax() == null || skillForSave.getSalaryMax() < 0 ||
+                skillForSave.getTermMin() == null || skillForSave.getTermMin() < 0 ||
+                skillForSave.getTermMax() == null || skillForSave.getTermMax() < 0) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create skill");
         }
+
         skillForSave.setChanged(Timestamp.valueOf(LocalDateTime.now()));
         return skillForSave;
     }

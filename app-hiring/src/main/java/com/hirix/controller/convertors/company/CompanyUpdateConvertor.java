@@ -16,6 +16,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRequest, Company> {
+
     private final CompanyRepository companyRepository;
     private final LocationRepository locationRepository;
 
@@ -26,11 +27,11 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
             id = request.getId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about company id in request body to update company. Must be Long type" + e.getCause());
+                    ("Poor information about company id in request body to update company. Must be Long type" + e.getCause());
         }
         if (id < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
-                "Id must be more than 0L");
+                    "Id must be more than 0L");
         }
         Optional<Company> optionalCompany;
         try {
@@ -44,24 +45,25 @@ public class CompanyUpdateConvertor extends CompanyBaseConvertor<CompanyUpdateRe
             userId = request.getUserId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about user id in request body to update company. Must be Long type" +
-                    e.getCause());
+                    ("Poor information about user id in request body to update company. Must be Long type" +
+                            e.getCause());
         }
         if (!userId.equals(company.getUser().getId())) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Can not update company, because user id does not correspond to this company");
+                    ("Can not update company, because user id does not correspond to this company");
         }
+
         Long locationId;
         try {
             locationId = request.getLocationId();
         } catch (Exception e) {
             throw new PoorInfoInRequestToCreateUpdateEntity
-                ("Poor information about location id in request body to update company. Must be Long type" +
-                    e.getCause());
+                    ("Poor information about location id in request body to update company. Must be Long type" +
+                            e.getCause());
         }
         if (locationId < 1L) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update company. " +
-                "LocationId must be more than 0L");
+                    "LocationId must be more than 0L");
         }
         if (!locationId.equals(company.getLocation().getId())) {
             Optional<Location> optionalLocation;

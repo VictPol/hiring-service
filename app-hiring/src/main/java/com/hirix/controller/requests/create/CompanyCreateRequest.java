@@ -19,15 +19,15 @@ import javax.validation.constraints.Size;
 @Validated
 public class CompanyCreateRequest {
     @NotNull
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 200)
     private String fullTitle;
 
     @NotNull
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 50)
     private String shortTitle;
 
     @NotNull
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 100)
     private String regNumber;
 
     @NotNull

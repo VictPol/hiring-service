@@ -23,6 +23,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class RequirementCreateConvertor extends RequirementBaseConvertor<RequirementCreateRequest, Requirement> {
+
     private final CompanyRepository companyRepository;
     private final IndustryRepository industryRepository;
     private final ProfessionRepository professionRepository;

@@ -19,6 +19,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class OfferCreateConvertor implements Converter<OfferCreateRequest, Offer> {
+
     private final RequirementRepository requirementRepository;
     private final SkillRepository skillRepository;
 

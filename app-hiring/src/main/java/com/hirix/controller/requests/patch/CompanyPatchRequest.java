@@ -25,13 +25,13 @@ public class CompanyPatchRequest {
     @Max(value = 9223372036854775807L)
     private Long id;
 
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 200)
     private String fullTitle;
 
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 50)
     private String shortTitle;
 
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 100)
     private String regNumber;
 
     @Size(min = 2, max = 20)

@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public abstract class CompanyBaseConvertor<S, T> implements Converter<S, T> {
+
     public Company doConvert(CompanyCreateRequest request, Company companyForSave) {
         try {
             companyForSave.setFullTitle(request.getFullTitle());
@@ -20,9 +21,9 @@ public abstract class CompanyBaseConvertor<S, T> implements Converter<S, T> {
                     e.getCause());
         }
         if (companyForSave.getFullTitle() == null ||
-            companyForSave.getShortTitle() == null ||
-            companyForSave.getRegNumber() == null ||
-            companyForSave.getOrgType() == null) {
+                companyForSave.getShortTitle() == null ||
+                companyForSave.getRegNumber() == null ||
+                companyForSave.getOrgType() == null) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create company");
         }
         companyForSave.setChanged(Timestamp.valueOf(LocalDateTime.now()));

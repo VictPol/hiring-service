@@ -26,6 +26,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class SkillUpdateConvertor extends SkillBaseConvertor<SkillUpdateRequest, Skill> {
+
     private final SkillRepository skillRepository;
     private final IndustryRepository industryRepository;
     private final ProfessionRepository professionRepository;
@@ -66,7 +67,7 @@ public class SkillUpdateConvertor extends SkillBaseConvertor<SkillUpdateRequest,
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update skill. " +
                     "Industry id must be more than 0L");
         }
-        if(!industryId.equals(skill.getIndustry().getId())) {
+        if (!industryId.equals(skill.getIndustry().getId())) {
             setIndustryToSkill(skill, industryId, industryRepository);
         }
 
@@ -82,7 +83,7 @@ public class SkillUpdateConvertor extends SkillBaseConvertor<SkillUpdateRequest,
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update skill. " +
                     "Profession id must be more than 0L");
         }
-        if(!professionId.equals(skill.getProfession().getId())) {
+        if (!professionId.equals(skill.getProfession().getId())) {
             setProfessionToSkill(skill, professionId, professionRepository);
         }
 
@@ -130,7 +131,7 @@ public class SkillUpdateConvertor extends SkillBaseConvertor<SkillUpdateRequest,
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to update skill. " +
                     "Position id must be more than 0L");
         }
-        if(!positionId.equals(skill.getPosition().getId())) {
+        if (!positionId.equals(skill.getPosition().getId())) {
             setPositionToSkill(skill, positionId, positionRepository);
         }
         return doConvert(request, skill);

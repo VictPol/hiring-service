@@ -37,7 +37,7 @@ import java.util.Set;
         "employee", "company", "roles"
 })
 @Entity
-@Table (name = "users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,18 +61,18 @@ public class User {
     @JsonIgnore
     private Timestamp changed;
 
-    @Column (name = "is_deleted")
+    @Column(name = "is_deleted")
     @JsonIgnore
     private boolean isDeleted;
 
-    @Column (name = "is_visible")
+    @Column(name = "is_visible")
     @JsonIgnore
     private boolean isVisible;
 
-    @Column (name = "is_locked")
+    @Column(name = "is_locked")
     private boolean isLocked;
 
-    @Column (name = "is_expired")
+    @Column(name = "is_expired")
     private boolean isExpired;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = false)

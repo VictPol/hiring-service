@@ -8,7 +8,8 @@ import org.springframework.core.convert.converter.Converter;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-public abstract class UserBaseConvertor <S, T> implements Converter<S, T> {
+public abstract class UserBaseConvertor<S, T> implements Converter<S, T> {
+
     public User doConvert(UserCreateRequest request, User userForSave) {
         try {
             userForSave.setEmail(request.getEmail());
@@ -19,10 +20,11 @@ public abstract class UserBaseConvertor <S, T> implements Converter<S, T> {
                     e.getCause());
         }
         if (userForSave.getEmail() == null ||
-            userForSave.getPassword() == null ||
-            userForSave.getNickName() == null) {
+                userForSave.getPassword() == null ||
+                userForSave.getNickName() == null) {
             throw new PoorInfoInRequestToCreateUpdateEntity("Poor information in request body to create user");
         }
+
         userForSave.setChanged(Timestamp.valueOf(LocalDateTime.now()));
         return userForSave;
     }

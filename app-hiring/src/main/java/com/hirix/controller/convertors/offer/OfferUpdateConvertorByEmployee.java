@@ -15,6 +15,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class OfferUpdateConvertorByEmployee implements Converter<OfferUpdateRequestEmployee, Offer> {
+
     private final OfferRepository offerRepository;
 
     @Override

@@ -25,19 +25,19 @@ public class EmployeePatchRequest {
     @Max(value = 9223372036854775807L)
     private Long id;
 
-    @Size(min = 2, max = 50)
+    @Size(min = 2, max = 100)
     private String fullName;
 
-    @Size(min = 19, max = 25)
+    @Size(min = 18, max = 23)
     private String birthday;
 
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 25)
     private String education;
 
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 25)
     private String health;
 
-    @Size(min = 2, max = 20)
+    @Size(min = 2, max = 25)
     private String gender;
 
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")

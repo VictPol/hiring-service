@@ -28,7 +28,7 @@ import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_CREATED_OR_NO
 import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_DELETED;
 import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_FOUND;
 import static com.hirix.exception.ApplicationErrorCodes.FATAL_ERROR;
-import static com.hirix.exception.ApplicationErrorCodes.ID_IS_NOT_LONG;
+import static com.hirix.exception.ApplicationErrorCodes.ID_IS_NOT_REQUIRED_NUMBER_FORMAT;
 import static com.hirix.exception.ApplicationErrorCodes.NO_ENTITY_WITH_SUCH_ID;
 import static com.hirix.exception.ApplicationErrorCodes.NULL_POINTER;
 import static com.hirix.exception.ApplicationErrorCodes.POOR_INFORMATION_TO_CREATE_UPDATE_ENTITY;
@@ -37,6 +37,7 @@ import static com.hirix.exception.ApplicationErrorCodes.RUNTIME_EXCEPTION;
 @ControllerAdvice
 @RequiredArgsConstructor
 public class DefaultExceptionHandler {
+
     private static final Logger log = Logger.getLogger(DefaultExceptionHandler.class);
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -124,7 +125,7 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(
                 new ErrorMessage(
                         exceptionUniqueId,
-                        ID_IS_NOT_LONG.getCodeId(),
+                        ID_IS_NOT_REQUIRED_NUMBER_FORMAT.getCodeId(),
                         e.getMessage() + ". " + e.getClass().getName()
                 ),
                 HttpStatus.BAD_REQUEST);
@@ -149,6 +150,7 @@ public class DefaultExceptionHandler {
                 ),
                 HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(ConvertRequestToEntityException.class)
     public ResponseEntity<ErrorMessage> handleConvertRequestToEntityException(ConvertRequestToEntityException e) {
         String exceptionUniqueId = UUID.randomUUID().toString();
