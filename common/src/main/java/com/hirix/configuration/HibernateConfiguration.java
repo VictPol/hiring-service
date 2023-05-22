@@ -15,6 +15,8 @@ import java.util.Properties;
 
 @Configuration
 public class HibernateConfiguration {
+
+    @Autowired
     @Bean(name = "sessionFactory")
     public SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
