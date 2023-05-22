@@ -24,6 +24,7 @@ public class ApplicationCacheConfiguration {
                 .initialCapacity(1000)
                 .maximumSize(2000)
                 .expireAfterAccess(60, TimeUnit.SECONDS)
+                .expireAfterWrite(0, TimeUnit.MICROSECONDS)
                 .weakKeys()
                 .recordStats();
     }
