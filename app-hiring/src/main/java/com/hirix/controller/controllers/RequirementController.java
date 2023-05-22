@@ -90,7 +90,7 @@ public class RequirementController {
     @Operation(
             summary = "Show all requirements paged",
             description = "Show all professional requirements of all companies to employees skills, " +
-                    "paged with only one skill on one page and by page number",
+                    "paged by page number with only one skill on one page and sorted by salary asc",
             responses = {
                     @ApiResponse(
                             responseCode = "OK",
@@ -116,7 +116,9 @@ public class RequirementController {
     )
     @GetMapping("/page_one_requirement/{page}")
     public ResponseEntity<Map<String, Page<Requirement>>> findAllShowPageWithOneSkill
-            (@Parameter(name = "page", description = "number of page", example = "0", required = true) @PathVariable String page) {
+            (@Parameter(name = "page", description = "number of page, starts from \'0\' ", example = "7", required = true)
+             @PathVariable String page) {
+
         Integer parsedPage;
         try {
             parsedPage = Integer.parseInt(page);
