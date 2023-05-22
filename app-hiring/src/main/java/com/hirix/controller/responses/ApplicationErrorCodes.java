@@ -1,4 +1,4 @@
-package com.hirix.exception;
+package com.hirix.controller.responses;
 
 public enum ApplicationErrorCodes {
     FATAL_ERROR(1),

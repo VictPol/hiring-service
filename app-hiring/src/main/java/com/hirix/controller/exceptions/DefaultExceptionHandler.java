@@ -21,18 +21,18 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.hirix.exception.ApplicationErrorCodes.BAD_ARGUMENTS_IN_SEARCH_PATH;
-import static com.hirix.exception.ApplicationErrorCodes.BAD_REQUEST_SEE_DETAILS;
-import static com.hirix.exception.ApplicationErrorCodes.CAN_NOT_CONVERT_REQUEST_TO_ENTITY;
-import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_CREATED_OR_NOT_UPDATED;
-import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_DELETED;
-import static com.hirix.exception.ApplicationErrorCodes.ENTITY_NOT_FOUND;
-import static com.hirix.exception.ApplicationErrorCodes.FATAL_ERROR;
-import static com.hirix.exception.ApplicationErrorCodes.ID_IS_NOT_REQUIRED_NUMBER_FORMAT;
-import static com.hirix.exception.ApplicationErrorCodes.NO_ENTITY_WITH_SUCH_ID;
-import static com.hirix.exception.ApplicationErrorCodes.NULL_POINTER;
-import static com.hirix.exception.ApplicationErrorCodes.POOR_INFORMATION_TO_CREATE_UPDATE_ENTITY;
-import static com.hirix.exception.ApplicationErrorCodes.RUNTIME_EXCEPTION;
+import static com.hirix.controller.responses.ApplicationErrorCodes.BAD_ARGUMENTS_IN_SEARCH_PATH;
+import static com.hirix.controller.responses.ApplicationErrorCodes.BAD_REQUEST_SEE_DETAILS;
+import static com.hirix.controller.responses.ApplicationErrorCodes.CAN_NOT_CONVERT_REQUEST_TO_ENTITY;
+import static com.hirix.controller.responses.ApplicationErrorCodes.ENTITY_NOT_CREATED_OR_NOT_UPDATED;
+import static com.hirix.controller.responses.ApplicationErrorCodes.ENTITY_NOT_DELETED;
+import static com.hirix.controller.responses.ApplicationErrorCodes.ENTITY_NOT_FOUND;
+import static com.hirix.controller.responses.ApplicationErrorCodes.FATAL_ERROR;
+import static com.hirix.controller.responses.ApplicationErrorCodes.ID_IS_NOT_REQUIRED_NUMBER_FORMAT;
+import static com.hirix.controller.responses.ApplicationErrorCodes.NO_ENTITY_WITH_SUCH_ID;
+import static com.hirix.controller.responses.ApplicationErrorCodes.NULL_POINTER;
+import static com.hirix.controller.responses.ApplicationErrorCodes.POOR_INFORMATION_TO_CREATE_UPDATE_ENTITY;
+import static com.hirix.controller.responses.ApplicationErrorCodes.RUNTIME_EXCEPTION;
 
 @ControllerAdvice
 @RequiredArgsConstructor
