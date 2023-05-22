@@ -11,6 +11,7 @@ import com.hirix.exception.ConvertRequestToEntityException;
 import com.hirix.exception.EntityNotCreatedOrNotUpdatedException;
 import com.hirix.exception.EntityNotDeletedException;
 import com.hirix.exception.EntityNotFoundException;
+import com.hirix.exception.ErrorMessage;
 import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.RequirementRepository;
@@ -62,8 +63,13 @@ public class RequirementController {
             responses = {
                     @ApiResponse(
                             responseCode = "OK",
-                            description = "Successfully loaded Users",
+                            description = "Successfully loaded requirements",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "NOT_FOUND",
+                            description = "Failed to load requirements",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     )
             }
     )
