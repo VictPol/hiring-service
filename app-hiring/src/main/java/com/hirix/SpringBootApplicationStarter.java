@@ -15,12 +15,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableWebMvc
 @EnableTransactionManagement
+@EnableCaching
 @Import(
         { ApplicationConfig.class,
             HibernateConfiguration.class,
                 ApplicationCacheConfiguration.class }
-)
-@EnableCaching
+        )
+
 public class SpringBootApplicationStarter {
     public static void main(String[] args) {
         SpringApplication.run(SpringBootApplicationStarter.class, args);
