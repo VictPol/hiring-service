@@ -15,6 +15,10 @@ import com.hirix.exception.IllegalRequestException;
 import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.RequirementRepository;
 import com.hirix.repository.SkillRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Page;
@@ -52,6 +56,17 @@ public class RequirementController {
     private final ConversionService conversionService;
     private final SkillRepository skillRepository;
 
+    @Operation(
+            summary = "Find all requirements",
+            description = "Find all professional requirements of all companies to employees skills",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully loaded Users",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    )
+            }
+    )
     @GetMapping
     public ResponseEntity<List<Requirement>> getAllRequirements() {
         List<Requirement> requirements;
