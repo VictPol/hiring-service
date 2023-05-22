@@ -27,11 +27,11 @@ public class CustomContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContextListener.super.contextInitialized(sce);
-        industryRepository.findAllByVisibleIs(true);
-        locationRepository.findAllByVisibleIs(true);
-        positionRepository.findAllByVisibleIs(true);
-        professionRepository.findAllByVisibleIs(true);
-        rankRepository.findAllByVisibleIs(true);
-        specializationRepository.findAllByVisibleIs(true);
+//        industryRepository.findAllByVisibleIs(true);
+//        locationRepository.findAllByVisibleIs(true);
+//        positionRepository.findAllByVisibleIs(true);
+//        professionRepository.findAllByVisibleIs(true);
+//        rankRepository.findAllByVisibleIs(true);
+//        specializationRepository.findAllByVisibleIs(true);
     }
 }
