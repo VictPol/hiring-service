@@ -552,10 +552,41 @@ public class RequirementController {
         return new ResponseEntity<>(Collections.singletonMap("requirements", requirements), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Create new requirement by create request",
+            description = "Create professional requirement of company to employee skill according to all fields " +
+                    "in create request. All fields in request body must be filled",
+            parameters = {
+                    @Parameter(name = "create request body",
+                            required = true,
+                            in = ParameterIn.HEADER,
+                            schema = @Schema(requiredMode = Schema.RequiredMode.REQUIRED,
+                                    type = "body of header with application/json",
+                                    description = "create request body with fields"))
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "CREATED",
+                            description = "Successfully created requirement",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad create request",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "INTERNAL_SERVER_ERROR",
+                            description = "Failed to create and save requirement",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PostMapping
     public ResponseEntity<Requirement> createRequirement(@Valid @RequestBody RequirementCreateRequest request,
                                                          BindingResult result) throws Exception {
+
         if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to create requirement", result);
         }
@@ -581,6 +612,7 @@ public class RequirementController {
     @PutMapping
     public ResponseEntity<Requirement> updateRequirement(@Valid @RequestBody RequirementUpdateRequest request, BindingResult result)
             throws Exception {
+
         if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to update requirement", result);
         }
@@ -604,6 +636,7 @@ public class RequirementController {
     @PatchMapping
     public ResponseEntity<Requirement> patchUpdateRequirement(@Valid @RequestBody RequirementPatchRequest request, BindingResult result)
             throws Exception {
+
         if (result.hasErrors()) {
             throw new IllegalRequestException("Poor information in request body to patch update requirement", result);
         }
@@ -625,6 +658,7 @@ public class RequirementController {
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Requirement> deleteRequirement(@PathVariable String id) throws Exception {
+
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);

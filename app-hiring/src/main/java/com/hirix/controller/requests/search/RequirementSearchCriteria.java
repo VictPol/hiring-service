@@ -16,8 +16,8 @@ import javax.validation.constraints.Size;
 @Getter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Schema(description = "Search criteria object: search by equipment text description")
 @Validated
+@Schema(description = "Search criteria object: search by equipment text description")
 public class RequirementSearchCriteria {
 
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "spring data", type = "string", description = "text query")
