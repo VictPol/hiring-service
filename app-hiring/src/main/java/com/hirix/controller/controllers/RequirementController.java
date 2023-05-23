@@ -88,7 +88,7 @@ public class RequirementController {
     }
 
     @Operation(
-            summary = "Show all requirements paged",
+            summary = "Show all requirements paged by page number",
             description = "Show all professional requirements of all companies to employees skills, " +
                     "paged by page number with only one skill on one page and sorted by salary asc",
             responses = {
@@ -140,8 +140,39 @@ public class RequirementController {
         return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, requirements), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Show all requirements paged by page number and page size",
+            description = "Show all professional requirements of all companies to employees skills, " +
+                    "paged by page number with required page size (number of skills on one page) and sorted by salary asc",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully loaded requirements paged with only one skill and page size",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = PageImpl.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad page number. Must be Integer type",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad page number. Must be not less than 0",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "NOT_FOUND",
+                            description = "Failed to load requirements from required resource",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @GetMapping("/page_size_requirements/{page}/{size}")
-    public ResponseEntity<Map<String, Page<Requirement>>> findAllShowPageBySize(@PathVariable String page, @PathVariable String size) {
+    public ResponseEntity<Map<String, Page<Requirement>>> findAllShowPageBySize
+            (@Parameter(name = "page", description = "number of page, starts from \'0\' ", example = "7", required = true)
+             @PathVariable String page,
+             @Parameter(name = "size", description = "size of page (number of skills on one page), starts from \'1\' ", example = "2", required = true)
+             @PathVariable String size) {
         Integer parsedPage;
         try {
             parsedPage = Integer.parseInt(page);
@@ -173,7 +204,6 @@ public class RequirementController {
         }
         return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, requirements), HttpStatus.OK);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Requirement> getRequirementById(@PathVariable String id) {
