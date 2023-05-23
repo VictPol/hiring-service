@@ -174,6 +174,7 @@ public class RequirementController {
              @PathVariable String page,
              @Parameter(name = "size", description = "size of page (number of skills on one page), starts from \'1\' ", example = "2", required = true)
              @PathVariable String size) {
+
         Integer parsedPage;
         try {
             parsedPage = Integer.parseInt(page);
@@ -185,6 +186,7 @@ public class RequirementController {
             throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/requirements/page_size_requirements/{page}/{size}\'. " +
                     "Id must be not less than 0L");
         }
+
         Integer parsedSize;
         try {
             parsedSize = Integer.parseInt(size);
@@ -208,7 +210,7 @@ public class RequirementController {
 
     @Operation(
             summary = "Show one requirement by its id",
-            description = "Show only one professional requirement, chosen by its individual unique id as parameter",
+            description = "Show only one professional requirement, chosen by its individual unique id",
             responses = {
                     @ApiResponse(
                             responseCode = "OK",
@@ -235,6 +237,7 @@ public class RequirementController {
     @GetMapping("/{id}")
     public ResponseEntity<Requirement> getRequirementById(@Parameter(name = "id", description = "individual unique id of requirement in DB table",
             example = "3", required = true) @PathVariable String id) {
+
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
@@ -259,7 +262,7 @@ public class RequirementController {
 
     @Operation(
             summary = "Show requirements by skill id",
-            description = "Show list of professional requirements matching to chosen skill by its individual unique id as parameter",
+            description = "Show list of professional requirements matching to chosen skill by its individual unique id ",
             responses = {
                     @ApiResponse(
                             responseCode = "OK",
@@ -273,28 +276,29 @@ public class RequirementController {
                     ),
                     @ApiResponse(
                             responseCode = "BAD_REQUEST",
-                            description = "Failed to load requirement because of bad skill id number. Must be not less than 0",
+                            description = "Failed to load requirements because of bad skill id number. Must be not less than 0",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     ),
                     @ApiResponse(
                             responseCode = "NOT_FOUND",
-                            description = "Failed to load requirements from required resource",
+                            description = "Failed to load skill/requirements from required resource",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     )
             }
     )
     @GetMapping("/skill/{id}")
-    public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillId(@Parameter(name = "id", description = "individual unique id of skill " +
-            "in DB table", example = "3", required = true) @PathVariable String id) {
+    public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillId(@Parameter(name = "id", description = "individual " +
+                    "unique id of skill in DB table", example = "3", required = true) @PathVariable String id) {
+
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad requirement {id} in resource path \'rest/requirements/skill/{id}\'. " +
+            throw new NumberFormatException("Bad skill {id} in resource path \'rest/requirements/skill/{id}\'. " +
                     "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'rest/requirements/skill/{id}\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/requirements/skill/{id}\'. " +
                     "Id must be more than 0L");
         }
         Optional<Skill> optionalSkill;
@@ -311,7 +315,7 @@ public class RequirementController {
 
     @Operation(
             summary = "Show requirements by skill id with max salary",
-            description = "Show list of professional requirements matching to chosen skill by its individual unique id as parameter " +
+            description = "Show list of professional requirements matching to chosen skill by its individual unique id " +
                     "and having max salary among all matching requirements",
             responses = {
                     @ApiResponse(
@@ -331,7 +335,7 @@ public class RequirementController {
                     ),
                     @ApiResponse(
                             responseCode = "NOT_FOUND",
-                            description = "Failed to load requirements from required resource",
+                            description = "Failed to load skill/requirements from required resource",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     )
             }
@@ -339,15 +343,16 @@ public class RequirementController {
     @GetMapping("/skill/{id}/salary_max")
     public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillIdAndSalaryMax(@Parameter(name = "id", description = "individual " +
             "unique id of skill in DB table", example = "3", required = true) @PathVariable String id) {
+
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad requirement {id} in resource path \'rest/requirements/skill/{id}/salary_max\'. " +
+            throw new NumberFormatException("Bad skill {id} in resource path \'rest/requirements/skill/{id}/salary_max\'. " +
                     "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'rest/requirements/skill/{id}/salary_max\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/requirements/skill/{id}/salary_max\'. " +
                     "Id must be more than 0L");
         }
         Optional<Skill> optionalSkill;
@@ -364,8 +369,8 @@ public class RequirementController {
 
     @Operation(
             summary = "Show requirements by skill id with equipment like string parameter",
-            description = "Show list of professional requirements matching to chosen skill by its individual unique id as parameter " +
-                    "and having equipment like string parameter (in fact equipment query) among all matching requirements",
+            description = "Show list of professional requirements matching to chosen skill by its individual unique id " +
+                    "and having equipment like string parameter (in fact - equipment query) among all matching requirements",
             responses = {
                     @ApiResponse(
                             responseCode = "OK",
@@ -384,7 +389,7 @@ public class RequirementController {
                     ),
                     @ApiResponse(
                             responseCode = "NOT_FOUND",
-                            description = "Failed to load requirements from required resource",
+                            description = "Failed to load skill/requirements from required resource",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     )
             }
@@ -392,17 +397,18 @@ public class RequirementController {
     @GetMapping("/skill/{id}/equipment/{equipment}")
     public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillIdAndEquipmentLike(@Parameter(name = "id", description = "individual " +
                     "unique id of skill in DB table", example = "3", required = true) @PathVariable String id,
-            @Parameter(name = "equipment", description = "skill equipment like string parameter (in fact equipment query)", example = "spring data",
+            @Parameter(name = "equipment", description = "skill equipment like string parameter (in fact - equipment query)", example = "spring data",
                     required = true) @PathVariable String equipment) {
+
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad requirement {id} in resource path \'rest/requirements/skill/{id}/equipment/{equipment}\'. " +
+            throw new NumberFormatException("Bad skill {id} in resource path \'rest/requirements/skill/{id}/equipment/{equipment}\'. " +
                     "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'rest/requirements/skill/{id}/equipment/{equipment}\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/requirements/skill/{id}/equipment/{equipment}\'. " +
                     "Id must be more than 0L");
         }
         Optional<Skill> optionalSkill;
@@ -417,30 +423,61 @@ public class RequirementController {
         return new ResponseEntity<>(requirements, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Show requirements by skill id and company location id",
+            description = "Show list of professional requirements matching to chosen skill by its individual unique id " +
+                    "and company location according to location id among all matching requirements",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully loaded requirements",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad skill/location id number. Id must be parsed from Long type",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirement because of bad skill/location id number. Must be not less than 0",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "NOT_FOUND",
+                            description = "Failed to load skill/location/requirements from required resource",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @GetMapping("/skill/{id}/company_location/{location_id}")
     public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillIdAndCompanyLocationId
-            (@PathVariable String id,
+            (@Parameter(name = "id", description = "individual unique id of skill in DB table", example = "3", required = true)
+             @PathVariable String id,
+             @Parameter(name = "location_id", description = "individual unique location id of company in DB table", example = "5", required = true)
              @PathVariable(name = "location_id") String locationId) {
+
         Long parsedLocationId;
         try {
             parsedLocationId = Long.parseLong(locationId);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad requirement {locationId} in resource path \'rest/requirements/skill/{id}/company_location/{location_id}\'. " +
-                    "Must be Long type");
+            throw new NumberFormatException("Bad company_location {locationId} in resource path \'rest/requirements/skill/{id}/" +
+                    "company_location/{location_id}\'. Must be Long type");
         }
         if (parsedLocationId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {locationId} in resource path \'rest/requirements/skill/{id}/company_location/{location_id}\'. " +
-                    "Id must be more than 0L");
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad company_location {locationId} in resource path \'rest/requirements/skill/{id}/" +
+                    "company_location/{location_id}\'. Id must be more than 0L");
         }
+
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Bad requirement {id} in resource path \'rest/requirements/skill/{id}/company_location/{location_id}\'. " +
+            throw new NumberFormatException("Bad skill {id} in resource path \'rest/requirements/skill/{id}/company_location/{location_id}\'. " +
                     "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'rest/requirements/skill/{id}/company_location/{location_id}\'. " +
+            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/requirements/skill/{id}/company_location/{location_id}\'. " +
                     "Id must be more than 0L");
         }
         Optional<Skill> optionalSkill;
@@ -587,7 +624,7 @@ public class RequirementController {
                     skill.getRank(), skill.getPosition(), skill.getId());
         } catch (Exception e) {
             throw new EntityNotFoundException
-                    ("Can not find requirements by skill from required resource \'rest/requirements/skill/{id}\', " +
+                    ("Can not find requirements by skill id from required resource \'rest/requirements/skill/{id}\', " +
                             e.getCause());
         }
         return requirements;
