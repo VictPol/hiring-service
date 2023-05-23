@@ -662,6 +662,36 @@ public class RequirementController {
         return new ResponseEntity<>(requirement, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Patch update requirement by update request",
+            description = "Patch update professional requirement of company to employee skill according to all fields " +
+                    "in patch update request. Not all fields in request body must be filled, only with updated info. Company can not be updated",
+            parameters = {
+                    @Parameter(name = "patch update request body",
+                            required = true,
+                            in = ParameterIn.HEADER,
+                            schema = @Schema(requiredMode = Schema.RequiredMode.REQUIRED,
+                                    type = "body of header with application/json",
+                                    description = "update request body with fields"))
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully patch updated requirement",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to convert request to requirement because of bad update request",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "INTERNAL_SERVER_ERROR",
+                            description = "Failed to patch update and save requirement",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PatchMapping
     public ResponseEntity<Requirement> patchUpdateRequirement(@Valid @RequestBody RequirementPatchRequest request, BindingResult result)
