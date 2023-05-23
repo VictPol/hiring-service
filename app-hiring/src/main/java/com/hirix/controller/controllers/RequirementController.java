@@ -152,12 +152,13 @@ public class RequirementController {
                     ),
                     @ApiResponse(
                             responseCode = "BAD_REQUEST",
-                            description = "Failed to load requirements because of bad page number. Must be Integer type",
+                            description = "Failed to load requirements because of bad page/size number. Must be Integer type",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     ),
                     @ApiResponse(
                             responseCode = "BAD_REQUEST",
-                            description = "Failed to load requirements because of bad page number. Must be not less than 0",
+                            description = "Failed to load requirements because of bad page number/size. Must be not less than 0 for page number " +
+                                    "and not less than 1 for page size",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     ),
                     @ApiResponse(
@@ -205,8 +206,35 @@ public class RequirementController {
         return new ResponseEntity<>(Collections.singletonMap("page #" + parsedPage, requirements), HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Show one requirement by its id",
+            description = "Show only one professional requirement, chosen by its individual unique id as parameter",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully loaded requirement",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirement because of bad id number. Id must be parsed from Long type",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirement because of bad id number. Must be not less than 0",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "NOT_FOUND",
+                            description = "Failed to load requirement from required resource",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @GetMapping("/{id}")
-    public ResponseEntity<Requirement> getRequirementById(@PathVariable String id) {
+    public ResponseEntity<Requirement> getRequirementById(@Parameter(name = "id", description = "individual unique id of requirement in DB table",
+            example = "3", required = true) @PathVariable String id) {
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
