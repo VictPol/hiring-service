@@ -572,7 +572,7 @@ public class RequirementController {
                     ),
                     @ApiResponse(
                             responseCode = "BAD_REQUEST",
-                            description = "Failed to load requirements because of bad create request",
+                            description = "Failed to convert request to requirement because of bad create request",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     ),
                     @ApiResponse(
@@ -608,6 +608,36 @@ public class RequirementController {
         return new ResponseEntity<>(requirement, HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "Update requirement by update request",
+            description = "Update professional requirement of company to employee skill according to all fields " +
+                    "in update request. All fields in request body must be filled, except company id. Company can not be updated",
+            parameters = {
+                    @Parameter(name = "update request body",
+                            required = true,
+                            in = ParameterIn.HEADER,
+                            schema = @Schema(requiredMode = Schema.RequiredMode.REQUIRED,
+                                    type = "body of header with application/json",
+                                    description = "update request body with fields"))
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully updated requirement",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to convert request to requirement because of bad update request",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "INTERNAL_SERVER_ERROR",
+                            description = "Failed to update and save requirement",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @PutMapping
     public ResponseEntity<Requirement> updateRequirement(@Valid @RequestBody RequirementUpdateRequest request, BindingResult result)
