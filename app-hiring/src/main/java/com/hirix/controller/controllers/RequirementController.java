@@ -18,6 +18,7 @@ import com.hirix.repository.RequirementRepository;
 import com.hirix.repository.SkillRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -492,13 +493,43 @@ public class RequirementController {
         return new ResponseEntity<>(requirements, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Show requirements by search query",
+            description = "Show list of professional requirements having equipment like query",
+            parameters = {
+                    @Parameter(name = "query",
+                            required = true,
+                            in = ParameterIn.QUERY,
+                            schema = @Schema(requiredMode = Schema.RequiredMode.REQUIRED, example = "query", type = "string",
+                                    description = "equipment like query"))
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully loaded requirements",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad query request",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "NOT_FOUND",
+                            description = "Failed to load requirements from required resource",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @GetMapping("/search")
     public ResponseEntity<Map<String, List<Requirement>>> searchRequirementsByEquipmentsLike
             (@Valid @ModelAttribute RequirementSearchCriteria criteria, BindingResult result) {
+
         if (result.hasErrors()) {
             throw new IllegalRequestException
                     ("Bad argument in search path, must be: \'search?query=word_like_equipment\'", result);
         }
+
         String query;
         try {
             query = criteria.getQuery();
@@ -509,6 +540,7 @@ public class RequirementController {
             throw new IllegalArgumentException
                     ("Bad argument in search path, must be: \'search?query=word_like_equipment\'");
         }
+
         List<Requirement> requirements;
         try {
             requirements = requirementRepository.findRequirementsByEquipmentsLike("%" + criteria.getQuery() + "%");
