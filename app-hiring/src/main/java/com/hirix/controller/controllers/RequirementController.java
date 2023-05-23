@@ -13,7 +13,6 @@ import com.hirix.exception.EntityNotDeletedException;
 import com.hirix.exception.EntityNotFoundException;
 import com.hirix.exception.ErrorMessage;
 import com.hirix.exception.IllegalRequestException;
-import com.hirix.exception.PoorInfoInRequestToCreateUpdateEntity;
 import com.hirix.repository.RequirementRepository;
 import com.hirix.repository.SkillRepository;
 import io.swagger.v3.oas.annotations.Operation;
@@ -128,7 +127,7 @@ public class RequirementController {
                     "Must be Integer type");
         }
         if (parsedPage < 0) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/requirements/page_one_requirement/{page}\'. " +
+            throw new IllegalArgumentException("Bad {page} in resource path \'/rest/requirements/page_one_requirement/{page}\'. " +
                     "Must be not less than 0");
         }
         Page<Requirement> requirements;
@@ -184,7 +183,7 @@ public class RequirementController {
                     "Must be Integer type");
         }
         if (parsedPage < 0) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {page} in resource path \'/rest/requirements/page_size_requirements/{page}/{size}\'. " +
+            throw new IllegalArgumentException("Bad {page} in resource path \'/rest/requirements/page_size_requirements/{page}/{size}\'. " +
                     "Id must be not less than 0L");
         }
 
@@ -196,7 +195,7 @@ public class RequirementController {
                     "Must be Integer type");
         }
         if (parsedSize < 1) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad {size} in resource path \'/rest/requirements/page_size_requirements/{page}/{size}\'. " +
+            throw new IllegalArgumentException("Bad {size} in resource path \'/rest/requirements/page_size_requirements/{page}/{size}\'. " +
                     "Id must be more than 0L");
         }
         Page<Requirement> requirements;
@@ -247,7 +246,7 @@ public class RequirementController {
                     "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad requirement {id} in resource path \'rest/requirements/{id}\'. " +
+            throw new IllegalArgumentException("Bad requirement {id} in resource path \'rest/requirements/{id}\'. " +
                     "Id must be more than 0L");
         }
         Optional<Requirement> optionalRequirement;
@@ -299,7 +298,7 @@ public class RequirementController {
                     "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/requirements/skill/{id}\'. " +
+            throw new IllegalArgumentException("Bad skill {id} in resource path \'rest/requirements/skill/{id}\'. " +
                     "Id must be more than 0L");
         }
         Optional<Skill> optionalSkill;
@@ -353,7 +352,7 @@ public class RequirementController {
                     "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/requirements/skill/{id}/salary_max\'. " +
+            throw new IllegalArgumentException("Bad skill {id} in resource path \'rest/requirements/skill/{id}/salary_max\'. " +
                     "Id must be more than 0L");
         }
         Optional<Skill> optionalSkill;
@@ -409,7 +408,7 @@ public class RequirementController {
                     "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/requirements/skill/{id}/equipment/{equipment}\'. " +
+            throw new IllegalArgumentException("Bad skill {id} in resource path \'rest/requirements/skill/{id}/equipment/{equipment}\'. " +
                     "Id must be more than 0L");
         }
         Optional<Skill> optionalSkill;
@@ -466,7 +465,7 @@ public class RequirementController {
                     "company_location/{location_id}\'. Must be Long type");
         }
         if (parsedLocationId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad company_location {locationId} in resource path \'rest/requirements/skill/{id}/" +
+            throw new IllegalArgumentException("Bad company_location {locationId} in resource path \'rest/requirements/skill/{id}/" +
                     "company_location/{location_id}\'. Id must be more than 0L");
         }
 
@@ -478,7 +477,7 @@ public class RequirementController {
                     "Must be Long type");
         }
         if (parsedId < 1L) {
-            throw new PoorInfoInRequestToCreateUpdateEntity("Bad skill {id} in resource path \'rest/requirements/skill/{id}/company_location/{location_id}\'. " +
+            throw new IllegalArgumentException("Bad skill {id} in resource path \'rest/requirements/skill/{id}/company_location/{location_id}\'. " +
                     "Id must be more than 0L");
         }
         Optional<Skill> optionalSkill;
@@ -715,9 +714,36 @@ public class RequirementController {
         return new ResponseEntity<>(requirement, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Delete one requirement by its id",
+            description = "Delete only one professional requirement, chosen by its individual unique id",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully deleted requirement",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to delete requirement because of bad id number. Id must be parsed from Long type",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to delete requirement because of bad id number. Must be not less than 0",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "INTERNAL_SERVER_ERROR",
+                            description = "Failed to delete requirement from required resource",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
-    public ResponseEntity<Requirement> deleteRequirement(@PathVariable String id) throws Exception {
+    public ResponseEntity<Requirement> deleteRequirement(@Parameter(name = "id", description = "individual unique id of requirement in DB table",
+            example = "3", required = true) @PathVariable String id) throws Exception {
 
         Long parsedId;
         try {
@@ -725,6 +751,10 @@ public class RequirementController {
         } catch (NumberFormatException e) {
             throw new NumberFormatException("Bad information about requirement id in resource \'/rest/requirements/{id}\'. " +
                     "Must be Long type");
+        }
+        if (parsedId < 1L) {
+            throw new IllegalArgumentException("Bad requirement {id} in resource path \'rest/requirements/{id}\'. " +
+                    "Id must be more than 0L");
         }
         Optional<Requirement> optionalRequirement;
         try {
