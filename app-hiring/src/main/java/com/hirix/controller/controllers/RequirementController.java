@@ -362,9 +362,38 @@ public class RequirementController {
         return new ResponseEntity<>(requirements, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Show requirements by skill id with equipment like string parameter",
+            description = "Show list of professional requirements matching to chosen skill by its individual unique id as parameter " +
+                    "and having equipment like string parameter (in fact equipment query) among all matching requirements",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully loaded requirements",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad skill id number. Id must be parsed from Long type",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirement because of bad skill id number. Must be not less than 0",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "NOT_FOUND",
+                            description = "Failed to load requirements from required resource",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @GetMapping("/skill/{id}/equipment/{equipment}")
-    public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillIdAndEquipmentLike(@PathVariable String id,
-                                                                                              @PathVariable String equipment) {
+    public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillIdAndEquipmentLike(@Parameter(name = "id", description = "individual " +
+                    "unique id of skill in DB table", example = "3", required = true) @PathVariable String id,
+            @Parameter(name = "equipment", description = "skill equipment like string parameter (in fact equipment query)", example = "spring data",
+                    required = true) @PathVariable String equipment) {
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
