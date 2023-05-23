@@ -157,7 +157,7 @@ public class RequirementController {
                     ),
                     @ApiResponse(
                             responseCode = "BAD_REQUEST",
-                            description = "Failed to load requirements because of bad page number/size. Must be not less than 0 for page number " +
+                            description = "Failed to load requirements because of bad page page/size number. Must be not less than 0 for page number " +
                                     "and not less than 1 for page size",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
                     ),
@@ -257,8 +257,35 @@ public class RequirementController {
         return new ResponseEntity<>(requirement, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Show requirements by skill id",
+            description = "Show list of professional requirements matching to chosen skill by its individual unique id as parameter",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully loaded requirements",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad skill id number. Id must be parsed from Long type",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirement because of bad skill id number. Must be not less than 0",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "NOT_FOUND",
+                            description = "Failed to load requirements from required resource",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @GetMapping("/skill/{id}")
-    public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillId(@PathVariable String id) {
+    public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillId(@Parameter(name = "id", description = "individual unique id of skill " +
+            "in DB table", example = "3", required = true) @PathVariable String id) {
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
@@ -282,8 +309,36 @@ public class RequirementController {
         return new ResponseEntity<>(requirements, HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Show requirements by skill id with max salary",
+            description = "Show list of professional requirements matching to chosen skill by its individual unique id as parameter " +
+                    "and having max salary among all matching requirements",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "OK",
+                            description = "Successfully loaded requirements",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Requirement.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirements because of bad skill id number. Id must be parsed from Long type",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "BAD_REQUEST",
+                            description = "Failed to load requirement because of bad skill id number. Must be not less than 0",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "NOT_FOUND",
+                            description = "Failed to load requirements from required resource",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
+                    )
+            }
+    )
     @GetMapping("/skill/{id}/salary_max")
-    public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillIdAndSalaryMax(@PathVariable String id) {
+    public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillIdAndSalaryMax(@Parameter(name = "id", description = "individual " +
+            "unique id of skill in DB table", example = "3", required = true) @PathVariable String id) {
         Long parsedId;
         try {
             parsedId = Long.parseLong(id);
