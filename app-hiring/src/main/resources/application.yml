@@ -1,40 +1,39 @@
 spring:
-  #  main:
-  #    allow-circular-references: true
+  main:
+    allow-circular-references: true
   datasource:
     hikari:
-      #      jdbc-url: "jdbc:postgresql://localhost:5432/apptest?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      jdbc-url: "jdbc:postgresql://localhost:5432/hiring_service?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
       maximum-pool-size: 20
-    #      driver-class-name: org.postgresql.Driver
+      driver-class-name: org.postgresql.Driver
     username: dev
-    #    username: postgres
     password: dev
-    #    password: root
-    url: "jdbc:postgresql://localhost:5432/hiring_service?useUnicode=true
-    &useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
-    #    url: "jdbc:postgresql://localhost:5432/apptest?useUnicode=true
-    #  &useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+    url: "jdbc:postgresql://localhost:5432/hiring_service?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
     driver-class-name: org.postgresql.Driver
 #  flyway:
 #    enabled: true
 #    baseline-on-migrate: true
 #    baseline-description: Flyway Scripts
-##    locations: classpath:/db
 #    user: ${spring.datasource.username}
 #    password: ${spring.datasource.password}
 #    url: ${spring.datasource.url}
 #    default-schema: public
 #    out-of-order: true
 #    ignore-migration-patterns: '*:ignored'
-#  jpa:
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
-#        format_sql: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        show_sql: true
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        connection:
+          characterEncoding: utf8mb4
+          CharSet: utf8mb4
+          useUnicode: true
 
 ---
-
+#Temporaly not used in project
 amazon:
   images:
     s3: 123123213
@@ -42,14 +41,14 @@ amazon:
     password: password
 
 ---
-
+#Temporaly not used in project
 google:
   servers:
     port: 8080
     name: some-server
 
 ---
-
+#Temporaly not used in project
 jwtconfig:
   secret: secret
   expiration: 60000
