@@ -13,6 +13,9 @@ spring:
     &useLegacyDatetimeCode=false&serverTimezone=UTC"
     driver-class-name: org.postgresql.Driver
 
+#  Temporally not used in project.
+#  To create DB from ready scripts in db.migration (16 files) cansel the comments from flyway below
+
 #  flyway:
 #    enabled: true
 #    baseline-on-migrate: true
