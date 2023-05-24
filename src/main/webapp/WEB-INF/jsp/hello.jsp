@@ -37,8 +37,12 @@ ${userName}
                 <td>${user.birthDate}</td>
                 <td>${user.fullName}</td>
                 <td>${user.weight}</td>
-                <td><button>Edit</button></td>
-                <td><button>Delete</button></td>
+                <td>
+                    <button>Edit</button>
+                </td>
+                <td>
+                    <button>Delete</button>
+                </td>
             </tr>
         </c:forEach>
     </table>

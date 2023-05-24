@@ -17,11 +17,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableTransactionManagement
 @EnableCaching
 @Import(
-        { ApplicationConfig.class,
-            HibernateConfiguration.class,
+        {ApplicationConfig.class,
+                HibernateConfiguration.class,
                 ApplicationCacheConfiguration.class,
-                    com.hirix.configuration.SwaggerConfig.class}
-        )
+                com.hirix.configuration.SwaggerConfig.class}
+)
 
 public class SpringBootApplicationStarter {
     public static void main(String[] args) {

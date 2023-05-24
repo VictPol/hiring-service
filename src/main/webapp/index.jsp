@@ -3,6 +3,6 @@
     <title>Start!</title>
 </head>
 <body>
-    DemoApp Tomcat Application!
+DemoApp Tomcat Application!
 </body>
 </html>

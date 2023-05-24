@@ -13,19 +13,19 @@ spring:
     &useLegacyDatetimeCode=false&serverTimezone=UTC"
     driver-class-name: org.postgresql.Driver
 
-#  Temporally not used in project.
-#  To create DB from ready scripts in db.migration (16 files) cansel the comments from flyway below
+  #  Temporally not used in project.
+  #  To create DB from ready scripts in db.migration (16 files) cansel the comments from flyway below
 
-#  flyway:
-#    enabled: true
-#    baseline-on-migrate: true
-#    baseline-description: Flyway Scripts
-#    user: ${spring.datasource.username}
-#    password: ${spring.datasource.password}
-#    url: ${spring.datasource.url}
-#    default-schema: public
-#    out-of-order: true
-#    ignore-migration-patterns: '*:ignored'
+  #  flyway:
+  #    enabled: true
+  #    baseline-on-migrate: true
+  #    baseline-description: Flyway Scripts
+  #    user: ${spring.datasource.username}
+  #    password: ${spring.datasource.password}
+  #    url: ${spring.datasource.url}
+  #    default-schema: public
+  #    out-of-order: true
+  #    ignore-migration-patterns: '*:ignored'
 
   jpa:
     show-sql: true
@@ -40,7 +40,7 @@ spring:
           useUnicode: true
 
 ---
-#Temporaly not used in project
+#Temporally not used in project
 amazon:
   images:
     s3: 123123213
@@ -48,14 +48,14 @@ amazon:
     password: password
 
 ---
-#Temporaly not used in project
+#Temporally not used in project
 google:
   servers:
     port: 8080
     name: some-server
 
 ---
-#Temporaly not used in project
+#Temporally not used in project
 jwtconfig:
   secret: secret
   expiration: 60000

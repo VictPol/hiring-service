@@ -1,50 +1,100 @@
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (1, 'industry_0001', '2023-05-05 12:46:00.000000', '2023-05-05 12:46:02.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (3, 'industry_0002', '2023-05-10 18:51:48.000000', '2023-05-10 18:52:05.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (4, 'industry_0003', '2023-05-10 18:52:22.000000', '2023-05-10 18:52:23.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (5, 'industry_0004', '2023-05-10 18:52:44.000000', '2023-05-10 18:52:46.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (6, 'industry_0005', '2023-05-10 18:53:08.000000', '2023-05-10 18:53:09.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (7, 'industry_0006', '2023-05-10 18:53:22.000000', '2023-05-10 18:53:22.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (8, 'industry_0007', '2023-05-10 18:53:38.000000', '2023-05-10 18:53:39.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (9, 'industry_0008', '2023-05-10 18:53:50.000000', '2023-05-10 18:53:51.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (10, 'industry_0009', '2023-05-10 18:54:06.000000', '2023-05-10 18:54:06.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (11, 'industry_0010', '2023-05-10 18:54:22.000000', '2023-05-10 18:54:23.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (12, 'industry_0011', '2023-05-10 18:54:36.000000', '2023-05-10 18:54:37.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (13, 'industry_0012', '2023-05-10 18:54:56.000000', '2023-05-10 18:54:57.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (14, 'industry_0013', '2023-05-10 18:55:08.000000', '2023-05-10 18:55:09.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (15, 'industry_0014', '2023-05-10 18:55:28.000000', '2023-05-10 18:55:29.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (16, 'industry_0015', '2023-05-10 18:55:38.000000', '2023-05-10 18:55:38.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (17, 'industry_0016', '2023-05-10 18:55:50.000000', '2023-05-10 18:55:51.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (18, 'industry_0017', '2023-05-10 18:56:01.000000', '2023-05-10 18:56:02.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (19, 'industry_0018', '2023-05-10 18:56:12.000000', '2023-05-10 18:56:12.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (20, 'industry_0019', '2023-05-10 18:56:25.000000', '2023-05-10 18:56:26.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (21, 'industry_0020', '2023-05-10 18:56:37.000000', '2023-05-10 18:56:37.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (22, 'industry_0021', '2023-05-10 18:56:52.000000', '2023-05-10 18:56:53.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (23, 'industry_0022', '2023-05-10 18:57:10.000000', '2023-05-10 18:57:11.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (24, 'industry_0023', '2023-05-10 18:57:20.000000', '2023-05-10 18:57:21.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (25, 'industry_0024', '2023-05-10 18:59:18.000000', '2023-05-10 18:59:19.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (26, 'industry_0025', '2023-05-10 18:59:28.000000', '2023-05-10 18:59:29.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (27, 'industry_0026', '2023-05-10 18:59:39.000000', '2023-05-10 18:59:40.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (28, 'industry_0027', '2023-05-10 18:59:48.000000', '2023-05-10 18:59:49.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (29, 'industry_0028', '2023-05-10 19:00:03.000000', '2023-05-10 19:00:04.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (30, 'industry_0029', '2023-05-10 19:00:13.000000', '2023-05-10 19:00:14.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (31, 'industry_0030', '2023-05-10 19:00:29.000000', '2023-05-10 19:00:30.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (32, 'industry_0031', '2023-05-10 19:00:40.000000', '2023-05-10 19:00:41.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (33, 'industry_0032', '2023-05-10 19:00:51.000000', '2023-05-10 19:00:52.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (34, 'industry_0033', '2023-05-10 19:01:05.000000', '2023-05-10 19:01:06.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (35, 'industry_0034', '2023-05-10 19:01:17.000000', '2023-05-10 19:01:18.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (36, 'industry_0035', '2023-05-10 19:01:27.000000', '2023-05-10 19:01:28.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (37, 'industry_0036', '2023-05-10 19:01:37.000000', '2023-05-10 19:01:38.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (38, 'industry_0037', '2023-05-10 19:01:46.000000', '2023-05-10 19:01:47.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (39, 'industry_0038', '2023-05-10 19:01:56.000000', '2023-05-10 19:01:57.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (40, 'industry_0039', '2023-05-10 19:02:09.000000', '2023-05-10 19:02:10.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (41, 'industry_0040', '2023-05-10 19:02:25.000000', '2023-05-10 19:02:26.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (42, 'industry_0041', '2023-05-10 19:02:34.000000', '2023-05-10 19:02:35.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (43, 'industry_0042', '2023-05-10 19:02:44.000000', '2023-05-10 19:02:45.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (44, 'industry_0043', '2023-05-10 19:02:56.000000', '2023-05-10 19:02:57.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (45, 'industry_0044', '2023-05-10 19:03:10.000000', '2023-05-10 19:03:11.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (46, 'industry_0045', '2023-05-10 19:03:25.000000', '2023-05-10 19:03:26.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (47, 'industry_0046', '2023-05-10 19:03:36.000000', '2023-05-10 19:03:37.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (48, 'industry_0047', '2023-05-10 19:03:46.000000', '2023-05-10 19:03:46.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (49, 'industry_0048', '2023-05-10 19:03:55.000000', '2023-05-10 19:03:56.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (50, 'industry_0049', '2023-05-10 19:04:06.000000', '2023-05-10 19:04:07.000000', false, true);
-INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible) VALUES (51, 'industry_0050', '2023-05-10 19:04:17.000000', '2023-05-10 19:04:18.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (1, 'industry_0001', '2023-05-05 12:46:00.000000', '2023-05-05 12:46:02.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (3, 'industry_0002', '2023-05-10 18:51:48.000000', '2023-05-10 18:52:05.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (4, 'industry_0003', '2023-05-10 18:52:22.000000', '2023-05-10 18:52:23.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (5, 'industry_0004', '2023-05-10 18:52:44.000000', '2023-05-10 18:52:46.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (6, 'industry_0005', '2023-05-10 18:53:08.000000', '2023-05-10 18:53:09.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (7, 'industry_0006', '2023-05-10 18:53:22.000000', '2023-05-10 18:53:22.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (8, 'industry_0007', '2023-05-10 18:53:38.000000', '2023-05-10 18:53:39.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (9, 'industry_0008', '2023-05-10 18:53:50.000000', '2023-05-10 18:53:51.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (10, 'industry_0009', '2023-05-10 18:54:06.000000', '2023-05-10 18:54:06.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (11, 'industry_0010', '2023-05-10 18:54:22.000000', '2023-05-10 18:54:23.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (12, 'industry_0011', '2023-05-10 18:54:36.000000', '2023-05-10 18:54:37.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (13, 'industry_0012', '2023-05-10 18:54:56.000000', '2023-05-10 18:54:57.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (14, 'industry_0013', '2023-05-10 18:55:08.000000', '2023-05-10 18:55:09.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (15, 'industry_0014', '2023-05-10 18:55:28.000000', '2023-05-10 18:55:29.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (16, 'industry_0015', '2023-05-10 18:55:38.000000', '2023-05-10 18:55:38.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (17, 'industry_0016', '2023-05-10 18:55:50.000000', '2023-05-10 18:55:51.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (18, 'industry_0017', '2023-05-10 18:56:01.000000', '2023-05-10 18:56:02.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (19, 'industry_0018', '2023-05-10 18:56:12.000000', '2023-05-10 18:56:12.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (20, 'industry_0019', '2023-05-10 18:56:25.000000', '2023-05-10 18:56:26.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (21, 'industry_0020', '2023-05-10 18:56:37.000000', '2023-05-10 18:56:37.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (22, 'industry_0021', '2023-05-10 18:56:52.000000', '2023-05-10 18:56:53.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (23, 'industry_0022', '2023-05-10 18:57:10.000000', '2023-05-10 18:57:11.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (24, 'industry_0023', '2023-05-10 18:57:20.000000', '2023-05-10 18:57:21.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (25, 'industry_0024', '2023-05-10 18:59:18.000000', '2023-05-10 18:59:19.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (26, 'industry_0025', '2023-05-10 18:59:28.000000', '2023-05-10 18:59:29.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (27, 'industry_0026', '2023-05-10 18:59:39.000000', '2023-05-10 18:59:40.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (28, 'industry_0027', '2023-05-10 18:59:48.000000', '2023-05-10 18:59:49.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (29, 'industry_0028', '2023-05-10 19:00:03.000000', '2023-05-10 19:00:04.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (30, 'industry_0029', '2023-05-10 19:00:13.000000', '2023-05-10 19:00:14.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (31, 'industry_0030', '2023-05-10 19:00:29.000000', '2023-05-10 19:00:30.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (32, 'industry_0031', '2023-05-10 19:00:40.000000', '2023-05-10 19:00:41.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (33, 'industry_0032', '2023-05-10 19:00:51.000000', '2023-05-10 19:00:52.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (34, 'industry_0033', '2023-05-10 19:01:05.000000', '2023-05-10 19:01:06.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (35, 'industry_0034', '2023-05-10 19:01:17.000000', '2023-05-10 19:01:18.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (36, 'industry_0035', '2023-05-10 19:01:27.000000', '2023-05-10 19:01:28.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (37, 'industry_0036', '2023-05-10 19:01:37.000000', '2023-05-10 19:01:38.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (38, 'industry_0037', '2023-05-10 19:01:46.000000', '2023-05-10 19:01:47.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (39, 'industry_0038', '2023-05-10 19:01:56.000000', '2023-05-10 19:01:57.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (40, 'industry_0039', '2023-05-10 19:02:09.000000', '2023-05-10 19:02:10.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (41, 'industry_0040', '2023-05-10 19:02:25.000000', '2023-05-10 19:02:26.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (42, 'industry_0041', '2023-05-10 19:02:34.000000', '2023-05-10 19:02:35.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (43, 'industry_0042', '2023-05-10 19:02:44.000000', '2023-05-10 19:02:45.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (44, 'industry_0043', '2023-05-10 19:02:56.000000', '2023-05-10 19:02:57.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (45, 'industry_0044', '2023-05-10 19:03:10.000000', '2023-05-10 19:03:11.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (46, 'industry_0045', '2023-05-10 19:03:25.000000', '2023-05-10 19:03:26.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (47, 'industry_0046', '2023-05-10 19:03:36.000000', '2023-05-10 19:03:37.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (48, 'industry_0047', '2023-05-10 19:03:46.000000', '2023-05-10 19:03:46.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (49, 'industry_0048', '2023-05-10 19:03:55.000000', '2023-05-10 19:03:56.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (50, 'industry_0049', '2023-05-10 19:04:06.000000', '2023-05-10 19:04:07.000000', false, true);
+INSERT INTO public.industries (id, industry_name, created, changed, is_deleted, is_visible)
+VALUES (51, 'industry_0050', '2023-05-10 19:04:17.000000', '2023-05-10 19:04:18.000000', false, true);

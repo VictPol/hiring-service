@@ -6,7 +6,6 @@ import com.hirix.repository.PositionRepository;
 import com.hirix.repository.ProfessionRepository;
 import com.hirix.repository.RankRepository;
 import com.hirix.repository.SpecializationRepository;
-import com.hirix.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -29,12 +28,12 @@ public class CustomContextListener implements ServletContextListener {
 
         ServletContextListener.super.contextInitialized(sce);
 
-//        industryRepository.findAllByVisibleIs(true);
-//        locationRepository.findAllByVisibleIs(true);
-//        positionRepository.findAllByVisibleIs(true);
-//        professionRepository.findAllByVisibleIs(true);
-//        rankRepository.findAllByVisibleIs(true);
-//        specializationRepository.findAllByVisibleIs(true);
-//        locationRepository.findAllByVisibleIs(true);
+        industryRepository.findAllByVisibleIs(true);
+        locationRepository.findAllByVisibleIs(true);
+        positionRepository.findAllByVisibleIs(true);
+        professionRepository.findAllByVisibleIs(true);
+        rankRepository.findAllByVisibleIs(true);
+        specializationRepository.findAllByVisibleIs(true);
+        locationRepository.findAllByVisibleIs(true);
     }
 }

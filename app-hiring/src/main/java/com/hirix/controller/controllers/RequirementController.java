@@ -288,7 +288,7 @@ public class RequirementController {
     )
     @GetMapping("/skill/{id}")
     public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillId(@Parameter(name = "id", description = "individual " +
-                    "unique id of skill in DB table", example = "3", required = true) @PathVariable String id) {
+            "unique id of skill in DB table", example = "3", required = true) @PathVariable String id) {
 
         Long parsedId;
         try {
@@ -396,9 +396,9 @@ public class RequirementController {
     )
     @GetMapping("/skill/{id}/equipment/{equipment}")
     public ResponseEntity<List<Requirement>> getRequirementsMatchingToSkillIdAndEquipmentLike(@Parameter(name = "id", description = "individual " +
-                    "unique id of skill in DB table", example = "3", required = true) @PathVariable String id,
-            @Parameter(name = "equipment", description = "skill equipment like string parameter (in fact - equipment query)", example = "spring data",
-                    required = true) @PathVariable String equipment) {
+            "unique id of skill in DB table", example = "3", required = true) @PathVariable String id,
+                                                                                              @Parameter(name = "equipment", description = "skill equipment like string parameter (in fact - equipment query)", example = "spring data",
+                                                                                                      required = true) @PathVariable String equipment) {
 
         Long parsedId;
         try {
