@@ -12,10 +12,10 @@ import javax.sql.DataSource;
 @Configuration
 public class ApplicationConfig {
 
-    @Bean
-    public FlywayMigrationInitializer flywayInitializer() {
-        return null;
-    }
+//    @Bean
+//    public FlywayMigrationInitializer flywayInitializer() {
+//        return null;
+//    }
 
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {

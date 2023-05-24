@@ -24,8 +24,6 @@ spring:
 #    out-of-order: true
 #    ignore-migration-patterns: '*:ignored'
 
-
-
   jpa:
     show-sql: true
     properties:

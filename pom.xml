@@ -209,11 +209,10 @@
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
 
-        <!--        Temporaly switched off the project-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.flywaydb</groupId>-->
-        <!--            <artifactId>flyway-core</artifactId>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springdoc</groupId>
