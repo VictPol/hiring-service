@@ -19,7 +19,9 @@ public class HibernateConfiguration {
     @Autowired
     @Bean(name = "sessionFactory")
     public SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
+
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
+
         factoryBean.setPackagesToScan("com.hirix");
         factoryBean.setDataSource(dataSource);
         factoryBean.setHibernateProperties(getAdditionalProperties());
@@ -32,7 +34,9 @@ public class HibernateConfiguration {
     @Autowired
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
+
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+
         em.setPackagesToScan("com.hirix");
         em.setDataSource(dataSource);
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
@@ -42,8 +46,14 @@ public class HibernateConfiguration {
     }
 
     private Properties getAdditionalProperties() {
+
         Properties properties = new Properties();
+
         properties.put("hibernate.show_sql", "true");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL10Dialect");
+        properties.put("hibernate.connection.characterEncoding", "utf8mb4");
+        properties.put("hibernate.connection.CharSet", "utf8mb4");
+        properties.put("hibernate.connection.useUnicode", "true");
         return properties;
     }
 }
