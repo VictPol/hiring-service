@@ -3,13 +3,16 @@ spring:
     allow-circular-references: true
   datasource:
     hikari:
-      jdbc-url: "jdbc:postgresql://localhost:5432/hiring_service?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      jdbc-url: "jdbc:postgresql://localhost:5432/hiring_service?useUnicode=true
+      &useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
       maximum-pool-size: 20
       driver-class-name: org.postgresql.Driver
     username: dev
     password: dev
-    url: "jdbc:postgresql://localhost:5432/hiring_service?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+    url: "jdbc:postgresql://localhost:5432/hiring_service?useUnicode=true&useJDBCCompliantTimezoneShift=true
+    &useLegacyDatetimeCode=false&serverTimezone=UTC"
     driver-class-name: org.postgresql.Driver
+
 #  flyway:
 #    enabled: true
 #    baseline-on-migrate: true
@@ -20,6 +23,7 @@ spring:
 #    default-schema: public
 #    out-of-order: true
 #    ignore-migration-patterns: '*:ignored'
+
   jpa:
     show-sql: true
     properties:
