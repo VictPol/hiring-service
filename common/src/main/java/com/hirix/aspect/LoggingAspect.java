@@ -8,15 +8,15 @@ public class LoggingAspect {
 
     @org.aspectj.lang.annotation.Before("aroundRepositoryPointcut()")
     public void logBefore(org.aspectj.lang.JoinPoint joinPoint) {
-        log.info("Method " + joinPoint.getSignature().getName() + " start");
+        log.info("Method " + joinPoint.getSignature().getDeclaringTypeName() + " " + joinPoint.getSignature().getName() + " start");
     }
 
     @org.aspectj.lang.annotation.AfterReturning(pointcut = "aroundRepositoryPointcut()")
     public void doAccessCheck(org.aspectj.lang.JoinPoint joinPoint) {
-        log.info("Method " + joinPoint.getSignature().getName() + " finished");
+        log.info("Method " + joinPoint.getSignature().getDeclaringTypeName() + " " + joinPoint.getSignature().getName() + " finished");
     }
 
-    @org.aspectj.lang.annotation.Pointcut("execution(* com.hirix.repository.*.*(..))")
+    @org.aspectj.lang.annotation.Pointcut("execution(* com.hirix.repository..*(..))")
     public void aroundRepositoryPointcut() {
     }
 }
