@@ -19,7 +19,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @Import(
         { ApplicationConfig.class,
             HibernateConfiguration.class,
-                ApplicationCacheConfiguration.class }
+                ApplicationCacheConfiguration.class,
+                    com.hirix.configuration.SwaggerConfig.class}
         )
 
 public class SpringBootApplicationStarter {
