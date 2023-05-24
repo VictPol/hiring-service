@@ -29,6 +29,6 @@ public class RequirementUpdateRequest extends RequirementCreateRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Long id;
 }

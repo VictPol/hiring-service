@@ -28,7 +28,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Long id;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "2", type = "integer",
@@ -36,7 +36,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "2")
     @Min(value = 0)
     @Max(value = 100)
-    @Pattern(regexp = "[1-9][\\d]+")
+    @Pattern(regexp = "^[1-9][\\d]+")
     private Integer experience;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "true", type = "boolean",
@@ -61,7 +61,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1)
     @Max(value = 100000)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Integer salary;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "12", type = "integer",
@@ -69,7 +69,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "12")
     @Min(value = 1)
     @Max(value = 1000)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Integer term;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1", type = "long",
@@ -77,7 +77,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Long companyId;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1", type = "long",
@@ -85,7 +85,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Long industryId;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1", type = "long",
@@ -93,7 +93,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Long professionId;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1", type = "long",
@@ -101,7 +101,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Long specializationId;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1", type = "long",
@@ -109,7 +109,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Long rankId;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1", type = "long",
@@ -117,7 +117,7 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Long positionId;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED, example = "1", type = "long",
@@ -125,6 +125,6 @@ public class RequirementPatchRequest {
     @NumberFormat(style = NumberFormat.Style.NUMBER, pattern = "1")
     @Min(value = 1L)
     @Max(value = 9223372036854775807L)
-    @Pattern(regexp = "[1-9]([\\d]+)")
+    @Pattern(regexp = "^[1-9]([\\d]+)")
     private Long locationOfferedId;
 }
