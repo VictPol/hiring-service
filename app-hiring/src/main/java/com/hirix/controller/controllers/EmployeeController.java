@@ -206,7 +206,7 @@ public class EmployeeController {
         return new ResponseEntity<>(Collections.singletonMap("employees", employees), HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PostMapping
     public ResponseEntity<Employee> createEmployee(@Valid @RequestBody EmployeeCreateRequest request, BindingResult result) throws Exception {
         if (result.hasErrors()) {
@@ -230,7 +230,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employee, HttpStatus.CREATED);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PutMapping
     public ResponseEntity<Employee> updateEmployee(@Valid @RequestBody EmployeeUpdateRequest request, BindingResult result)
             throws Exception {
@@ -253,7 +253,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PatchMapping
     public ResponseEntity<Employee> patchUpdateEmployee(@Valid @RequestBody EmployeePatchRequest request, BindingResult result)
             throws Exception {
@@ -275,7 +275,7 @@ public class EmployeeController {
         return new ResponseEntity<>(employee, HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Employee> deleteEmployee(@PathVariable String id) throws Exception {
         Long parsedId;

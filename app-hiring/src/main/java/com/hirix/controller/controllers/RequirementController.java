@@ -581,7 +581,7 @@ public class RequirementController {
                     )
             }
     )
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PostMapping
     public ResponseEntity<Requirement> createRequirement(@Valid @RequestBody RequirementCreateRequest request,
                                                          BindingResult result) throws Exception {
@@ -637,7 +637,7 @@ public class RequirementController {
                     )
             }
     )
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PutMapping
     public ResponseEntity<Requirement> updateRequirement(@Valid @RequestBody RequirementUpdateRequest request, BindingResult result)
             throws Exception {
@@ -691,7 +691,7 @@ public class RequirementController {
                     )
             }
     )
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PatchMapping
     public ResponseEntity<Requirement> patchUpdateRequirement(@Valid @RequestBody RequirementPatchRequest request, BindingResult result)
             throws Exception {
@@ -740,7 +740,7 @@ public class RequirementController {
                     )
             }
     )
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Requirement> deleteRequirement(@Parameter(name = "id", description = "individual unique id of requirement in DB table",
             example = "3", required = true) @PathVariable String id) throws Exception {

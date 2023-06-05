@@ -174,7 +174,7 @@ public class UserController {
         return new ResponseEntity<>(Collections.singletonMap(roleName, users), HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateRequest request, BindingResult result) throws Exception {
         if (result.hasErrors()) {
@@ -198,7 +198,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PutMapping
     public ResponseEntity<User> updateUser(@Valid @RequestBody UserUpdateRequest request, BindingResult result)
             throws Exception {
@@ -221,7 +221,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PatchMapping
     public ResponseEntity<User> patchUpdateUser(@Valid @RequestBody UserPatchRequest request, BindingResult result)
             throws Exception {
@@ -325,7 +325,7 @@ public class UserController {
         return new ResponseEntity<>(link, HttpStatus.CREATED);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable String id) throws Exception {
         Long parsedId;

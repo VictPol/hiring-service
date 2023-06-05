@@ -260,7 +260,7 @@ public class OfferController {
         return new ResponseEntity<>(offers, HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PostMapping
     public ResponseEntity<Offer> createOffer(@Valid @RequestBody OfferCreateRequest request, BindingResult result)
             throws Exception {
@@ -285,7 +285,7 @@ public class OfferController {
         return new ResponseEntity<>(offer, HttpStatus.CREATED);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PatchMapping("/company")
     public ResponseEntity<Offer> updateOfferByCompany(@Valid @RequestBody OfferUpdateRequestCompany request, BindingResult result)
             throws Exception {
@@ -308,7 +308,7 @@ public class OfferController {
         return new ResponseEntity<>(offer, HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @PatchMapping("/employee")
     public ResponseEntity<Offer> updateOfferByEmployee(@Valid @RequestBody OfferUpdateRequestEmployee request, BindingResult result)
             throws Exception {
@@ -331,7 +331,7 @@ public class OfferController {
         return new ResponseEntity<>(offer, HttpStatus.OK);
     }
 
-    @Transactional(propagation = Propagation.REQUIRED, timeout = 3, rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, timeout = 3000, rollbackFor = Exception.class)
     @DeleteMapping("/{id}")
     public ResponseEntity<Offer> deleteOffer(@PathVariable String id) throws Exception {
         Long parsedId;
